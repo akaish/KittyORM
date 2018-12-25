@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson4 tab 1 sources &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           <p><strong>Tip №1: Avoid using generating data model from packages</strong></p>
+
+<ol>
+<li>
+<details>
+<summary>Click to view static registry initialization via annotations example: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln"> 2</span>        <span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#34;basic_database&#34;</span><span class="o">,</span>
+<span class="ln"> 3</span>        <span class="n">domainPackageNames</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;net.akaish.kittyormdemo.sqlite.basicdb&#34;</span><span class="o">},</span>
+<span class="ln"> 4</span>        <span class="n">logTag</span> <span class="o">=</span> <span class="n">LOG_TAG</span><span class="o">,</span>
+<span class="ln"> 5</span>        <span class="n">isLoggingOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln"> 6</span>        <span class="n">isProductionOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln"> 7</span>        <span class="n">isPragmaOn</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="ln"> 8</span><span class="o">)</span>
+<span class="ln"> 9</span><span class="nd">@KITTY_DATABASE_REGISTRY</span><span class="o">(</span>
+<span class="ln">10</span>        <span class="c1">// You can just define set of domain models and extended crud controllers (mappers) would
+</span><span class="ln">11</span><span class="c1"></span>        <span class="c1">// be added only if those models are annotated with KITTY_EXTENDED_CRUD annotation.
+</span><span class="ln">12</span><span class="c1"></span>        <span class="c1">// For example, for ComplexRandom.class it would be 
+</span><span class="ln">13</span><span class="c1"></span>        <span class="c1">// @KITTY_EXTENDED_CRUD(extendedCrudController = ComplexRandomMapper.class)
+</span><span class="ln">14</span><span class="c1"></span>        <span class="n">domainModels</span> <span class="o">=</span> <span class="o">{</span>
+<span class="ln">15</span>                <span class="n">ComplexRandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+<span class="ln">16</span>                <span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+<span class="ln">17</span>                <span class="n">RandomModel</span><span class="o">.</span><span class="na">class</span>
+<span class="ln">18</span>        <span class="o">},</span>
+<span class="ln">19</span>        <span class="c1">// Or you can provide explicit assignment of model-&gt;mapper pairs by defining domainPais
+</span><span class="ln">20</span><span class="c1"></span>        <span class="n">domainPairs</span> <span class="o">=</span> <span class="o">{</span>
+<span class="ln">21</span>                <span class="nd">@KITTY_REGISTRY_PAIR</span><span class="o">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">ComplexRandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">ComplexRandomMapper</span><span class="o">.</span><span class="na">class</span><span class="o">),</span>
+<span class="ln">22</span>                <span class="nd">@KITTY_REGISTRY_PAIR</span><span class="o">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">class</span><span class="o">),</span>
+<span class="ln">23</span>                <span class="nd">@KITTY_REGISTRY_PAIR</span><span class="o">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">RandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">RandomMapper</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="ln">24</span>        <span class="o">}</span>
+<span class="ln">25</span><span class="o">)</span>
+<span class="ln">26</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicDatabase</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln">27</span>    <span class="o">...</span>
+<span class="ln">28</span><span class="o">}</span>
+<span class="ln">29</span>  </code></pre></div>
+</details></li>
+<li>
+<details>
+<summary>Click to view static registry initialization via overloading <code>getStaticRegistry()</code> method example: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln"> 2</span>        <span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#34;basic_database&#34;</span><span class="o">,</span>
+<span class="ln"> 3</span>        <span class="n">logTag</span> <span class="o">=</span> <span class="n">LOG_TAG</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">isLoggingOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln"> 5</span>        <span class="n">isProductionOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln"> 6</span>        <span class="n">isPragmaOn</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="ln"> 7</span><span class="o">)</span>
+<span class="ln"> 8</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicDatabase</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln"> 9</span>
+<span class="ln">10</span>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">KittyModel</span><span class="o">&gt;,</span> <span class="n">Class</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="n">KittyMapper</span><span class="o">&gt;&gt;</span> <span class="n">staticRegistry</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+<span class="ln">11</span>
+<span class="ln">12</span>    <span class="kd">static</span> <span class="o">{</span>
+<span class="ln">13</span>        <span class="n">staticRegistry</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">ComplexRandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">ComplexRandomMapper</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">14</span>        <span class="n">staticRegistry</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">KittyMapper</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">15</span>        <span class="n">staticRegistry</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">RandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">RandomMapper</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">16</span>    <span class="o">}</span>
+<span class="ln">17</span>
+<span class="ln">18</span>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">LOG_TAG</span> <span class="o">=</span> <span class="s">&#34;BASIC DB DEMO&#34;</span><span class="o">;</span>
+<span class="ln">19</span>
+<span class="ln">20</span>    <span class="cm">/**
+</span><span class="ln">21</span><span class="cm">     * KittyORM main database class that represents bootstrap and holder for all related with database
+</span><span class="ln">22</span><span class="cm">     * components.
+</span><span class="ln">23</span><span class="cm">     * &lt;br&gt; See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.
+</span><span class="ln">24</span><span class="cm">     *
+</span><span class="ln">25</span><span class="cm">     * @param ctx
+</span><span class="ln">26</span><span class="cm">     */</span>
+<span class="ln">27</span>    <span class="kd">public</span> <span class="nf">BasicDatabase</span><span class="o">(</span><span class="n">Context</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">28</span>        <span class="kd">super</span><span class="o">(</span><span class="n">ctx</span><span class="o">);</span>
+<span class="ln">29</span>    <span class="o">}</span>
+<span class="ln">30</span>
+<span class="ln">31</span>    <span class="nd">@Override</span>
+<span class="ln">32</span>    <span class="kd">protected</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Class</span><span class="o">,</span> <span class="n">Class</span><span class="o">&lt;</span><span class="n">KittyMapper</span><span class="o">&gt;&gt;</span> <span class="nf">getStaticRegistry</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">33</span>        <span class="k">return</span> <span class="o">(</span><span class="n">Map</span><span class="o">)</span> <span class="n">staticRegistry</span><span class="o">;</span>
+<span class="ln">34</span>    <span class="o">}</span>
+<span class="ln">35</span><span class="o">}</span>
+<span class="ln">36</span>  </code></pre></div>
+</details></li>
+</ol>
+
+<p><strong>Tip №2: Avoid multiply initialization of <code>KittyDatabase</code></strong></p>
+
+<ol>
+<li>
+<details>
+<summary>Click to view KittyDatabase implementation static initialization at <code>Application</code> implementation example: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AwesomeApplication</span> <span class="kd">extends</span> <span class="n">Application</span> <span class="o">{</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span>	<span class="kd">private</span> <span class="kd">static</span> <span class="n">AwesomeKittyDatabaseImplementation</span> <span class="n">database</span><span class="o">;</span>
+<span class="ln"> 4</span>
+<span class="ln"> 5</span>	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 6</span>		<span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">();</span>
+<span class="ln"> 7</span>		<span class="n">AwesomeApplication</span><span class="o">.</span><span class="na">database</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AwesomeKittyDatabaseImplementation</span><span class="o">(</span><span class="n">getApplicationContext</span><span class="o">());</span>
+<span class="ln"> 8</span>	<span class="o">}</span>
+<span class="ln"> 9</span>
+<span class="ln">10</span>	<span class="kd">public</span> <span class="kd">static</span> <span class="n">AwesomeKittyDatabaseImplementation</span> <span class="nf">getAwesomeDB</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">11</span>		<span class="k">return</span> <span class="n">database</span><span class="o">;</span>
+<span class="ln">12</span>	<span class="o">}</span>
+<span class="ln">13</span><span class="o">}</span>
+<span class="ln">14</span>  </code></pre></div>
+</details></li>
+</ol>
+
+<p><strong>Tip №3: Optimize your data model and statements</strong></p>
+
+<ol>
+<li>
+<details>
+<summary>Click to view <code>INDEX</code> declaration with KittyORM example: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span> <span class="c1">// Index declaration example №1
+</span><span class="ln"> 3</span><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 4</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span>    <span class="o">...</span>
+<span class="ln"> 7</span>
+<span class="ln"> 8</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">5</span><span class="o">)</span>
+<span class="ln"> 9</span>    <span class="nd">@DEFAULT</span><span class="o">(</span>
+<span class="ln">10</span>            <span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_TIMESTAMP</span>
+<span class="ln">11</span>    <span class="o">)</span>
+<span class="ln">12</span>    <span class="c1">// Index declaration example №2
+</span><span class="ln">13</span><span class="c1"></span>    <span class="nd">@ONE_COLUMN_INDEX</span><span class="o">(</span><span class="n">unique</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">indexName</span> <span class="o">=</span> <span class="s">&#34;IAC_unique_index_creation_timestamp&#34;</span><span class="o">)</span>
+<span class="ln">14</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">15</span>    <span class="kd">public</span> <span class="n">Timestamp</span> <span class="n">creationTmstmp</span><span class="o">;</span>
+<span class="ln">16</span>
+<span class="ln">17</span>    <span class="o">...</span>
+<span class="ln">18</span><span class="o">}</span>
+<span class="ln">19</span>  </code></pre></div>
+</details></li>
+<li>
+<details>
+<summary>Click to view bulk insert operation in transaction mode with KittyORM example: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kt">void</span> <span class="nf">insertIntoDB</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 2</span>    <span class="c1">// Getting mapper instance and filling model collection with random models
+</span><span class="ln"> 3</span><span class="c1"></span>    <span class="n">RNDRandomModelFactory</span> <span class="n">rndFactory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RNDRandomModelFactory</span><span class="o">(</span><span class="n">Lesson2Tab5Random</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">getContext</span><span class="o">());</span>
+<span class="ln"> 4</span>    <span class="n">RandomMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="o">(</span><span class="n">RandomMapper</span><span class="o">)</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">RandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln"> 5</span>    <span class="n">List</span><span class="o">&lt;</span><span class="n">RandomModel</span><span class="o">&gt;</span> <span class="n">toInsert</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+<span class="ln"> 6</span>    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">50000</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<span class="ln"> 7</span>        <span class="n">toInsert</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">rndFactory</span><span class="o">.</span><span class="na">newRandomModel</span><span class="o">());</span>
+<span class="ln"> 8</span>            
+<span class="ln"> 9</span>     <span class="c1">// Saving list of 50k models in transaction mode
+</span><span class="ln">10</span><span class="c1"></span>     <span class="n">mapper</span><span class="o">.</span><span class="na">insertInTransaction</span><span class="o">(</span><span class="n">toInsert</span><span class="o">);</span>
+<span class="ln">11</span>           
+<span class="ln">12</span>     <span class="c1">// Closing mapper
+</span><span class="ln">13</span><span class="c1"></span>     <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">14</span><span class="o">}</span>
+<span class="ln">15</span>  </code></pre></div>
+</details></li>
+</ol>
+
+<p><strong>Tip №6: Turn off logging at production</strong></p>
+
+<ol>
+<li>
+<details>
+<summary>Click to view logging settings example: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln"> 2</span>        <span class="n">isLoggingOn</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="c1">// By default false, bootstrap and error logging
+</span><span class="ln"> 3</span><span class="c1"></span>        <span class="n">isProductionOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="c1">// By default true, when false - query logging
+</span><span class="ln"> 4</span><span class="c1"></span>        <span class="n">isKittyDexUtilLoggingEnabled</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="c1">// By default false, when true - a lot of logging about classes in app namespace at initialization
+</span><span class="ln"> 5</span><span class="c1"></span>        <span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#34;mig&#34;</span><span class="o">,</span>
+<span class="ln"> 6</span>        <span class="n">domainPackageNames</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;net.akaish.kittyormdemo.sqlite.migrations.migv4&#34;</span><span class="o">},</span>
+<span class="ln"> 7</span>        <span class="n">databaseVersion</span> <span class="o">=</span> <span class="n">4</span><span class="o">,</span>
+<span class="ln"> 8</span>        <span class="n">logTag</span> <span class="o">=</span> <span class="n">MigrationDBv4</span><span class="o">.</span><span class="na">LTAG</span>
+<span class="ln"> 9</span><span class="o">)</span>
+<span class="ln">10</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MigrationDBv4</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln">11</span>    <span class="o">...</span>
+<span class="ln">12</span><span class="o">}</span>
+<span class="ln">13</span>  </code></pre></div>
+</details></li>
+</ol>
+
+<p><strong>Tip №7: Run expensive operations not in UI thread</strong></p>
+
+<ol>
+<li>
+<details>
+<summary>Click to view example of KittyORM in <code>AsyncTask</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">  1</span>    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">INSERT_AMOUNT</span> <span class="o">=</span> <span class="n">25</span><span class="o">;</span>
+<span class="ln">  2</span>
+<span class="ln">  3</span>    <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">ERR_INSERT_RND</span> <span class="o">=</span> <span class="s">&#34;Lesson5tab1InsertRNDDataError, see exception details!&#34;</span><span class="o">;</span>
+<span class="ln">  4</span>
+<span class="ln">  5</span>    <span class="kd">class</span> <span class="nc">InsertRandomAsync</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Long</span><span class="o">,</span> <span class="n">InsertRandomResults</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="ln">  6</span>        <span class="n">ProgressDialog</span> <span class="n">dialog</span><span class="o">;</span>
+<span class="ln">  7</span>
+<span class="ln">  8</span>        <span class="nd">@Override</span>
+<span class="ln">  9</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPreExecute</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 10</span>            <span class="n">dialog</span> <span class="o">=</span> <span class="n">ProgressDialog</span><span class="o">.</span><span class="na">show</span><span class="o">(</span>
+<span class="ln"> 11</span>                    <span class="n">getLessonActivity</span><span class="o">(),</span>
+<span class="ln"> 12</span>                    <span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t1_running_requested_operation_pg_title</span><span class="o">),</span>
+<span class="ln"> 13</span>                    <span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t1_running_requested_operation_pg_body</span><span class="o">)</span>
+<span class="ln"> 14</span>            <span class="o">);</span>
+<span class="ln"> 15</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">setCancelable</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="ln"> 16</span>        <span class="o">}</span>
+<span class="ln"> 17</span>
+<span class="ln"> 18</span>        <span class="nd">@Override</span>
+<span class="ln"> 19</span>        <span class="kd">protected</span> <span class="n">InsertRandomResults</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Long</span><span class="o">...</span> <span class="n">strings</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 20</span>            <span class="k">if</span><span class="o">(</span><span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 21</span>                <span class="k">return</span> <span class="k">new</span> <span class="n">InsertRandomResults</span><span class="o">(</span>
+<span class="ln"> 22</span>                        <span class="kc">null</span><span class="o">,</span>
+<span class="ln"> 23</span>                        <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln"> 24</span>                        <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln"> 25</span>                        <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln"> 26</span>                        <span class="kc">false</span><span class="o">,</span>
+<span class="ln"> 27</span>                        <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span>
+<span class="ln"> 28</span>                <span class="o">);</span>
+<span class="ln"> 29</span>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln"> 30</span>                <span class="k">try</span> <span class="o">{</span>
+<span class="ln"> 31</span>                    <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">MigOneModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln"> 32</span>                    <span class="kt">long</span> <span class="n">recordsCount</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">();</span>
+<span class="ln"> 33</span>                    <span class="kt">long</span> <span class="n">affected</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">deleteAll</span><span class="o">();</span>
+<span class="ln"> 34</span>                    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;</span> <span class="n">modelsToInsert</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln"> 35</span>                    <span class="n">getSf</span><span class="o">().</span><span class="na">setDatabaseCreated</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln"> 36</span>                    <span class="n">getSf</span><span class="o">().</span><span class="na">setCurrentMigDBVersion</span><span class="o">(</span><span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">);</span>
+<span class="ln"> 37</span>                    <span class="n">getSf</span><span class="o">().</span><span class="na">setDatabaseDeletedManually</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="ln"> 38</span>                    <span class="n">MigV1RandomModelFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MigV1RandomModelFactory</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln"> 39</span>                    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">INSERT_AMOUNT</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<span class="ln"> 40</span>                        <span class="n">MigOneModel</span> <span class="n">m</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">newM1RndModel</span><span class="o">();</span>
+<span class="ln"> 41</span>                        <span class="n">modelsToInsert</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+<span class="ln"> 42</span>                    <span class="o">}</span>
+<span class="ln"> 43</span>                    <span class="n">mapper</span><span class="o">.</span><span class="na">insertInTransaction</span><span class="o">(</span><span class="n">modelsToInsert</span><span class="o">);</span>
+<span class="ln"> 44</span>                    <span class="n">List</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;</span> <span class="n">models</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+<span class="ln"> 45</span>                    <span class="kt">long</span> <span class="n">recordsCountAfter</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">();</span>
+<span class="ln"> 46</span>                    <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln"> 47</span>                    <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;</span> <span class="n">mI</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+<span class="ln"> 48</span>                    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln"> 49</span>                    <span class="k">while</span> <span class="o">(</span><span class="n">mI</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+<span class="ln"> 50</span>                        <span class="n">out</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">mI</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+<span class="ln"> 51</span>                    <span class="o">}</span>
+<span class="ln"> 52</span>                    <span class="k">return</span> <span class="k">new</span> <span class="n">InsertRandomResults</span><span class="o">(</span><span class="n">out</span><span class="o">,</span> <span class="n">affected</span><span class="o">,</span> <span class="n">recordsCount</span><span class="o">,</span> <span class="n">recordsCountAfter</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">());</span>
+<span class="ln"> 53</span>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 54</span>                    <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">MigrationDBv1</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span> <span class="n">ERR_INSERT_RND</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+<span class="ln"> 55</span>                    <span class="k">if</span> <span class="o">(</span><span class="n">e</span> <span class="k">instanceof</span> <span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 56</span>                        <span class="k">if</span> <span class="o">(((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 57</span>                            <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">MigrationDBv1</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span> <span class="n">ERR_INSERT_RND</span><span class="o">,</span> <span class="o">((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">());</span>
+<span class="ln"> 58</span>                        <span class="o">}</span>
+<span class="ln"> 59</span>                    <span class="o">}</span>
+<span class="ln"> 60</span>                    <span class="k">return</span> <span class="k">new</span> <span class="n">InsertRandomResults</span><span class="o">(</span>
+<span class="ln"> 61</span>                            <span class="kc">null</span><span class="o">,</span>
+<span class="ln"> 62</span>                            <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln"> 63</span>                            <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln"> 64</span>                            <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln"> 65</span>                            <span class="kc">false</span><span class="o">,</span>
+<span class="ln"> 66</span>                            <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span>
+<span class="ln"> 67</span>                    <span class="o">);</span>
+<span class="ln"> 68</span>                <span class="o">}</span>
+<span class="ln"> 69</span>            <span class="o">}</span>
+<span class="ln"> 70</span>        <span class="o">}</span>
+<span class="ln"> 71</span>
+<span class="ln"> 72</span>        <span class="nd">@Override</span>
+<span class="ln"> 73</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">InsertRandomResults</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 74</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+<span class="ln"> 75</span>            <span class="k">if</span> <span class="o">(</span><span class="n">eventsListView</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 76</span>                <span class="n">eventsListView</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">BasicArrayAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;()));</span>
+<span class="ln"> 77</span>                <span class="n">eventsListView</span><span class="o">.</span><span class="na">setOnTouchListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnTouchListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 78</span>
+<span class="ln"> 79</span>                    <span class="c1">// Setting on Touch Listener for handling the touch inside ScrollView
+</span><span class="ln"> 80</span><span class="c1"></span>                    <span class="nd">@Override</span>
+<span class="ln"> 81</span>                    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTouch</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">,</span> <span class="n">MotionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 82</span>                        <span class="c1">// Disallow the touch request for parent scroll on touch of child view
+</span><span class="ln"> 83</span><span class="c1"></span>                        <span class="n">v</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">requestDisallowInterceptTouchEvent</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln"> 84</span>                        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="ln"> 85</span>                    <span class="o">}</span>
+<span class="ln"> 86</span>                <span class="o">});</span>
+<span class="ln"> 87</span>                <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">operationSuccess</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 88</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t1_count_to_events</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">modelsCountBefore</span><span class="o">));</span>
+<span class="ln"> 89</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t1_deleted_to_events</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">deletedModelsAffectedRows</span><span class="o">));</span>
+<span class="ln"> 90</span>                    <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">modelString</span> <span class="o">:</span> <span class="n">result</span><span class="o">.</span><span class="na">modelInsertions</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 91</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t1_inserted_to_events</span><span class="o">),</span> <span class="n">M1M1TN</span><span class="o">,</span> <span class="n">modelString</span><span class="o">));</span>
+<span class="ln"> 92</span>                    <span class="o">}</span>
+<span class="ln"> 93</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t1_count_to_events</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">modelsCountAfter</span><span class="o">));</span>
+<span class="ln"> 94</span>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln"> 95</span>                    <span class="k">if</span><span class="o">(</span><span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 96</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_op_mig_version_is_higher</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">dbVersion</span><span class="o">,</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">));</span>
+<span class="ln"> 97</span>                    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln"> 98</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t1_error_event</span><span class="o">));</span>
+<span class="ln"> 99</span>                    <span class="o">}</span>
+<span class="ln">100</span>                <span class="o">}</span>
+<span class="ln">101</span>                <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">notifyDataSetChanged</span><span class="o">();</span>
+<span class="ln">102</span>                <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln">103</span>                <span class="n">reloadStatus</span><span class="o">();</span>
+<span class="ln">104</span>            <span class="o">}</span>
+<span class="ln">105</span>        <span class="o">}</span>
+<span class="ln">106</span>
+<span class="ln">107</span>
+<span class="ln">108</span>    <span class="o">}</span>
+<span class="ln">109</span>
+<span class="ln">110</span>    <span class="kd">class</span> <span class="nc">InsertRandomResults</span> <span class="o">{</span>
+<span class="ln">111</span>        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">modelInsertions</span><span class="o">;</span>
+<span class="ln">112</span>        <span class="kt">long</span> <span class="n">deletedModelsAffectedRows</span><span class="o">;</span>
+<span class="ln">113</span>        <span class="kt">long</span> <span class="n">modelsCountBefore</span><span class="o">;</span>
+<span class="ln">114</span>        <span class="kt">long</span> <span class="n">modelsCountAfter</span><span class="o">;</span>
+<span class="ln">115</span>        <span class="kt">boolean</span> <span class="n">operationSuccess</span><span class="o">;</span>
+<span class="ln">116</span>        <span class="kt">int</span> <span class="n">dbVersion</span><span class="o">;</span>
+<span class="ln">117</span>
+<span class="ln">118</span>        <span class="kd">public</span> <span class="nf">InsertRandomResults</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">modelInsertions</span><span class="o">,</span> <span class="kt">long</span> <span class="n">deletedModelsAffectedRows</span><span class="o">,</span>
+<span class="ln">119</span>                                   <span class="kt">long</span> <span class="n">modelsCountBefore</span><span class="o">,</span> <span class="kt">long</span> <span class="n">modelsCountAfter</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">opSuccess</span><span class="o">,</span>
+<span class="ln">120</span>                                   <span class="kt">int</span> <span class="n">dbVersion</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">121</span>            <span class="k">this</span><span class="o">.</span><span class="na">modelInsertions</span> <span class="o">=</span> <span class="n">modelInsertions</span><span class="o">;</span>
+<span class="ln">122</span>            <span class="k">this</span><span class="o">.</span><span class="na">deletedModelsAffectedRows</span> <span class="o">=</span> <span class="n">deletedModelsAffectedRows</span><span class="o">;</span>
+<span class="ln">123</span>            <span class="k">this</span><span class="o">.</span><span class="na">modelsCountBefore</span> <span class="o">=</span> <span class="n">modelsCountBefore</span><span class="o">;</span>
+<span class="ln">124</span>            <span class="k">this</span><span class="o">.</span><span class="na">modelsCountAfter</span> <span class="o">=</span> <span class="n">modelsCountAfter</span><span class="o">;</span>
+<span class="ln">125</span>            <span class="k">this</span><span class="o">.</span><span class="na">operationSuccess</span> <span class="o">=</span> <span class="n">opSuccess</span><span class="o">;</span>
+<span class="ln">126</span>            <span class="k">this</span><span class="o">.</span><span class="na">dbVersion</span> <span class="o">=</span> <span class="n">dbVersion</span><span class="o">;</span>
+<span class="ln">127</span>        <span class="o">}</span>
+<span class="ln">128</span>    <span class="o">}</span>
+<span class="ln">129</span>  </code></pre></div>
+</details></li>
+</ol>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

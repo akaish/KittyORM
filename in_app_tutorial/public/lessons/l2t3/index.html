@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson2 Tab 3: delete entity &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           
+
+<h3 id="deleting-entities-with-kittyorm">Deleting entities with KittyORM</h3>
+
+<p>You have two ways to delete entities in KittyORM:</p>
+
+<ul>
+<li><p>Delete associated with model row by calling <code>KittyMapper.delete(M model)</code> or <code>KittyMapper.delete(List&lt;M&gt; models)</code> methods:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="c1">// Initializing database instance
+</span><span class="ln">2</span><span class="c1"></span><span class="n">BasicDatabase</span> <span class="n">db</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BasicDatabase</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln">3</span><span class="c1">// Getting mapper instance
+</span><span class="ln">4</span><span class="c1"></span><span class="n">RandomMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="o">(</span><span class="n">RandomMapper</span><span class="o">)</span> <span class="n">db</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">RandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">5</span><span class="c1">// Getting existing model from database (assuming that 0l model exists)
+</span><span class="ln">6</span><span class="c1"></span><span class="n">RandomModel</span> <span class="n">toDelete</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByIPK</span><span class="o">(</span><span class="n">0l</span><span class="o">);</span>
+<span class="ln">7</span><span class="c1">// Deleting model
+</span><span class="ln">8</span><span class="c1"></span><span class="kt">long</span> <span class="n">rowsAffected</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">toDelete</span><span class="o">);</span></code></pre></div></p></li>
+
+<li><p>Delete all rows in a table that suit provided <code>WHERE</code> clause generated with <code>SQLiteConditionBuilder.class</code>:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="c1">// Deleting by random_int range
+</span><span class="ln"> 2</span><span class="c1"></span><span class="n">BasicDatabase</span> <span class="n">db</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BasicDatabase</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln"> 3</span><span class="c1">// Getting mapper instance
+</span><span class="ln"> 4</span><span class="c1"></span><span class="n">RandomMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="o">(</span><span class="n">RandomMapper</span><span class="o">)</span> <span class="n">db</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">RandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln"> 5</span><span class="c1">// Creating clause for deletion
+</span><span class="ln"> 6</span><span class="c1"></span><span class="n">SQLiteCondition</span> <span class="n">condition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
+<span class="ln"> 7</span>                <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;random_int&#34;</span><span class="o">)</span>
+<span class="ln"> 8</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">GREATER_OR_EQUAL</span><span class="o">)</span>
+<span class="ln"> 9</span>                <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">0</span><span class="o">)</span>
+<span class="ln">10</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">AND</span><span class="o">)</span>
+<span class="ln">11</span>                <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;random_int&#34;</span><span class="o">)</span>
+<span class="ln">12</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">LESS_OR_EQUAL</span><span class="o">)</span>
+<span class="ln">13</span>                <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">10000</span><span class="o">)</span>
+<span class="ln">14</span>                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="ln">15</span><span class="c1">// Deleting with generated clause
+</span><span class="ln">16</span><span class="c1"></span><span class="n">mapper</span><span class="o">.</span><span class="na">deleteByWhere</span><span class="o">(</span><span class="n">condition</span><span class="o">);</span></code></pre></div></p></li>
+</ul>
+
+<h3 id="closer-look-on-sqliteconditionbuilder-class">Closer look on <code>SQLiteConditionBuilder.class</code></h3>
+
+<p><code>SQLiteConditionBuilder.class</code> is a builder for generating <code>WHERE</code> clauses within KittyORM. It is really simple to use and it is designed to generate <code>WHERE</code> clauses in most natural for SQLite way: just add column names, SQLite operators and values for your clause in an order they should appear in SQLite clause. For example, clause <code>WHERE a_column = 'a' AND (b_column &gt; 0 OR BETWEEN 10 AND 20)</code> would be generated by following code:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="n">SQLiteCondition</span> <span class="n">condition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
+<span class="ln"> 2</span>            <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;a_column&#34;</span><span class="o">)</span>
+<span class="ln"> 3</span>            <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">EQUAL</span><span class="o">)</span>
+<span class="ln"> 4</span>            <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;a&#34;</span><span class="o">)</span>
+<span class="ln"> 5</span>            <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">AND</span><span class="o">)</span>
+<span class="ln"> 6</span>            <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">OPEN_SUBC</span><span class="o">)</span>
+<span class="ln"> 7</span>            <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;b_column&#34;</span><span class="o">)</span>
+<span class="ln"> 8</span>            <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">GREATER_THAN</span><span class="o">)</span>
+<span class="ln"> 9</span>            <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">0</span><span class="o">)</span>
+<span class="ln">10</span>            <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">OR</span><span class="o">)</span>
+<span class="ln">11</span>            <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">BETWEEN</span><span class="o">)</span>
+<span class="ln">12</span>            <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">10</span><span class="o">)</span>
+<span class="ln">13</span>            <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">AND</span><span class="o">)</span>
+<span class="ln">14</span>            <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">20</span><span class="o">)</span>
+<span class="ln">15</span>            <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">CLOSE_SUBC</span><span class="o">)</span>
+<span class="ln">16</span>            <span class="o">.</span><span class="na">build</span><span class="o">();</span></code></pre></div>
+All supported by KittyORM SQLite operators presented at <code>net.akaish.kitty.orm.query.conditions.SQLiteOperator</code> enumeration.</p>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

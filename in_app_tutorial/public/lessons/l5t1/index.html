@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson5 Tab 1: Migrations overview &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           
+
+<h3 id="migrations-mechanism-between-different-schema-versions">Migrations mechanism between different schema versions</h3>
+
+<p>By design KittyORM has three main mechanisms for supporting migrations between different versions of database. Those utilities called <code>Migrators</code> and implements <code>KittyORMVersionMigrator</code> abstract class. By default, when your application needs to update database schema KittyORM would just wipe old version database and create new schema, however it is not suitable for production purposes. You can define what migration utility to use by annotating your <code>KittyDatabase</code> class implementation with <code>@KITTY_DATABASE_HELPER</code> annotation and set its <code>onUpgradeBehavior</code> from any option available at <code>@KITTY_DATABASE_HELPER.UpgradeBehavior</code> enumeration.  Here is a list of three already implemented by KittyORM database version migrations mechanisms:</p>
+
+<ol>
+<li><p><strong>DropCreate Migrator</strong> - basic database version migration utility, it creates simple migration script that drops all tables that present in newer schema version and recreates them. Using this migration mechanism is useful for development purposes when database filled with test data and there is no need to save it. Implemented by <code>KittyDevDropCreateMigrator.class</code>. It is default <code>onUpgrade</code> behavior, if you wish to define it manually, set <code>@KITTY_DATABASE_HELPER.onUpgradeBehavior</code> to <code>KITTY_DATABASE_HELPER.UpgradeBehavior.DROP_AND_CREATE</code>.</p></li>
+
+<li><p><strong>SimpleMigrationScriptGenerator Migrator</strong> - migration utility that tries to generate migration script based on differences between current and new schema and save as many data as possible. See <code>KittySimpleMigrator.class</code> for more info. To set this behavior just set <code>onUpgradeBehavior</code> property value of <code>@KITTY_DATABASE_HELPER</code> to <code>KITTY_DATABASE_HELPER.UpgradeBehavior.USE_SIMPLE_MIGRATIONS</code>.</p></li>
+
+<li><p><strong>Filescript Migrator</strong> - migration utility that run a sequence of migration scripts stored at file system or at assets. Checks set of files named on one pattern and run SQLite scripts stored in at defined path if such migration sequence is applicable for new schema version. Implemented by <code>KittyORMVersionFileDumpMigrator.class</code>. To set this behavior you have to set <code>onUpgradeBehavior</code> property value of <code>@KITTY_DATABASE_HELPER</code> to <code>KITTY_DATABASE_HELPER.UpgradeBehavior.USE_FILE_MIGRATIONS</code>.</p></li>
+</ol>
+
+<p>Also, you are able to implement your own migration mechanism by extending <code>KittyDatabaseHelper.class</code> and setting <code>onUpgradeBehavior</code> annotation propertie of <code>@KITTY_DATABASE_HELPER</code> that annotates your <code>KittyDatabase</code> implementation to <code>KITTY_DATABASE_HELPER.UpgradeBehavior.USE_CUSTOM_MIGRATOR</code>.</p>
+
+<h3 id="initial-database-setup">Initial database setup</h3>
+
+<p>In this lesson we would work with database with name <code>mig</code>. In this tab we would create first version of <code>mig</code> schema, first iteration consists only from one table <code>mig.mig_one</code>. Tap &ldquo;CREATE MIG&hellip;&rdquo; button to create schema and fill it with some random values.
+<details>
+  <summary>Click here to view mig v.1 schema: </summary>
+<strong>Mig v.1</strong></p>
+
+<p><strong>MigOneModel (mig_one)</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Java type</th>
+<th>Name</th>
+<th>SQLite name</th>
+<th>Constraints</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Long</code></td>
+<td>id</td>
+<td>id</td>
+<td>PRIMARY KEY</td>
+</tr>
+
+<tr>
+<td><code>String</code></td>
+<td>creationDate</td>
+<td>creation_date</td>
+<td>NOT_NULL</td>
+</tr>
+
+<tr>
+<td><code>Integer</code></td>
+<td>someInteger</td>
+<td>some_integer</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+
+<p></details></p>
+
+<p><details>
+  <summary>Click here to view mig v.1 schema SQLite creation script: </summary>
+<strong>Create schema script generated by KittyORM for database <code>mig</code> version <code>1</code></strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">creation_date</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span> <span class="n">some_integer</span> <span class="nb">INTEGER</span><span class="p">);</span></code></pre></div>
+<strong>Drop schema script generated by KittyORM for database <code>mig</code> version <code>1</code></strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_one</span><span class="p">;</span></code></pre></div>
+</details></p>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

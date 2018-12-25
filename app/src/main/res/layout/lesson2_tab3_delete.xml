@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Denis Bogomolov (akaish)
+  ~
+  ~ This work is licensed under a
+  ~ Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~ This file is a part of KittyORM project (KittyORM Demo), more information at
+  ~ https://akaish.github.io/KittyORMPages/license/
+  -->
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="@dimen/sliding_bar_lesson_expand_me_height"
+    sothree:umanoShadowHeight="4dp">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollbarAlwaysDrawVerticalTrack="true">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:background="@color/colorGrayLightest">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TableLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="1"
+                    >
+
+                    <!-- Delete by id -->
+
+                    <TableRow
+                        android:layout_margin="@dimen/lesson_elements_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:textColor="@color/colorPrimaryDark"
+                            android:layout_width="0dip"
+                            android:layout_weight="1"
+                            android:singleLine="false"
+                            android:layout_height="wrap_content"
+                            android:text="@string/_l2_t3_delete_by_id" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_margin="@dimen/lesson_elements_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <EditText
+                            android:id="@+id/l2_t3_et_id"
+                            android:layout_width="0dip"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:inputType="number" />
+
+                        <Button
+                            android:id="@+id/l2_t3_delete_by_id_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/_l2_t3_delete_by_id_button" />
+
+                    </TableRow>
+
+                    <!-- Delete by rnd int range -->
+
+
+                    <TableRow
+                        android:layout_margin="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dip"
+                            android:layout_weight="1"
+                            android:singleLine="false"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:layout_height="wrap_content"
+                            android:text="@string/_l2_t3_delete_by_range" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_margin="@dimen/lesson_elements_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <EditText
+                            android:id="@+id/l2_t3_et_id_range_start"
+                            android:layout_width="0dip"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:text="0"
+                            android:inputType="numberSigned" />
+
+                        <EditText
+                            android:id="@+id/l2_t3_et_id_range_end"
+                            android:layout_width="0dip"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:text="0"
+                            android:inputType="numberSigned" />
+
+                        <Button
+                            android:id="@+id/l2_t3_delete_by_range_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/_l2_t3_delete_by_range_button" />
+
+                    </TableRow>
+
+
+
+                    <!-- delete by animal -->
+
+
+                    <TableRow
+                        android:layout_margin="@dimen/lesson_elements_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dip"
+                            android:layout_weight="1"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:singleLine="false"
+                            android:layout_height="wrap_content"
+                            android:text="@string/_l2_t3_delete_by_animal" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_margin="@dimen/lesson_elements_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <Spinner
+                            android:id="@+id/l2_t3_spinner"
+                            android:layout_width="0dip"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content" />
+
+                        <Button
+                            android:id="@+id/l2_t3_delete_by_animal_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/_l2_t3_delete_by_animal_button" />
+                    </TableRow>
+
+
+                </TableLayout>
+
+                <Button
+                    android:id="@+id/l2_t3_wipe"
+                    android:layout_marginTop="5dp"
+                    android:layout_margin="@dimen/lesson_elements_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_l2_t3_wipe_data" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorGrayLightest"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="@color/colorPrimaryDark"
+            android:id="@+id/_l2_t3_expanded_panel">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center|center"
+                android:id="@+id/_l2_t3_expanded_panel_text"
+                android:text="@string/_l2_t3_expanded_text_pattern"
+                android:theme="@style/AlertDialog.AppCompat.Light"
+                android:textColor="@color/colorGrayLightest"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+
+        <ListView
+            android:layout_below="@+id/_l2_t3_expanded_panel"
+            android:layout_width="match_parent"
+            android:id="@+id/_l2_t3_expanded_panel_lw"
+            android:background="@color/colorGrayLightest"
+            android:layout_height="wrap_content">
+
+        </ListView>
+    </RelativeLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

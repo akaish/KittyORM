@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Denis Bogomolov (akaish)
+  ~
+  ~ This work is licensed under a
+  ~ Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~ This file is a part of KittyORM project (KittyORM Demo), more information at
+  ~ https://akaish.github.io/KittyORMPages/license/
+  -->
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:id="@+id/lesson_detail_id_main"
+    tools:context="net.akaish.kittyormdemo.LessonDetailActivity"
+    tools:ignore="MergeRootFrame">
+
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/detail_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+
+    </android.support.design.widget.AppBarLayout>
+
+
+
+    <android.support.v4.widget.NestedScrollView
+         android:id="@+id/lesson_detail_container"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:fillViewport="true"
+         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|end"
+        android:id="@+id/lesson_detail_fab_parent">
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>

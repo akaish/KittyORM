@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson3 tab 2 sources &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           <p><strong>KittyORM constraint declaration examples</strong></p>
+
+<ol>
+<li><p><details>
+<summary>Click to view <code>NOT NULL</code> constraint declaration example: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@PRIMARY_KEY</span>
+<span class="ln">3</span><span class="nd">@NOT_NULL</span> <span class="c1">// NOT NULL constraint declaration
+</span><span class="ln">4</span><span class="c1"></span><span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>DEFAULT</code> constraint declaration examples: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">3</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@DEFAULT</span><span class="o">(</span><span class="n">signedInteger</span> <span class="o">=</span> <span class="n">28</span><span class="o">)</span> <span class="c1">// You can choose for options for default declaration, if nothing set than 0 value would be used
+</span><span class="ln"> 3</span><span class="c1"></span><span class="nd">@NOT_NULL</span>
+<span class="ln"> 4</span><span class="kd">public</span> <span class="n">Integer</span> <span class="n">defaultNumber</span><span class="o">;</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">4</span><span class="o">)</span>
+<span class="ln"> 7</span><span class="nd">@DEFAULT</span><span class="o">(</span>
+<span class="ln"> 8</span>        <span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_DATE</span>
+<span class="ln"> 9</span><span class="o">)</span>
+<span class="ln">10</span><span class="nd">@NOT_NULL</span>
+<span class="ln">11</span><span class="kd">public</span> <span class="n">String</span> <span class="n">creationDate</span><span class="o">;</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>UNIQUE</code> constraint declaration examples: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@NOT_NULL</span>
+<span class="ln">3</span><span class="nd">@UNIQUE</span>
+<span class="ln">4</span><span class="kd">public</span> <span class="n">Long</span> <span class="n">rndId</span><span class="o">;</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@FOREIGN_KEY_T</span><span class="o">(</span>
+<span class="ln"> 3</span>        <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;CAI_FK&#34;</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">RANDOM_ID_CNAME</span><span class="o">},</span>
+<span class="ln"> 5</span>        <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln"> 6</span>                <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;random&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>                <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln"> 8</span>                <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">10</span>        <span class="o">)</span>
+<span class="ln">11</span><span class="o">)</span>
+<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span> 
+<span class="ln">13</span><span class="nd">@UNIQUE_T</span><span class="o">(</span><span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;rnd_id, animal&#34;</span><span class="o">})</span> <span class="c1">// Declaring unique constraint on more than two columns
+</span><span class="ln">14</span><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln">15</span>    <span class="o">...</span>
+<span class="ln">16</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>CHECK</code> constraint declaration example: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@CHECK</span><span class="o">(</span><span class="n">checkExpression</span> <span class="o">=</span> <span class="s">&#34;animal IN (\&#34;CAT\&#34;, \&#34;TIGER\&#34;, \&#34;LION\&#34;)&#34;</span><span class="o">)</span> <span class="c1">// only cats allowed to this party
+</span><span class="ln">3</span><span class="c1"></span><span class="kd">public</span> <span class="n">Animals</span> <span class="n">animal</span><span class="o">;</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>COLLATE</code> constraint declaration example: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@COLLATE</span><span class="o">(</span><span class="n">collation</span> <span class="o">=</span> <span class="n">BuiltInCollations</span><span class="o">.</span><span class="na">NOCASE</span><span class="o">)</span> <span class="c1">// Collation example
+</span><span class="ln">3</span><span class="c1"></span><span class="nd">@CHECK</span><span class="o">(</span><span class="n">checkExpression</span> <span class="o">=</span> <span class="s">&#34;animal IN (\&#34;CAT\&#34;, \&#34;TIGER\&#34;, \&#34;LION\&#34;)&#34;</span><span class="o">)</span> 
+<span class="ln">4</span><span class="kd">public</span> <span class="n">Animals</span> <span class="n">animal</span><span class="o">;</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>PRIMARY KEY</code> constraint declaration examples: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">2</span>        <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">,</span> 
+<span class="ln">3</span>        <span class="n">isIPK</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="ln">4</span><span class="o">)</span>
+<span class="ln">5</span><span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@PRIMARY_KEY</span>
+<span class="ln">3</span><span class="nd">@NOT_NULL</span>
+<span class="ln">4</span><span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cpk_test&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@PRIMARY_KEY_T</span><span class="o">(</span>
+<span class="ln"> 3</span>    <span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;user_name&#34;</span><span class="o">,</span> <span class="s">&#34;email&#34;</span><span class="o">}</span>
+<span class="ln"> 4</span><span class="o">)</span>
+<span class="ln"> 5</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CPKModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 6</span>
+<span class="ln"> 7</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln"> 8</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userName</span><span class="o">;</span>
+<span class="ln"> 9</span>
+<span class="ln">10</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">11</span>    <span class="nd">@UNIQUE</span>
+<span class="ln">12</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">email</span><span class="o">;</span>
+<span class="ln">13</span>    
+<span class="ln">14</span>    <span class="o">...</span>
+<span class="ln">15</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>FOREIGN KEY</code> constraint declaration examples: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@NOT_NULL</span>
+<span class="ln"> 3</span><span class="nd">@UNIQUE</span>
+<span class="ln"> 4</span><span class="nd">@FOREIGN_KEY</span><span class="o">(</span>
+<span class="ln"> 5</span>        <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln"> 6</span>                <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;random&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>                <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln"> 8</span>                <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">10</span>        <span class="o">)</span>
+<span class="ln">11</span><span class="o">)</span>
+<span class="ln">12</span><span class="kd">public</span> <span class="n">Long</span> <span class="n">rndId</span><span class="o">;</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@FOREIGN_KEY_T</span><span class="o">(</span>
+<span class="ln"> 3</span>        <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;CAI_FK&#34;</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">RANDOM_ID_CNAME</span><span class="o">},</span>
+<span class="ln"> 5</span>        <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln"> 6</span>                <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;random&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>                <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln"> 8</span>                <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">10</span>        <span class="o">)</span>
+<span class="ln">11</span><span class="o">)</span>
+<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span>
+<span class="ln">13</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln">14</span>    <span class="o">...</span>
+<span class="ln">15</span>    
+<span class="ln">16</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">17</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">18</span>    <span class="nd">@UNIQUE</span>
+<span class="ln">19</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">rndId</span><span class="o">;</span>
+<span class="ln">20</span>
+<span class="ln">21</span>    <span class="o">...</span>
+<span class="ln">22</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view index declaration examples: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@FOREIGN_KEY_T</span><span class="o">(</span>
+<span class="ln"> 3</span>        <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;CAI_FK&#34;</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">RANDOM_ID_CNAME</span><span class="o">},</span>
+<span class="ln"> 5</span>        <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln"> 6</span>                <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;random&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>                <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln"> 8</span>                <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">10</span>        <span class="o">)</span>
+<span class="ln">11</span><span class="o">)</span>
+<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span> <span class="c1">// index declaration
+</span><span class="ln">13</span><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln">14</span>    <span class="o">...</span>
+<span class="ln">15</span>
+<span class="ln">16</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">4</span><span class="o">)</span>
+<span class="ln">17</span>    <span class="nd">@DEFAULT</span><span class="o">(</span>
+<span class="ln">18</span>            <span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_DATE</span>
+<span class="ln">19</span>    <span class="o">)</span>
+<span class="ln">20</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">21</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">creationDate</span><span class="o">;</span> <span class="c1">// indexed column
+</span><span class="ln">22</span><span class="c1"></span>
+<span class="ln">23</span>    <span class="o">...</span>
+<span class="ln">24</span><span class="o">}</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="o">...</span>
+<span class="ln"> 3</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 4</span>    <span class="o">...</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">5</span><span class="o">)</span>
+<span class="ln"> 7</span>    <span class="nd">@DEFAULT</span><span class="o">(</span>
+<span class="ln"> 8</span>            <span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_TIMESTAMP</span>
+<span class="ln"> 9</span>    <span class="o">)</span>
+<span class="ln">10</span>    <span class="c1">// One column indexe declaration example
+</span><span class="ln">11</span><span class="c1"></span>    <span class="nd">@ONE_COLUMN_INDEX</span><span class="o">(</span><span class="n">unique</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">indexName</span> <span class="o">=</span> <span class="s">&#34;IAC_unique_index_creation_timestamp&#34;</span><span class="o">)</span> 
+<span class="ln">12</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">13</span>    <span class="kd">public</span> <span class="n">Timestamp</span> <span class="n">creationTmstmp</span><span class="o">;</span>
+<span class="ln">14</span>
+<span class="ln">15</span>    <span class="o">...</span>
+<span class="ln">16</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+</ol>
+
+<p><strong>KittyORM <code>basic_datase</code> implementation sources</strong></p>
+
+<ol>
+<li><p><details>
+<summary>Click to view <code>BasicDatabase.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln"> 2</span>        <span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#34;basic_database&#34;</span><span class="o">,</span>
+<span class="ln"> 3</span>        <span class="n">domainPackageNames</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;net.akaish.kittyormdemo.sqlite.basicdb&#34;</span><span class="o">},</span>
+<span class="ln"> 4</span>        <span class="n">logTag</span> <span class="o">=</span> <span class="n">LOG_TAG</span><span class="o">,</span>
+<span class="ln"> 5</span>        <span class="n">isLoggingOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln"> 6</span>        <span class="n">isProductionOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln"> 7</span>        <span class="n">isPragmaOn</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="ln"> 8</span><span class="o">)</span>
+<span class="ln"> 9</span><span class="nd">@KITTY_DATABASE_REGISTRY</span><span class="o">(</span>
+<span class="ln">10</span>        <span class="n">domainPairs</span> <span class="o">=</span> <span class="o">{</span>
+<span class="ln">11</span>                <span class="nd">@KITTY_REGISTRY_PAIR</span><span class="o">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">ComplexRandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">ComplexRandomMapper</span><span class="o">.</span><span class="na">class</span><span class="o">),</span>
+<span class="ln">12</span>                <span class="nd">@KITTY_REGISTRY_PAIR</span><span class="o">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">class</span><span class="o">),</span>
+<span class="ln">13</span>                <span class="nd">@KITTY_REGISTRY_PAIR</span><span class="o">(</span><span class="n">model</span> <span class="o">=</span> <span class="n">RandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">RandomMapper</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="ln">14</span>        <span class="o">}</span>
+<span class="ln">15</span><span class="o">)</span>
+<span class="ln">16</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicDatabase</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln">17</span>
+<span class="ln">18</span>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">LOG_TAG</span> <span class="o">=</span> <span class="s">&#34;BASIC DB DEMO&#34;</span><span class="o">;</span>
+<span class="ln">19</span>
+<span class="ln">20</span>    <span class="cm">/**
+</span><span class="ln">21</span><span class="cm">     * KittyORM main database class that represents bootstrap and holder for all related with database
+</span><span class="ln">22</span><span class="cm">     * components.
+</span><span class="ln">23</span><span class="cm">     * &lt;br&gt; See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.
+</span><span class="ln">24</span><span class="cm">     *
+</span><span class="ln">25</span><span class="cm">     * @param ctx
+</span><span class="ln">26</span><span class="cm">     */</span>
+<span class="ln">27</span>    <span class="kd">public</span> <span class="nf">BasicDatabase</span><span class="o">(</span><span class="n">Context</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">28</span>        <span class="kd">super</span><span class="o">(</span><span class="n">ctx</span><span class="o">);</span>
+<span class="ln">29</span>    <span class="o">}</span>
+<span class="ln">30</span>
+<span class="ln">31</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>AbstractRandomModel.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">AbstractRandomModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">RND_INTEGER_CNAME</span> <span class="o">=</span> <span class="s">&#34;rnd_int_custom_column_name&#34;</span><span class="o">;</span>
+<span class="ln"> 4</span>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">RND_ANIMAL_CNAME</span> <span class="o">=</span> <span class="s">&#34;rndanimal&#34;</span><span class="o">;</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln"> 7</span>            <span class="n">isIPK</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln"> 8</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span>
+<span class="ln"> 9</span>    <span class="o">)</span>
+<span class="ln">10</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+<span class="ln">11</span>
+<span class="ln">12</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">13</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span>
+<span class="ln">14</span>    <span class="o">)</span>
+<span class="ln">15</span>    <span class="kd">public</span> <span class="kt">int</span> <span class="n">randomInt</span><span class="o">;</span>
+<span class="ln">16</span>
+<span class="ln">17</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">18</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span><span class="o">,</span>
+<span class="ln">19</span>            <span class="n">columnName</span> <span class="o">=</span> <span class="n">RND_INTEGER_CNAME</span>
+<span class="ln">20</span>    <span class="o">)</span>
+<span class="ln">21</span>    <span class="kd">public</span> <span class="n">Integer</span> <span class="n">randomInteger</span><span class="o">;</span>
+<span class="ln">22</span>
+<span class="ln">23</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">24</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">3</span><span class="o">,</span>
+<span class="ln">25</span>            <span class="n">columnName</span> <span class="o">=</span> <span class="n">RND_ANIMAL_CNAME</span>
+<span class="ln">26</span>    <span class="o">)</span>
+<span class="ln">27</span>    <span class="kd">public</span> <span class="n">Animals</span> <span class="n">randomAnimal</span><span class="o">;</span>
+<span class="ln">28</span>
+<span class="ln">29</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">30</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">4</span><span class="o">,</span>
+<span class="ln">31</span>            <span class="n">columnAffinity</span> <span class="o">=</span> <span class="n">TypeAffinities</span><span class="o">.</span><span class="na">TEXT</span>
+<span class="ln">32</span>    <span class="o">)</span>
+<span class="ln">33</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">randomAnimalName</span><span class="o">;</span>
+<span class="ln">34</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>ComplexRandomModel.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">  1</span><span class="nd">@KITTY_TABLE</span>
+<span class="ln">  2</span><span class="nd">@KITTY_EXTENDED_CRUD</span><span class="o">(</span><span class="n">extendedCrudController</span> <span class="o">=</span> <span class="n">ComplexRandomMapper</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="ln">  3</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ComplexRandomModel</span> <span class="kd">extends</span> <span class="n">AbstractRandomModel</span> <span class="o">{</span>
+<span class="ln">  4</span>
+<span class="ln">  5</span>    <span class="kd">public</span> <span class="nf">ComplexRandomModel</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">  6</span>        <span class="kd">super</span><span class="o">();</span>
+<span class="ln">  7</span>    <span class="o">}</span>
+<span class="ln">  8</span>
+<span class="ln">  9</span>
+<span class="ln"> 10</span>    <span class="c1">// Primitives
+</span><span class="ln"> 11</span><span class="c1"></span>    <span class="c1">// (boolean, int, byte, double, long, short, float)
+</span><span class="ln"> 12</span><span class="c1"></span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">5</span><span class="o">)</span>
+<span class="ln"> 13</span>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="n">boolF</span><span class="o">;</span>
+<span class="ln"> 14</span>
+<span class="ln"> 15</span>
+<span class="ln"> 16</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">6</span><span class="o">)</span>
+<span class="ln"> 17</span>    <span class="kd">public</span> <span class="kt">byte</span> <span class="n">byteF</span><span class="o">;</span>
+<span class="ln"> 18</span>
+<span class="ln"> 19</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">7</span><span class="o">)</span>
+<span class="ln"> 20</span>    <span class="kd">public</span> <span class="kt">double</span> <span class="n">doubleF</span><span class="o">;</span>
+<span class="ln"> 21</span>
+<span class="ln"> 22</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">8</span><span class="o">)</span>
+<span class="ln"> 23</span>    <span class="kd">public</span> <span class="kt">long</span> <span class="n">longF</span><span class="o">;</span>
+<span class="ln"> 24</span>
+<span class="ln"> 25</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">9</span><span class="o">)</span>
+<span class="ln"> 26</span>    <span class="kd">public</span> <span class="kt">short</span> <span class="n">shortF</span><span class="o">;</span>
+<span class="ln"> 27</span>
+<span class="ln"> 28</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">10</span><span class="o">)</span>
+<span class="ln"> 29</span>    <span class="kd">public</span> <span class="kt">float</span> <span class="n">floatF</span><span class="o">;</span>
+<span class="ln"> 30</span>
+<span class="ln"> 31</span>    <span class="c1">// Byte array
+</span><span class="ln"> 32</span><span class="c1"></span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">11</span><span class="o">)</span>
+<span class="ln"> 33</span>    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">byteArray</span><span class="o">;</span>
+<span class="ln"> 34</span>
+<span class="ln"> 35</span>    <span class="c1">// String (TEXT) (String, BigDecimal, BigInteger, Enum)
+</span><span class="ln"> 36</span><span class="c1"></span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">12</span><span class="o">)</span>
+<span class="ln"> 37</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">stringF</span><span class="o">;</span>
+<span class="ln"> 38</span>
+<span class="ln"> 39</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">13</span><span class="o">)</span>
+<span class="ln"> 40</span>    <span class="kd">public</span> <span class="n">BigDecimal</span> <span class="n">bigDecimalF</span><span class="o">;</span>
+<span class="ln"> 41</span>
+<span class="ln"> 42</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">14</span><span class="o">)</span>
+<span class="ln"> 43</span>    <span class="kd">public</span> <span class="n">BigInteger</span> <span class="n">bigIntegerF</span><span class="o">;</span>
+<span class="ln"> 44</span>
+<span class="ln"> 45</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">15</span><span class="o">)</span>
+<span class="ln"> 46</span>    <span class="kd">public</span> <span class="n">Uri</span> <span class="n">uriF</span><span class="o">;</span>
+<span class="ln"> 47</span>
+<span class="ln"> 48</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">16</span><span class="o">)</span>
+<span class="ln"> 49</span>    <span class="kd">public</span> <span class="n">File</span> <span class="n">fileF</span><span class="o">;</span>
+<span class="ln"> 50</span>
+<span class="ln"> 51</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">17</span><span class="o">)</span>
+<span class="ln"> 52</span>    <span class="kd">public</span> <span class="n">Currency</span> <span class="n">currencyF</span><span class="o">;</span>
+<span class="ln"> 53</span>
+<span class="ln"> 54</span>    <span class="c1">// SD
+</span><span class="ln"> 55</span><span class="c1"></span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln"> 56</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">18</span><span class="o">,</span>
+<span class="ln"> 57</span>            <span class="n">columnAffinity</span> <span class="o">=</span> <span class="n">TypeAffinities</span><span class="o">.</span><span class="na">TEXT</span>
+<span class="ln"> 58</span>    <span class="o">)</span>
+<span class="ln"> 59</span>    <span class="nd">@KITTY_COLUMN_SERIALIZATION</span>
+<span class="ln"> 60</span>    <span class="kd">public</span> <span class="n">AnimalSounds</span> <span class="n">stringSDF</span><span class="o">;</span>
+<span class="ln"> 61</span>
+<span class="ln"> 62</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">19</span><span class="o">)</span>
+<span class="ln"> 63</span>    <span class="kd">public</span> <span class="n">SomeColours</span> <span class="n">bitmapColour</span><span class="o">;</span>
+<span class="ln"> 64</span>
+<span class="ln"> 65</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln"> 66</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">20</span><span class="o">,</span>
+<span class="ln"> 67</span>            <span class="n">columnAffinity</span> <span class="o">=</span> <span class="n">TypeAffinities</span><span class="o">.</span><span class="na">BLOB</span>
+<span class="ln"> 68</span>    <span class="o">)</span>
+<span class="ln"> 69</span>    <span class="nd">@KITTY_COLUMN_SERIALIZATION</span>
+<span class="ln"> 70</span>    <span class="kd">public</span> <span class="n">Bitmap</span> <span class="n">byteArraySDF</span><span class="o">;</span>
+<span class="ln"> 71</span>
+<span class="ln"> 72</span>    <span class="n">String</span> <span class="nf">stringSDFSerialize</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 73</span>        <span class="k">if</span><span class="o">(</span><span class="n">stringSDF</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 74</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">GsonBuilder</span><span class="o">().</span><span class="na">create</span><span class="o">().</span><span class="na">toJson</span><span class="o">(</span><span class="n">stringSDF</span><span class="o">);</span>
+<span class="ln"> 75</span>    <span class="o">}</span>
+<span class="ln"> 76</span>
+<span class="ln"> 77</span>    <span class="n">AnimalSounds</span> <span class="nf">stringSDFDeserialize</span><span class="o">(</span><span class="n">String</span> <span class="n">cvData</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 78</span>        <span class="k">if</span><span class="o">(</span><span class="n">cvData</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 79</span>        <span class="k">if</span><span class="o">(</span><span class="n">cvData</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 80</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">GsonBuilder</span><span class="o">().</span><span class="na">create</span><span class="o">().</span><span class="na">fromJson</span><span class="o">(</span><span class="n">cvData</span><span class="o">,</span> <span class="n">AnimalSounds</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln"> 81</span>    <span class="o">}</span>
+<span class="ln"> 82</span>
+<span class="ln"> 83</span>    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">byteArraySDFSerialize</span><span class="o">()</span> <span class="o">{</span><span class="c1">//byteArraySDFSerialize
+</span><span class="ln"> 84</span><span class="c1"></span>        <span class="k">if</span><span class="o">(</span><span class="n">byteArraySDF</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 85</span>        <span class="n">ByteArrayOutputStream</span> <span class="n">bmpStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">();</span>
+<span class="ln"> 86</span>        <span class="n">byteArraySDF</span><span class="o">.</span><span class="na">compress</span><span class="o">(</span><span class="n">Bitmap</span><span class="o">.</span><span class="na">CompressFormat</span><span class="o">.</span><span class="na">PNG</span><span class="o">,</span> <span class="n">100</span><span class="o">,</span> <span class="n">bmpStream</span><span class="o">);</span>
+<span class="ln"> 87</span>        <span class="k">return</span> <span class="n">bmpStream</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">();</span>
+<span class="ln"> 88</span>    <span class="o">}</span>
+<span class="ln"> 89</span>
+<span class="ln"> 90</span>    <span class="kd">public</span> <span class="n">Bitmap</span> <span class="nf">byteArraySDFDeserialize</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">cursorData</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 91</span>        <span class="k">if</span><span class="o">(</span><span class="n">cursorData</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 92</span>        <span class="k">if</span><span class="o">(</span><span class="n">cursorData</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 93</span>        <span class="k">return</span> <span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeByteArray</span><span class="o">(</span><span class="n">cursorData</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">cursorData</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+<span class="ln"> 94</span>    <span class="o">}</span>
+<span class="ln"> 95</span>
+<span class="ln"> 96</span>    <span class="c1">// Primitive wrappers Boolean, Integer, Byte, Double, Short or Float
+</span><span class="ln"> 97</span><span class="c1"></span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">21</span><span class="o">)</span>
+<span class="ln"> 98</span>    <span class="kd">public</span> <span class="n">Boolean</span> <span class="n">boolFF</span><span class="o">;</span>
+<span class="ln"> 99</span>
+<span class="ln">100</span>
+<span class="ln">101</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">22</span><span class="o">)</span>
+<span class="ln">102</span>    <span class="kd">public</span> <span class="n">Byte</span> <span class="n">byteFF</span><span class="o">;</span>
+<span class="ln">103</span>
+<span class="ln">104</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">23</span><span class="o">)</span>
+<span class="ln">105</span>    <span class="kd">public</span> <span class="n">Double</span> <span class="n">doubleFF</span><span class="o">;</span>
+<span class="ln">106</span>
+<span class="ln">107</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">24</span><span class="o">)</span>
+<span class="ln">108</span>    <span class="kd">public</span> <span class="n">Short</span> <span class="n">shortFF</span><span class="o">;</span>
+<span class="ln">109</span>
+<span class="ln">110</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">25</span><span class="o">)</span>
+<span class="ln">111</span>    <span class="kd">public</span> <span class="n">Float</span> <span class="n">floatFF</span><span class="o">;</span>
+<span class="ln">112</span>
+<span class="ln">113</span>
+<span class="ln">114</span>    <span class="c1">// Long represented types Long, Date, Calendar, Timestamp
+</span><span class="ln">115</span><span class="c1"></span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">26</span><span class="o">)</span>
+<span class="ln">116</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">longFF</span><span class="o">;</span>
+<span class="ln">117</span>
+<span class="ln">118</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">27</span><span class="o">)</span>
+<span class="ln">119</span>    <span class="kd">public</span> <span class="n">Date</span> <span class="n">dateF</span><span class="o">;</span>
+<span class="ln">120</span>
+<span class="ln">121</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">28</span><span class="o">)</span>
+<span class="ln">122</span>    <span class="kd">public</span> <span class="n">Calendar</span> <span class="n">calendarF</span><span class="o">;</span>
+<span class="ln">123</span>
+<span class="ln">124</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">29</span><span class="o">)</span>
+<span class="ln">125</span>    <span class="kd">public</span> <span class="n">Timestamp</span> <span class="n">timestampF</span><span class="o">;</span>
+<span class="ln">126</span>
+<span class="ln">127</span>    <span class="nd">@Override</span>
+<span class="ln">128</span>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">129</span>        <span class="n">StringBuffer</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="o">(</span><span class="n">256</span><span class="o">);</span>
+<span class="ln">130</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;Long id : &#34;</span><span class="o">+</span><span class="n">id</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">131</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;int randomInt : &#34;</span><span class="o">+</span><span class="n">randomInt</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">132</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;String stringF : &#34;</span><span class="o">+</span><span class="n">stringF</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">133</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;BigInteger bigIntegerF : &#34;</span><span class="o">+</span><span class="n">bigIntegerF</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">134</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;SomeColours bitmapColour : &#34;</span><span class="o">+</span><span class="n">bitmapColour</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">135</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;Short shortFF : &#34;</span><span class="o">+</span><span class="n">shortFF</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">136</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;Timestamp timestampF (HReadable) : &#34;</span><span class="o">+</span><span class="n">timestampF</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">137</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;AnimalSounds stringSDF (HReadable) : &#34;</span><span class="o">+</span><span class="n">stringSDFSerialize</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">138</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;Uri uriF : &#34;</span> <span class="o">+</span> <span class="n">uriF</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">139</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;Currency currencyF : &#34;</span> <span class="o">+</span> <span class="n">currencyF</span><span class="o">.</span><span class="na">getSymbol</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">140</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;... \r\n&#34;</span><span class="o">);</span>
+<span class="ln">141</span>        <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">142</span>    <span class="o">}</span>
+<span class="ln">143</span>
+<span class="ln">144</span>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toShortString</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">145</span>        <span class="n">StringBuffer</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="o">(</span><span class="n">256</span><span class="o">);</span>
+<span class="ln">146</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;[ Long id : &#34;</span><span class="o">+</span><span class="n">id</span><span class="o">+</span><span class="s">&#34;; &#34;</span><span class="o">);</span>
+<span class="ln">147</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;int randomInt : &#34;</span><span class="o">+</span><span class="n">randomInt</span><span class="o">+</span><span class="s">&#34;; &#34;</span><span class="o">);</span>
+<span class="ln">148</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;String stringF : &#34;</span><span class="o">+</span><span class="n">stringF</span><span class="o">+</span><span class="s">&#34;; &#34;</span><span class="o">);</span>
+<span class="ln">149</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;BigInteger bigIntegerF : &#34;</span><span class="o">+</span><span class="n">bigIntegerF</span><span class="o">+</span><span class="s">&#34;; &#34;</span><span class="o">);</span>
+<span class="ln">150</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;SomeColours bitmapColour : &#34;</span><span class="o">+</span><span class="n">bitmapColour</span><span class="o">+</span><span class="s">&#34;; &#34;</span><span class="o">);</span>
+<span class="ln">151</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;Short shortFF : &#34;</span><span class="o">+</span><span class="n">shortFF</span><span class="o">+</span><span class="s">&#34;; &#34;</span><span class="o">);</span>
+<span class="ln">152</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;Timestamp timestampF (HReadable) : &#34;</span><span class="o">+</span><span class="n">timestampF</span><span class="o">+</span><span class="s">&#34;; ... ]&#34;</span><span class="o">);</span>
+<span class="ln">153</span>        <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">154</span>    <span class="o">}</span>
+<span class="ln">155</span>
+<span class="ln">156</span>    <span class="nd">@Deprecated</span>
+<span class="ln">157</span>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toHTMLString</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">158</span>        <span class="n">StringBuffer</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="o">(</span><span class="n">2048</span><span class="o">);</span>
+<span class="ln">159</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Long id : &#34;</span><span class="o">+</span><span class="n">id</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">160</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;&lt;b&gt;PRIMITIVES&lt;/b&gt;&#34;</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">161</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;boolean boolF : &#34;</span><span class="o">+</span><span class="n">Boolean</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">boolF</span><span class="o">)+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">162</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;int randomInt : &#34;</span><span class="o">+</span><span class="n">Integer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">randomInt</span><span class="o">)+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">163</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;byte byteF : &#34;</span><span class="o">+</span><span class="n">Byte</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">byteF</span><span class="o">)+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">164</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;double doubleF : &#34;</span><span class="o">+</span><span class="n">Double</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">doubleF</span><span class="o">)+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">165</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;long longF : &#34;</span><span class="o">+</span><span class="n">Long</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">longF</span><span class="o">)+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">166</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;short shortF : &#34;</span><span class="o">+</span><span class="n">Short</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">shortF</span><span class="o">)+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">167</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;float floatF : &#34;</span><span class="o">+</span><span class="n">Float</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">floatF</span><span class="o">)+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">168</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;byte[] byteArray : &#34;</span><span class="o">+</span><span class="n">byteArrayToString</span><span class="o">(</span><span class="n">byteArray</span><span class="o">)+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">169</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;&lt;b&gt;STRING AFFINITIES&lt;/b&gt;&#34;</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">170</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;String randomAnimalName : &#34;</span><span class="o">+</span><span class="n">randomAnimalName</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">171</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;String stringF : &#34;</span><span class="o">+</span><span class="n">stringF</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">172</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;BigDecimal bigDecimalF : &#34;</span><span class="o">+</span><span class="n">bigDecimalF</span><span class="o">.</span><span class="na">toEngineeringString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">173</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;BigInteger bigIntegerF : &#34;</span><span class="o">+</span><span class="n">bigIntegerF</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">174</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Animals randomAnimal : &#34;</span><span class="o">+</span><span class="n">randomAnimal</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">175</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;&lt;b&gt;SERIALIZATION AND DESERIALIZATION&lt;/b&gt;&#34;</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">176</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;AnimalSounds stringSDF : &#34;</span><span class="o">+</span><span class="n">stringSDFSerialize</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">177</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;SomeColours bitmapColour : &#34;</span><span class="o">+</span><span class="n">bitmapColour</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">178</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;&lt;b&gt;PRIMITIVE WRAPPERS&lt;/b&gt;&#34;</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">179</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Boolean boolFF : &#34;</span><span class="o">+</span><span class="n">boolFF</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">180</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Integer randomInteger : &#34;</span><span class="o">+</span><span class="n">randomInteger</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">181</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Byte byteFF : &#34;</span><span class="o">+</span><span class="n">byteFF</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">182</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Double doubleFF : &#34;</span><span class="o">+</span><span class="n">doubleFF</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">183</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Short shortFF : &#34;</span><span class="o">+</span><span class="n">shortFF</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">184</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Float floatFF :&#34;</span><span class="o">+</span><span class="n">floatFF</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">185</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;&lt;b&gt;LONG REPRESENTED TYPES&lt;/b&gt;&#34;</span><span class="o">+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">186</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Long longFF : &#34;</span><span class="o">+</span><span class="n">longFF</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">187</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Date dateF : &#34;</span><span class="o">+</span><span class="n">Long</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">dateF</span><span class="o">.</span><span class="na">getTime</span><span class="o">())+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">188</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Calendar calendarF : &#34;</span><span class="o">+</span><span class="n">Long</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">calendarF</span><span class="o">.</span><span class="na">getTimeInMillis</span><span class="o">())+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">189</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Timestamp timestampF : &#34;</span><span class="o">+</span><span class="n">Long</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">timestampF</span><span class="o">.</span><span class="na">getTime</span><span class="o">())+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">190</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Date dateF (HReadable) : &#34;</span><span class="o">+</span><span class="n">dateF</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">191</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Calendar calendarF (HReadable) : &#34;</span><span class="o">+</span><span class="n">calendarF</span><span class="o">.</span><span class="na">getTime</span><span class="o">().</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">192</span>        <span class="n">out</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;&lt;br&gt;Timestamp timestampF (HReadable) : &#34;</span><span class="o">+</span><span class="n">timestampF</span><span class="o">.</span><span class="na">toString</span><span class="o">()+</span><span class="s">&#34;\r\n&#34;</span><span class="o">);</span>
+<span class="ln">193</span>        <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">194</span>    <span class="o">}</span>
+<span class="ln">195</span>
+<span class="ln">196</span>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">byteArrayToString</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">toString</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">197</span>        <span class="n">String</span><span class="o">[]</span> <span class="n">strings</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">toString</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+<span class="ln">198</span>        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">toString</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<span class="ln">199</span>            <span class="n">strings</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">Byte</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">toString</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+<span class="ln">200</span>        <span class="o">}</span>
+<span class="ln">201</span>        <span class="k">return</span> <span class="n">KittyUtils</span><span class="o">.</span><span class="na">implodeWithCommaInBKT</span><span class="o">(</span><span class="n">strings</span><span class="o">);</span>
+<span class="ln">202</span>    <span class="o">}</span>
+<span class="ln">203</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>ComplexRandomMapper.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ComplexRandomMapper</span> <span class="kd">extends</span> <span class="n">KittyMapper</span> <span class="o">{</span>
+<span class="ln">2</span>
+<span class="ln">3</span>    <span class="kd">public</span> <span class="o">&lt;</span><span class="n">M</span> <span class="kd">extends</span> <span class="n">KittyModel</span><span class="o">&gt;</span> <span class="nf">ComplexRandomMapper</span><span class="o">(</span><span class="n">KittyTableConfiguration</span> <span class="n">tableConfiguration</span><span class="o">,</span> <span class="n">M</span> <span class="n">blankModelInstance</span><span class="o">,</span> <span class="n">String</span> <span class="n">databasePassword</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">4</span>        <span class="kd">super</span><span class="o">(</span><span class="n">tableConfiguration</span><span class="o">,</span> <span class="n">blankModelInstance</span><span class="o">,</span> <span class="n">databasePassword</span><span class="o">);</span>
+<span class="ln">5</span>    <span class="o">}</span>
+<span class="ln">6</span>
+<span class="ln">7</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>IndexesAndConstraintsModel.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@FOREIGN_KEY_T</span><span class="o">(</span>
+<span class="ln"> 3</span>        <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;CAI_FK&#34;</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">RANDOM_ID_CNAME</span><span class="o">},</span>
+<span class="ln"> 5</span>        <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln"> 6</span>                <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;random&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>                <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln"> 8</span>                <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">10</span>        <span class="o">)</span>
+<span class="ln">11</span><span class="o">)</span>
+<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span>
+<span class="ln">13</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln">14</span>    <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">RANDOM_ID_CNAME</span> <span class="o">=</span> <span class="s">&#34;rnd_id&#34;</span><span class="o">;</span>
+<span class="ln">15</span>
+<span class="ln">16</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln">17</span>    <span class="nd">@PRIMARY_KEY</span>
+<span class="ln">18</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">19</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+<span class="ln">20</span>
+<span class="ln">21</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">22</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">23</span>    <span class="nd">@UNIQUE</span>
+<span class="ln">24</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">rndId</span><span class="o">;</span>
+<span class="ln">25</span>
+<span class="ln">26</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span><span class="o">)</span>
+<span class="ln">27</span>    <span class="nd">@CHECK</span><span class="o">(</span><span class="n">checkExpression</span> <span class="o">=</span> <span class="s">&#34;animal IN (\&#34;CAT\&#34;, \&#34;TIGER\&#34;, \&#34;LION\&#34;)&#34;</span><span class="o">)</span> <span class="c1">// only cats allowed to this party
+</span><span class="ln">28</span><span class="c1"></span>    <span class="kd">public</span> <span class="n">Animals</span> <span class="n">animal</span><span class="o">;</span>
+<span class="ln">29</span>
+<span class="ln">30</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">3</span><span class="o">)</span>
+<span class="ln">31</span>    <span class="nd">@DEFAULT</span><span class="o">(</span><span class="n">signedInteger</span> <span class="o">=</span> <span class="n">28</span><span class="o">)</span> <span class="c1">// You can choose for options for default declaration, if nothing set than 0 value would be used
+</span><span class="ln">32</span><span class="c1"></span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">33</span>    <span class="kd">public</span> <span class="n">Integer</span> <span class="n">defaultNumber</span><span class="o">;</span>
+<span class="ln">34</span>
+<span class="ln">35</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">4</span><span class="o">)</span>
+<span class="ln">36</span>    <span class="nd">@DEFAULT</span><span class="o">(</span>
+<span class="ln">37</span>            <span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_DATE</span>
+<span class="ln">38</span>    <span class="o">)</span>
+<span class="ln">39</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">40</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">creationDate</span><span class="o">;</span>
+<span class="ln">41</span>
+<span class="ln">42</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">5</span><span class="o">)</span>
+<span class="ln">43</span>    <span class="nd">@DEFAULT</span><span class="o">(</span>
+<span class="ln">44</span>            <span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_TIMESTAMP</span>
+<span class="ln">45</span>    <span class="o">)</span>
+<span class="ln">46</span>    <span class="nd">@ONE_COLUMN_INDEX</span><span class="o">(</span><span class="n">unique</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">indexName</span> <span class="o">=</span> <span class="s">&#34;IAC_unique_index_creation_timestamp&#34;</span><span class="o">)</span>
+<span class="ln">47</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">48</span>    <span class="kd">public</span> <span class="n">Timestamp</span> <span class="n">creationTmstmp</span><span class="o">;</span>
+<span class="ln">49</span>
+<span class="ln">50</span>    <span class="nd">@Override</span>
+<span class="ln">51</span>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">52</span>        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">64</span><span class="o">);</span>
+<span class="ln">53</span>        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;[ RowID = &#34;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">getRowID</span><span class="o">())</span>
+<span class="ln">54</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; id = &#34;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">id</span><span class="o">)</span>
+<span class="ln">55</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; rndId = &#34;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">rndId</span><span class="o">)</span>
+<span class="ln">56</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; animal = &#34;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">animal</span><span class="o">)</span>
+<span class="ln">57</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; defaultNumber = &#34;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">defaultNumber</span><span class="o">)</span>
+<span class="ln">58</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; creationDate = &#34;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">creationDate</span><span class="o">)</span>
+<span class="ln">59</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; creationTmstmp = &#34;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">creationTmstmp</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ]&#34;</span><span class="o">);</span>
+<span class="ln">60</span>        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">61</span>    <span class="o">}</span>
+<span class="ln">62</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+</ol>
+
+<p><strong>Fragment code used in this tutorial</strong></p>
+
+<ol>
+<li>
+<details>
+<summary>Click to view <code>Lesson3Tab2Constraints.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">  1</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Lesson3Tab2Constraints</span> <span class="kd">extends</span> <span class="n">Lesson3BaseFragment</span> <span class="o">{</span>
+<span class="ln">  2</span>
+<span class="ln">  3</span>    <span class="kd">private</span> <span class="n">BasicDatabase</span> <span class="n">database</span><span class="o">;</span>
+<span class="ln">  4</span>
+<span class="ln">  5</span>    <span class="kd">protected</span> <span class="n">ArrayAdapter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">animalAdapter</span><span class="o">;</span>
+<span class="ln">  6</span>    <span class="kd">protected</span> <span class="n">Spinner</span> <span class="n">animalSpinner</span><span class="o">;</span>
+<span class="ln">  7</span>
+<span class="ln">  8</span>    <span class="kd">public</span> <span class="nf">Lesson3Tab2Constraints</span><span class="o">()</span> <span class="o">{}</span>
+<span class="ln">  9</span>
+<span class="ln"> 10</span>    <span class="n">EditText</span> <span class="n">rndIdFkET</span><span class="o">;</span>
+<span class="ln"> 11</span>    <span class="n">EditText</span> <span class="n">defaultIntET</span><span class="o">;</span>
+<span class="ln"> 12</span>    <span class="n">EditText</span> <span class="n">creationDateET</span><span class="o">;</span>
+<span class="ln"> 13</span>    <span class="n">EditText</span> <span class="n">creationTmstmpET</span><span class="o">;</span>
+<span class="ln"> 14</span>
+<span class="ln"> 15</span>    <span class="n">Button</span> <span class="n">saveNewModelButton</span><span class="o">;</span>
+<span class="ln"> 16</span>    <span class="n">Button</span> <span class="n">wipeAllButton</span><span class="o">;</span>
+<span class="ln"> 17</span>
+<span class="ln"> 18</span>    <span class="nd">@Override</span>
+<span class="ln"> 19</span>    <span class="kd">public</span> <span class="n">View</span> <span class="nf">onCreateView</span><span class="o">(</span><span class="n">LayoutInflater</span> <span class="n">inflater</span><span class="o">,</span> <span class="n">ViewGroup</span> <span class="n">container</span><span class="o">,</span> <span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 20</span>        <span class="n">View</span> <span class="n">rootView</span> <span class="o">=</span> <span class="n">inflater</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">lesson3_tab2_constraints_and_indexes</span><span class="o">,</span> <span class="n">container</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+<span class="ln"> 21</span>
+<span class="ln"> 22</span>        <span class="n">rndIdFkET</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l3_t2_et_fk</span><span class="o">);</span>
+<span class="ln"> 23</span>        <span class="n">defaultIntET</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l3_t2_et_default_number</span><span class="o">);</span>
+<span class="ln"> 24</span>        <span class="n">creationDateET</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l3_t2_et_creation_date</span><span class="o">);</span>
+<span class="ln"> 25</span>        <span class="n">creationTmstmpET</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l3_t2_et_current_timestamp</span><span class="o">);</span>
+<span class="ln"> 26</span>
+<span class="ln"> 27</span>        <span class="n">saveNewModelButton</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">_l3_t2_save_button</span><span class="o">);</span>
+<span class="ln"> 28</span>        <span class="n">saveNewModelButton</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 29</span>            <span class="nd">@Override</span>
+<span class="ln"> 30</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 31</span>                <span class="n">IndexesAndConstraintsModel</span> <span class="n">model</span> <span class="o">=</span> <span class="n">getModelFromInput</span><span class="o">();</span>
+<span class="ln"> 32</span>                <span class="k">if</span><span class="o">(</span><span class="n">model</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+<span class="ln"> 33</span>                <span class="k">new</span> <span class="n">InsertNewAsync</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">model</span><span class="o">);</span>
+<span class="ln"> 34</span>            <span class="o">}</span>
+<span class="ln"> 35</span>        <span class="o">});</span>
+<span class="ln"> 36</span>
+<span class="ln"> 37</span>        <span class="n">wipeAllButton</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">_l3_t2_wipe_button</span><span class="o">);</span>
+<span class="ln"> 38</span>        <span class="n">wipeAllButton</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 39</span>            <span class="nd">@Override</span>
+<span class="ln"> 40</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 41</span>                <span class="k">new</span> <span class="n">WipeAsync</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">0l</span><span class="o">);</span>
+<span class="ln"> 42</span>            <span class="o">}</span>
+<span class="ln"> 43</span>        <span class="o">});</span>
+<span class="ln"> 44</span>
+<span class="ln"> 45</span>
+<span class="ln"> 46</span>        <span class="n">setUpExpandedList</span><span class="o">(</span>
+<span class="ln"> 47</span>                <span class="n">rootView</span><span class="o">,</span>
+<span class="ln"> 48</span>                <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">_l3_t2_expanded_panel_lw</span><span class="o">,</span>
+<span class="ln"> 49</span>                <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">_l3_t2_expanded_panel_text</span><span class="o">,</span>
+<span class="ln"> 50</span>                <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l3_t2_expanded_text_pattern</span>
+<span class="ln"> 51</span>        <span class="o">);</span>
+<span class="ln"> 52</span>
+<span class="ln"> 53</span>        <span class="n">setAnimalSpinner</span><span class="o">(</span><span class="n">rootView</span><span class="o">,</span> <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l3_t2_spinner</span><span class="o">,</span> <span class="k">new</span> <span class="n">AdapterView</span><span class="o">.</span><span class="na">OnItemSelectedListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 54</span>            <span class="nd">@Override</span>
+<span class="ln"> 55</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onItemSelected</span><span class="o">(</span><span class="n">AdapterView</span><span class="o">&lt;?&gt;</span> <span class="n">parent</span><span class="o">,</span> <span class="n">View</span> <span class="n">view</span><span class="o">,</span> <span class="kt">int</span> <span class="n">position</span><span class="o">,</span> <span class="kt">long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 56</span>            <span class="o">}</span>
+<span class="ln"> 57</span>
+<span class="ln"> 58</span>            <span class="nd">@Override</span>
+<span class="ln"> 59</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNothingSelected</span><span class="o">(</span><span class="n">AdapterView</span><span class="o">&lt;?&gt;</span> <span class="n">parent</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 60</span>            <span class="o">}</span>
+<span class="ln"> 61</span>        <span class="o">});</span>
+<span class="ln"> 62</span>
+<span class="ln"> 63</span>        <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln"> 64</span>        <span class="k">return</span> <span class="n">rootView</span><span class="o">;</span>
+<span class="ln"> 65</span>    <span class="o">}</span>
+<span class="ln"> 66</span>
+<span class="ln"> 67</span>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">reloadTableExpandedList</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 68</span>        <span class="k">new</span> <span class="n">ReloadTableAsync</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">0l</span><span class="o">);</span>
+<span class="ln"> 69</span>    <span class="o">}</span>
+<span class="ln"> 70</span>
+<span class="ln"> 71</span>    <span class="kd">private</span> <span class="n">IndexesAndConstraintsModel</span> <span class="nf">getModelFromInput</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 72</span>        <span class="n">IndexesAndConstraintsModel</span> <span class="n">model</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IndexesAndConstraintsModel</span><span class="o">();</span>
+<span class="ln"> 73</span>        <span class="n">String</span> <span class="n">rndId</span> <span class="o">=</span> <span class="n">rndIdFkET</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln"> 74</span>        <span class="k">if</span><span class="o">(</span><span class="n">rndId</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="n">model</span><span class="o">.</span><span class="na">rndId</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 75</span>        <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">rndId</span><span class="o">.</span><span class="na">trim</span><span class="o">().</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span> <span class="n">model</span><span class="o">.</span><span class="na">rndId</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 76</span>        <span class="k">else</span> <span class="o">{</span>
+<span class="ln"> 77</span>            <span class="k">try</span> <span class="o">{</span>
+<span class="ln"> 78</span>                <span class="n">model</span><span class="o">.</span><span class="na">rndId</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">rndId</span><span class="o">);</span>
+<span class="ln"> 79</span>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 80</span>                <span class="n">getLessonActivity</span><span class="o">().</span><span class="na">showWarningDialog</span><span class="o">(</span>
+<span class="ln"> 81</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_title</span><span class="o">,</span>
+<span class="ln"> 82</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l3_t2_rnd_id_cant_be_treated_as_null_or_long_only</span><span class="o">,</span>
+<span class="ln"> 83</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_ok_button_text</span><span class="o">);</span>
+<span class="ln"> 84</span>                <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 85</span>            <span class="o">}</span>
+<span class="ln"> 86</span>        <span class="o">}</span>
+<span class="ln"> 87</span>        <span class="n">String</span> <span class="n">animalEnumStringValue</span> <span class="o">=</span> <span class="n">animalSpinner</span><span class="o">.</span><span class="na">getSelectedItem</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln"> 88</span>        <span class="k">if</span><span class="o">(!</span><span class="n">animalEnumStringValue</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">animalAdapter</span><span class="o">.</span><span class="na">getItem</span><span class="o">(</span><span class="n">animalAdapter</span><span class="o">.</span><span class="na">getCount</span><span class="o">())))</span> <span class="o">{</span>
+<span class="ln"> 89</span>            <span class="n">model</span><span class="o">.</span><span class="na">animal</span> <span class="o">=</span> <span class="n">Animals</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">animalEnumStringValue</span><span class="o">);</span>
+<span class="ln"> 90</span>        <span class="o">}</span>
+<span class="ln"> 91</span>        <span class="n">String</span> <span class="n">defInteger</span> <span class="o">=</span> <span class="n">defaultIntET</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln"> 92</span>        <span class="k">if</span><span class="o">(</span><span class="n">defInteger</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="n">model</span><span class="o">.</span><span class="na">setFieldExclusion</span><span class="o">(</span><span class="s">&#34;defaultNumber&#34;</span><span class="o">);</span>
+<span class="ln"> 93</span>        <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">defInteger</span><span class="o">.</span><span class="na">trim</span><span class="o">().</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span> <span class="n">model</span><span class="o">.</span><span class="na">setFieldExclusion</span><span class="o">(</span><span class="s">&#34;defaultNumber&#34;</span><span class="o">);</span>
+<span class="ln"> 94</span>        <span class="k">else</span> <span class="o">{</span>
+<span class="ln"> 95</span>            <span class="k">try</span> <span class="o">{</span>
+<span class="ln"> 96</span>                <span class="n">model</span><span class="o">.</span><span class="na">defaultNumber</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">defInteger</span><span class="o">);</span>
+<span class="ln"> 97</span>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 98</span>                <span class="n">getLessonActivity</span><span class="o">().</span><span class="na">showWarningDialog</span><span class="o">(</span>
+<span class="ln"> 99</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_title</span><span class="o">,</span>
+<span class="ln">100</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l3_t2_default_number_can_be_treated_as_null_or_long_only</span><span class="o">,</span>
+<span class="ln">101</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_ok_button_text</span><span class="o">);</span>
+<span class="ln">102</span>                <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln">103</span>            <span class="o">}</span>
+<span class="ln">104</span>        <span class="o">}</span>
+<span class="ln">105</span>        <span class="n">String</span> <span class="n">creationDate</span> <span class="o">=</span> <span class="n">creationDateET</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">106</span>        <span class="k">if</span><span class="o">(</span><span class="n">creationDate</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="n">model</span><span class="o">.</span><span class="na">setFieldExclusion</span><span class="o">(</span><span class="s">&#34;creationDate&#34;</span><span class="o">);</span>
+<span class="ln">107</span>        <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">creationDate</span><span class="o">.</span><span class="na">trim</span><span class="o">().</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span> <span class="n">model</span><span class="o">.</span><span class="na">setFieldExclusion</span><span class="o">(</span><span class="s">&#34;creationDate&#34;</span><span class="o">);</span>
+<span class="ln">108</span>        <span class="k">else</span> <span class="n">model</span><span class="o">.</span><span class="na">creationDate</span> <span class="o">=</span> <span class="n">creationDate</span><span class="o">;</span>
+<span class="ln">109</span>        <span class="n">String</span> <span class="n">creationTimestamp</span> <span class="o">=</span> <span class="n">creationTmstmpET</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">110</span>        <span class="k">if</span><span class="o">(</span><span class="n">creationTimestamp</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="n">model</span><span class="o">.</span><span class="na">setFieldExclusion</span><span class="o">(</span><span class="s">&#34;creationTmstmp&#34;</span><span class="o">);</span>
+<span class="ln">111</span>        <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">creationTimestamp</span><span class="o">.</span><span class="na">trim</span><span class="o">().</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span> <span class="n">model</span><span class="o">.</span><span class="na">setFieldExclusion</span><span class="o">(</span><span class="s">&#34;creationTmstmp&#34;</span><span class="o">);</span>
+<span class="ln">112</span>        <span class="k">else</span> <span class="o">{</span>
+<span class="ln">113</span>            <span class="n">Long</span> <span class="n">creationTimestampLong</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln">114</span>            <span class="k">try</span> <span class="o">{</span>
+<span class="ln">115</span>                <span class="n">creationTimestampLong</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">creationTimestamp</span><span class="o">);</span>
+<span class="ln">116</span>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">117</span>                <span class="n">getLessonActivity</span><span class="o">().</span><span class="na">showWarningDialog</span><span class="o">(</span>
+<span class="ln">118</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_title</span><span class="o">,</span>
+<span class="ln">119</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l3_t2_creation_timestamp_can_be_treated_as_null_or_long_only</span><span class="o">,</span>
+<span class="ln">120</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_ok_button_text</span><span class="o">);</span>
+<span class="ln">121</span>                <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln">122</span>            <span class="o">}</span>
+<span class="ln">123</span>            <span class="n">model</span><span class="o">.</span><span class="na">creationTmstmp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timestamp</span><span class="o">(</span><span class="n">creationTimestampLong</span><span class="o">);</span>
+<span class="ln">124</span>        <span class="o">}</span>
+<span class="ln">125</span>
+<span class="ln">126</span>        <span class="k">return</span> <span class="n">model</span><span class="o">;</span>
+<span class="ln">127</span>    <span class="o">}</span>
+<span class="ln">128</span>
+<span class="ln">129</span>    <span class="kd">private</span> <span class="n">BasicDatabase</span> <span class="nf">getDatabase</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">130</span>        <span class="k">if</span><span class="o">(</span><span class="n">database</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="n">database</span><span class="o">;</span>
+<span class="ln">131</span>        <span class="n">database</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BasicDatabase</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln">132</span>        <span class="k">return</span> <span class="n">database</span><span class="o">;</span>
+<span class="ln">133</span>    <span class="o">}</span>
+<span class="ln">134</span>
+<span class="ln">135</span>    <span class="nd">@Override</span>
+<span class="ln">136</span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onVisible</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">137</span>        <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln">138</span>    <span class="o">}</span>
+<span class="ln">139</span>
+<span class="ln">140</span>    <span class="nd">@Override</span>
+<span class="ln">141</span>    <span class="kd">protected</span> <span class="kt">int</span> <span class="nf">snackbarMessageResource</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">142</span>        <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l3_t2_snackbar_message</span><span class="o">;</span>
+<span class="ln">143</span>    <span class="o">}</span>
+<span class="ln">144</span>
+<span class="ln">145</span>    <span class="c1">// Asyncs
+</span><span class="ln">146</span><span class="c1"></span>
+<span class="ln">147</span>    <span class="kd">class</span> <span class="nc">ReloadTableAsync</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Long</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">IndexesAndConstraintsModel</span><span class="o">&gt;&gt;</span> <span class="o">{</span>
+<span class="ln">148</span>
+<span class="ln">149</span>        <span class="nd">@Override</span>
+<span class="ln">150</span>        <span class="kd">protected</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">IndexesAndConstraintsModel</span><span class="o">&gt;</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Long</span><span class="o">...</span> <span class="n">params</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">151</span>            <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">Lesson3Tab2Constraints</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">152</span>            <span class="n">List</span><span class="o">&lt;</span><span class="n">IndexesAndConstraintsModel</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+<span class="ln">153</span>            <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">154</span>            <span class="k">return</span> <span class="n">out</span><span class="o">;</span>
+<span class="ln">155</span>        <span class="o">}</span>
+<span class="ln">156</span>
+<span class="ln">157</span>        <span class="nd">@Override</span>
+<span class="ln">158</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">IndexesAndConstraintsModel</span><span class="o">&gt;</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">159</span>            <span class="k">if</span><span class="o">(</span><span class="n">result</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">160</span>                <span class="n">events</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">CAIModelAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="n">result</span><span class="o">));</span>
+<span class="ln">161</span>                <span class="n">expandedTitle</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">expandeddTitlePattern</span><span class="o">,</span> <span class="n">result</span><span class="o">.</span><span class="na">size</span><span class="o">()));</span>
+<span class="ln">162</span>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">163</span>                <span class="n">events</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">CAIModelAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">IndexesAndConstraintsModel</span><span class="o">&gt;()));</span>
+<span class="ln">164</span>                <span class="n">expandedTitle</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">expandeddTitlePattern</span><span class="o">,</span> <span class="n">0</span><span class="o">));</span>
+<span class="ln">165</span>            <span class="o">}</span>
+<span class="ln">166</span>        <span class="o">}</span>
+<span class="ln">167</span>    <span class="o">}</span>
+<span class="ln">168</span>
+<span class="ln">169</span>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">ERR_STRING_WIPE</span> <span class="o">=</span> <span class="s">&#34;Lesson3tab2WipeDataError, see exception details!&#34;</span><span class="o">;</span>
+<span class="ln">170</span>
+<span class="ln">171</span>    <span class="kd">class</span> <span class="nc">WipeAsync</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Long</span><span class="o">,</span> <span class="n">Long</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="ln">172</span>
+<span class="ln">173</span>        <span class="n">ProgressDialog</span> <span class="n">dialog</span><span class="o">;</span>
+<span class="ln">174</span>
+<span class="ln">175</span>        <span class="nd">@Override</span>
+<span class="ln">176</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPreExecute</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">177</span>            <span class="n">dialog</span> <span class="o">=</span> <span class="n">ProgressDialog</span><span class="o">.</span><span class="na">show</span><span class="o">(</span>
+<span class="ln">178</span>                    <span class="n">Lesson3Tab2Constraints</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">getLessonActivity</span><span class="o">(),</span>
+<span class="ln">179</span>                    <span class="n">Lesson3Tab2Constraints</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l3_t2_running_requested_operation_pg_title</span><span class="o">),</span>
+<span class="ln">180</span>                    <span class="n">Lesson3Tab2Constraints</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l3_t2_running_requested_operation_pg_body</span><span class="o">)</span>
+<span class="ln">181</span>            <span class="o">);</span>
+<span class="ln">182</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">setCancelable</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="ln">183</span>        <span class="o">}</span>
+<span class="ln">184</span>
+<span class="ln">185</span>        <span class="nd">@Override</span>
+<span class="ln">186</span>        <span class="kd">protected</span> <span class="n">Long</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Long</span><span class="o">...</span> <span class="n">params</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">187</span>            <span class="k">try</span> <span class="o">{</span>
+<span class="ln">188</span>                <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">Lesson3Tab2Constraints</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">189</span>                <span class="kt">long</span> <span class="n">affected</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">deleteAll</span><span class="o">();</span>
+<span class="ln">190</span>                <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">191</span>                <span class="k">return</span> <span class="n">affected</span><span class="o">;</span>
+<span class="ln">192</span>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">193</span>                <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">BasicDatabase</span><span class="o">.</span><span class="na">LOG_TAG</span><span class="o">,</span> <span class="n">ERR_STRING_WIPE</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+<span class="ln">194</span>                <span class="k">if</span><span class="o">(</span><span class="n">e</span> <span class="k">instanceof</span> <span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">195</span>                    <span class="k">if</span><span class="o">(((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">196</span>                        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">BasicDatabase</span><span class="o">.</span><span class="na">LOG_TAG</span><span class="o">,</span> <span class="n">ERR_STRING_WIPE</span><span class="o">,</span> <span class="o">((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">());</span>
+<span class="ln">197</span>                    <span class="o">}</span>
+<span class="ln">198</span>                <span class="o">}</span>
+<span class="ln">199</span>                <span class="k">return</span> <span class="o">-</span><span class="n">1l</span><span class="o">;</span>
+<span class="ln">200</span>            <span class="o">}</span>
+<span class="ln">201</span>        <span class="o">}</span>
+<span class="ln">202</span>
+<span class="ln">203</span>        <span class="nd">@Override</span>
+<span class="ln">204</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">Long</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">205</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+<span class="ln">206</span>            <span class="k">if</span> <span class="o">(</span><span class="n">result</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">1l</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">207</span>                <span class="n">getLessonActivity</span><span class="o">().</span><span class="na">showWarningDialog</span><span class="o">(</span>
+<span class="ln">208</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_title</span><span class="o">,</span>
+<span class="ln">209</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l3_t2_some_error_on_deleting</span><span class="o">,</span>
+<span class="ln">210</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_ok_button_text</span><span class="o">);</span>
+<span class="ln">211</span>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">212</span>                <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln">213</span>            <span class="o">}</span>
+<span class="ln">214</span>        <span class="o">}</span>
+<span class="ln">215</span>    <span class="o">}</span>
+<span class="ln">216</span>
+<span class="ln">217</span>    <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">IA_EXPECTED_ONLY_ONE</span> <span class="o">=</span> <span class="s">&#34;Lesson3Tab2Constraints$InsertNewAsync expects array with one element as parameter for doInBackground&#34;</span><span class="o">;</span>
+<span class="ln">218</span>    <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">ERR_ON_INSERTION</span> <span class="o">=</span> <span class="s">&#34;Lesson3Tab2Constraints$InsertNewAsync error on insertion, see exception details!&#34;</span><span class="o">;</span>
+<span class="ln">219</span>
+<span class="ln">220</span>    <span class="kd">class</span> <span class="nc">InsertNewAsync</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">IndexesAndConstraintsModel</span><span class="o">,</span> <span class="n">Long</span><span class="o">,</span> <span class="n">InsertNewAsyncResult</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="ln">221</span>        <span class="nd">@Override</span>
+<span class="ln">222</span>        <span class="kd">protected</span> <span class="n">InsertNewAsyncResult</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">IndexesAndConstraintsModel</span><span class="o">...</span> <span class="n">params</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">223</span>            <span class="k">if</span><span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">224</span>                <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="n">IA_EXPECTED_ONLY_ONE</span><span class="o">);</span>
+<span class="ln">225</span>            <span class="k">try</span> <span class="o">{</span>
+<span class="ln">226</span>                <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">227</span>                <span class="kt">long</span> <span class="n">insert</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">params</span><span class="o">[</span><span class="n">0</span><span class="o">]);</span>
+<span class="ln">228</span>                <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">229</span>                <span class="k">if</span><span class="o">(</span><span class="n">insert</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">1l</span><span class="o">)</span>
+<span class="ln">230</span>                    <span class="k">return</span> <span class="k">new</span> <span class="n">InsertNewAsyncResult</span><span class="o">(</span><span class="kc">true</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="n">insert</span><span class="o">);</span>
+<span class="ln">231</span>                <span class="k">else</span>
+<span class="ln">232</span>                    <span class="k">return</span> <span class="k">new</span> <span class="n">InsertNewAsyncResult</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="n">insert</span><span class="o">);</span>
+<span class="ln">233</span>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">234</span>                <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">BasicDatabase</span><span class="o">.</span><span class="na">LOG_TAG</span><span class="o">,</span> <span class="n">ERR_ON_INSERTION</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+<span class="ln">235</span>                <span class="k">if</span><span class="o">(</span><span class="n">e</span> <span class="k">instanceof</span> <span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">236</span>                    <span class="k">if</span><span class="o">(((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">237</span>                        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">BasicDatabase</span><span class="o">.</span><span class="na">LOG_TAG</span><span class="o">,</span> <span class="n">ERR_ON_INSERTION</span><span class="o">,</span> <span class="o">((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">());</span>
+<span class="ln">238</span>                    <span class="o">}</span>
+<span class="ln">239</span>                <span class="o">}</span>
+<span class="ln">240</span>                <span class="k">return</span> <span class="k">new</span> <span class="n">InsertNewAsyncResult</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="n">e</span><span class="o">,</span> <span class="o">-</span><span class="n">1l</span><span class="o">);</span>
+<span class="ln">241</span>            <span class="o">}</span>
+<span class="ln">242</span>        <span class="o">}</span>
+<span class="ln">243</span>
+<span class="ln">244</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">InsertNewAsyncResult</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">245</span>            <span class="k">if</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">success</span><span class="o">)</span>
+<span class="ln">246</span>                <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln">247</span>            <span class="k">else</span> <span class="o">{</span>
+<span class="ln">248</span>                <span class="n">getLessonActivity</span><span class="o">().</span><span class="na">showWarningDialog</span><span class="o">(</span>
+<span class="ln">249</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_title</span><span class="o">,</span>
+<span class="ln">250</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l3_t2_some_error_on_insertion</span><span class="o">,</span>
+<span class="ln">251</span>                        <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_warning_dialog_ok_button_text</span><span class="o">);</span>
+<span class="ln">252</span>            <span class="o">}</span>
+<span class="ln">253</span>        <span class="o">}</span>
+<span class="ln">254</span>    <span class="o">}</span>
+<span class="ln">255</span>
+<span class="ln">256</span>    <span class="kd">class</span> <span class="nc">InsertNewAsyncResult</span> <span class="o">{</span>
+<span class="ln">257</span>        <span class="kt">boolean</span> <span class="n">success</span><span class="o">;</span>
+<span class="ln">258</span>        <span class="n">Exception</span> <span class="n">exception</span><span class="o">;</span>
+<span class="ln">259</span>        <span class="kt">long</span> <span class="n">insertId</span><span class="o">;</span>
+<span class="ln">260</span>
+<span class="ln">261</span>        <span class="kd">public</span> <span class="nf">InsertNewAsyncResult</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">success</span><span class="o">,</span> <span class="n">Exception</span> <span class="n">exception</span><span class="o">,</span> <span class="kt">long</span> <span class="n">insertId</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">262</span>            <span class="k">this</span><span class="o">.</span><span class="na">success</span> <span class="o">=</span> <span class="n">success</span><span class="o">;</span>
+<span class="ln">263</span>            <span class="k">this</span><span class="o">.</span><span class="na">exception</span> <span class="o">=</span> <span class="n">exception</span><span class="o">;</span>
+<span class="ln">264</span>            <span class="k">this</span><span class="o">.</span><span class="na">insertId</span> <span class="o">=</span> <span class="n">insertId</span><span class="o">;</span>
+<span class="ln">265</span>        <span class="o">}</span>
+<span class="ln">266</span>    <span class="o">}</span>
+<span class="ln">267</span>
+<span class="ln">268</span>    <span class="c1">// Animal spinner stuff
+</span><span class="ln">269</span><span class="c1"></span>    <span class="kd">protected</span> <span class="n">ArrayAdapter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">newAnimalAdapter</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">270</span>        <span class="n">ArrayAdapter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">adapter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayAdapter</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;(</span><span class="n">getContext</span><span class="o">(),</span> <span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">simple_spinner_dropdown_item</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">271</span>
+<span class="ln">272</span>            <span class="nd">@Override</span>
+<span class="ln">273</span>            <span class="kd">public</span> <span class="n">View</span> <span class="nf">getView</span><span class="o">(</span><span class="kt">int</span> <span class="n">position</span><span class="o">,</span> <span class="n">View</span> <span class="n">convertView</span><span class="o">,</span> <span class="n">ViewGroup</span> <span class="n">parent</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">274</span>
+<span class="ln">275</span>                <span class="n">View</span> <span class="n">v</span> <span class="o">=</span> <span class="kd">super</span><span class="o">.</span><span class="na">getView</span><span class="o">(</span><span class="n">position</span><span class="o">,</span> <span class="n">convertView</span><span class="o">,</span> <span class="n">parent</span><span class="o">);</span>
+<span class="ln">276</span>                <span class="k">if</span> <span class="o">(</span><span class="n">position</span> <span class="o">==</span> <span class="n">getCount</span><span class="o">())</span> <span class="o">{</span>
+<span class="ln">277</span>                    <span class="o">((</span><span class="n">TextView</span><span class="o">)</span><span class="n">v</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">text1</span><span class="o">)).</span><span class="na">setText</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">);</span>
+<span class="ln">278</span>                    <span class="o">((</span><span class="n">TextView</span><span class="o">)</span><span class="n">v</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">text1</span><span class="o">)).</span><span class="na">setHint</span><span class="o">(</span><span class="n">getItem</span><span class="o">(</span><span class="n">getCount</span><span class="o">()));</span> <span class="c1">//&#34;Hint to be displayed&#34;
+</span><span class="ln">279</span><span class="c1"></span>                <span class="o">}</span>
+<span class="ln">280</span>
+<span class="ln">281</span>                <span class="k">return</span> <span class="n">v</span><span class="o">;</span>
+<span class="ln">282</span>            <span class="o">}</span>
+<span class="ln">283</span>
+<span class="ln">284</span>            <span class="nd">@Override</span>
+<span class="ln">285</span>            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getCount</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">286</span>                <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getCount</span><span class="o">()-</span><span class="n">1</span><span class="o">;</span>
+<span class="ln">287</span>            <span class="o">}</span>
+<span class="ln">288</span>
+<span class="ln">289</span>        <span class="o">};</span>
+<span class="ln">290</span>
+<span class="ln">291</span>        <span class="n">adapter</span><span class="o">.</span><span class="na">setDropDownViewResource</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">simple_spinner_dropdown_item</span><span class="o">);</span>
+<span class="ln">292</span>        <span class="n">String</span><span class="o">[]</span> <span class="n">adapterStrings</span> <span class="o">=</span> <span class="n">getContext</span><span class="o">().</span><span class="na">getResources</span><span class="o">().</span><span class="na">getStringArray</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">array</span><span class="o">.</span><span class="na">animal_enum</span><span class="o">);</span>
+<span class="ln">293</span>        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">adapterStrings</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<span class="ln">294</span>            <span class="n">adapter</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">adapterStrings</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+<span class="ln">295</span>        <span class="o">}</span>
+<span class="ln">296</span>        <span class="n">adapter</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l2_t1_random_animal_hint</span><span class="o">));</span>
+<span class="ln">297</span>        <span class="k">return</span> <span class="n">adapter</span><span class="o">;</span>
+<span class="ln">298</span>    <span class="o">}</span>
+<span class="ln">299</span>
+<span class="ln">300</span>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setAnimalSpinner</span><span class="o">(</span><span class="n">View</span> <span class="n">rootView</span><span class="o">,</span> <span class="kt">int</span> <span class="n">spinnerId</span><span class="o">,</span> <span class="n">AdapterView</span><span class="o">.</span><span class="na">OnItemSelectedListener</span> <span class="n">onItemSelectedListener</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">301</span>        <span class="n">animalSpinner</span> <span class="o">=</span> <span class="o">(</span><span class="n">Spinner</span><span class="o">)</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">spinnerId</span><span class="o">);</span>
+<span class="ln">302</span>        <span class="n">animalAdapter</span> <span class="o">=</span> <span class="n">newAnimalAdapter</span><span class="o">();</span>
+<span class="ln">303</span>        <span class="n">animalSpinner</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="n">animalAdapter</span><span class="o">);</span>
+<span class="ln">304</span>        <span class="n">animalSpinner</span><span class="o">.</span><span class="na">setSelection</span><span class="o">(</span><span class="n">animalAdapter</span><span class="o">.</span><span class="na">getCount</span><span class="o">());</span> <span class="c1">//display hint
+</span><span class="ln">305</span><span class="c1"></span>        <span class="n">animalSpinner</span><span class="o">.</span><span class="na">setOnItemSelectedListener</span><span class="o">(</span><span class="n">onItemSelectedListener</span><span class="o">);</span>
+<span class="ln">306</span>    <span class="o">}</span>
+<span class="ln">307</span>
+<span class="ln">308</span>    <span class="c1">// expanded list
+</span><span class="ln">309</span><span class="c1"></span>    <span class="n">CAIModelAdapter</span> <span class="n">caiModelAdapter</span><span class="o">;</span>
+<span class="ln">310</span>
+<span class="ln">311</span>    <span class="nd">@Override</span>
+<span class="ln">312</span>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setUpExpandedList</span><span class="o">(</span><span class="n">View</span> <span class="n">rootView</span><span class="o">,</span> <span class="kt">int</span> <span class="n">eventsId</span><span class="o">,</span> <span class="kt">int</span> <span class="n">eventsTitleId</span><span class="o">,</span> <span class="kt">int</span> <span class="n">eventTitleStringPattern</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">313</span>        <span class="n">events</span> <span class="o">=</span> <span class="o">(</span><span class="n">ListView</span><span class="o">)</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">eventsId</span><span class="o">);</span>
+<span class="ln">314</span>        <span class="n">expandedTitle</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">eventsTitleId</span><span class="o">);</span>
+<span class="ln">315</span>        <span class="n">expandeddTitlePattern</span> <span class="o">=</span> <span class="n">getString</span><span class="o">(</span><span class="n">eventTitleStringPattern</span><span class="o">);</span>
+<span class="ln">316</span>
+<span class="ln">317</span>        <span class="n">expandedTitle</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">expandeddTitlePattern</span><span class="o">,</span> <span class="n">0</span><span class="o">));</span>
+<span class="ln">318</span>
+<span class="ln">319</span>        <span class="k">if</span><span class="o">(</span><span class="n">expandedAdapter</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">320</span>            <span class="n">caiModelAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CAIModelAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">IndexesAndConstraintsModel</span><span class="o">&gt;());</span>
+<span class="ln">321</span>        <span class="o">}</span>
+<span class="ln">322</span>
+<span class="ln">323</span>        <span class="n">events</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="n">caiModelAdapter</span><span class="o">);</span>
+<span class="ln">324</span>        <span class="n">events</span><span class="o">.</span><span class="na">setOnTouchListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnTouchListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">325</span>
+<span class="ln">326</span>            <span class="c1">// Setting on Touch Listener for handling the touch inside ScrollView
+</span><span class="ln">327</span><span class="c1"></span>            <span class="nd">@Override</span>
+<span class="ln">328</span>            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTouch</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">,</span> <span class="n">MotionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">329</span>                <span class="c1">// Disallow the touch request for parent scroll on touch of child view
+</span><span class="ln">330</span><span class="c1"></span>                <span class="n">v</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">requestDisallowInterceptTouchEvent</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln">331</span>                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="ln">332</span>            <span class="o">}</span>
+<span class="ln">333</span>        <span class="o">});</span>
+<span class="ln">334</span>    <span class="o">}</span>
+<span class="ln">335</span>
+<span class="ln">336</span>    <span class="c1">// Fab menu section
+</span><span class="ln">337</span><span class="c1"></span>
+<span class="ln">338</span>    <span class="nd">@Override</span>
+<span class="ln">339</span>    <span class="kd">public</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="nf">helpFabMenuAction</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">340</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">341</span>            <span class="nd">@Override</span>
+<span class="ln">342</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">343</span>                <span class="o">((</span><span class="n">KittyTutorialActivity</span><span class="o">)</span><span class="n">getActivity</span><span class="o">()).</span><span class="na">showWebViewDialog</span><span class="o">(</span><span class="n">LessonsUriConstants</span><span class="o">.</span><span class="na">L3_T2_TUTORIAL</span><span class="o">);</span>
+<span class="ln">344</span>            <span class="o">}</span>
+<span class="ln">345</span>        <span class="o">};</span>
+<span class="ln">346</span>    <span class="o">}</span>
+<span class="ln">347</span>
+<span class="ln">348</span>    <span class="nd">@Override</span>
+<span class="ln">349</span>    <span class="kd">public</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="nf">sourceFabMenuAction</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">350</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">351</span>            <span class="nd">@Override</span>
+<span class="ln">352</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">353</span>                <span class="o">((</span><span class="n">KittyTutorialActivity</span><span class="o">)</span><span class="n">getActivity</span><span class="o">()).</span><span class="na">showWebViewDialog</span><span class="o">(</span><span class="n">LessonsUriConstants</span><span class="o">.</span><span class="na">L3_T2_SOURCE</span><span class="o">);</span>
+<span class="ln">354</span>            <span class="o">}</span>
+<span class="ln">355</span>        <span class="o">};</span>
+<span class="ln">356</span>    <span class="o">}</span>
+<span class="ln">357</span>
+<span class="ln">358</span>    <span class="nd">@Override</span>
+<span class="ln">359</span>    <span class="kd">public</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="nf">schemaFabMenuAction</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">360</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">361</span>            <span class="nd">@Override</span>
+<span class="ln">362</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">363</span>                <span class="o">((</span><span class="n">KittyTutorialActivity</span><span class="o">)</span><span class="n">getActivity</span><span class="o">()).</span><span class="na">showWebViewDialog</span><span class="o">(</span><span class="n">LessonsUriConstants</span><span class="o">.</span><span class="na">L3_T2_SCHEMA</span><span class="o">);</span>
+<span class="ln">364</span>            <span class="o">}</span>
+<span class="ln">365</span>        <span class="o">};</span>
+<span class="ln">366</span>    <span class="o">}</span>
+<span class="ln">367</span><span class="o">}</span></code></pre></div>
+</details></li>
+</ol>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

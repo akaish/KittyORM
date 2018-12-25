@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="file:///android_asset/inapptut/index.xml" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    <div class="posts">
+<div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Contacts</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Ways to contact us  Contact us via email:
+Right now you can write us email to kittyorm@gmail.com. Feel free to share your feedback or ideas how to enhance KittyORM.
+ Stay in touch, follow us at twitter:
+Just follow us at our twitter account to be kept informed of developments in the elaboration of KittyORM.
+ Stay in touch, follow us at telegram:
+Just subscribe to our telegram channel to be kept informed of developments in the elaboration of KittyORM.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l7t1/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson 4 tab 2 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Example of KittyORM logging setup: 1@KITTY_DATABASE( 2 isLoggingOn = true, // Base logging flag 3 isProductionOn = false, // Production logging flag 4 isKittyDexUtilLoggingEnabled = false, // dex logging flag 5 logTag = MigrationDBv3.LTAG, // log tag 6 databaseName = &#34;mig&#34;, // database name 7 databaseVersion = 3, // database version 8 ... 9) 10 11public class MigrationDBv3 extends KittyDatabase { 12 13 public static final String LTAG = &#34;MIGv3&#34;; 14 15 .
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l4t2_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson 4 tab 3 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Example script for changing all imports at KittyORM that import Android database classes to corresponding classes of SQLCipher: #!/bin/bash find . -name &#39;*.java&#39; -exec sed -i -e &#39;s/android.database.sqlite/net.sqlcipher.database/g&#39; {} \; find . -name &#39;*.java&#39; -exec sed -i -e &#39;s/android.database/net.sqlcipher/g&#39; {} \; Modifying methods of KittyDatabaseHelper.class for encryption support: 1public SQLiteDatabase getWritableDatabase(String pwd) { 2 return super.getWritableDatabase(pwd); 3} 4 5public SQLiteDatabase getReadableDatabase(String pwd) { 6 return super.getReadableDatabase(pwd); 7} Modifying сonstructor of KittyDatabase.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l4t3_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 Tab 2: entity update</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Updating existing entity with KittyORM For updating an entity with KittyORM you may use KittyMapper.save(M model) or KittyMapper.update(M model) method. As mentioned in the earlier lesson using save method force KittyORM to define what operation should be done with the provided model: update or insert. KittyORM makes this decision based on a state of entity fields that can be used for the unambiguous definition of associated record in the database.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t2/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 Tab 3: delete entity</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Deleting entities with KittyORM You have two ways to delete entities in KittyORM:
+ Delete associated with model row by calling KittyMapper.delete(M model) or KittyMapper.delete(List&lt;M&gt; models) methods: 1// Initializing database instance 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.getMapper(RandomModel.class); 5// Getting existing model from database (assuming that 0l model exists) 6RandomModel toDelete = mapper.findByIPK(0l); 7// Deleting model 8long rowsAffected = mapper.delete(toDelete);
+ Delete all rows in a table that suit provided WHERE clause generated with SQLiteConditionBuilder.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t3/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 Tab 4: find entity</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Finding entities with KittyORM To find entities with KittyORM just use one of methods already implemented at KittyMapper.class: 1// Initializing database instance 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.getMapper(RandomModel.class); 5// Getting existing model from database (assuming that 0l model exists) 6RandomModel byIPK = mapper.findByIPK(0l); 7// Getting existing model with rowid (assuming that 10l model exists) 8RandomModel byRowid = mapper.findByRowID(10l); 9// Getting all models 10List&lt;RandomModel&gt; all = mapper.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t4/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 Tab 5: bulk operations</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM and bulk operations KittyORM by design provides several methods for updating, inserting and deleting collections of entities. If you want to save a collection of entities just call save(List&lt;M&gt; models) method of KittyMapper.class or its implementation and all models in provided collections would be updated or inserted (KittyORM would make a decision on this by processing POJO fields that can be used for unambiguous record definition in source table).
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t5/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 tab 1 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM insertion example 1// Initializing database instance 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.getMapper(RandomModel.class); 5// Initializing model 6RandomModel toInsert = new RandomModel(); 7// Setting model fields 8toInsert.randomInt = 10; 9... 10// Saving model with save method 11mapper.save(toInsert); 12// Saving model with direct insert call 13mapper.insert(toInsert);
+KittyORM basic_datase implementation sources
+  Click to view BasicDatabase.class:  1@KITTY_DATABASE( 2 databaseName = &#34;basic_database&#34;, 3 domainPackageNames = {&#34;net.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t1_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 tab 2 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM update example
+ 1// Initializing database instance 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.getMapper(RandomModel.class); 5// Getting existing model from database (assuming that 0l model exists) 6RandomModel toUpdate = mapper.findByIPK(0l); 7// Setting model fields 8toUpdate.randomInt = 12; 9... 10// Saving model with save method 11mapper.save(toUpdate); 12// Saving model with direct insert call 13mapper.update(toInsert); 1// Initializing database instance 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t2_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 tab 3 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM delete example
+ 1// Initializing database instance 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.getMapper(RandomModel.class); 5// Getting existing model from database (assuming that 0l model exists) 6RandomModel toDelete = mapper.findByIPK(0l); 7// Deleting model 8long rowsAffected = mapper.delete(toDelete); 1// Deleting by random_int range 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.getMapper(RandomModel.class); 5// Creating clause for deletion 6SQLiteCondition condition = new SQLiteConditionBuilder() 7 .
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t3_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 tab 4 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM find example 1// Initializing database instance 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.getMapper(RandomModel.class); 5// Getting existing model from database (assuming that 0l model exists) 6RandomModel byIPK = mapper.findByIPK(0l); 7// Getting existing model with rowid (assuming that 10l model exists) 8RandomModel byRowid = mapper.findByRowID(10l); 9// Getting all models 10List&lt;RandomModel&gt; all = mapper.findAll(); 11// Getting model with condition (fetching 100 existing tigers) 12QueryParameters parameters = new QueryParameters(); 13parameters.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t4_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 tab 5 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM bulk save example 1// Initializing database instance 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.getMapper(RandomModel.class); 5// Generating list of entities to insert 6List&lt;RandomModel&gt; toSave = new ArrayList&lt;&gt;(); 7// Filling this list with randomly generated POJOs 8RNDRandomModelFactory rndFactory = new RNDRandomModelFactory(getContext()); 9for(int i = 0; i &lt; 100; i++) { 10 toSave.add(rndFactory.newRandomModel()); 11} 12// Running bulk save 13mapper.save(toSave);
+KittyORM bulk save in transaction mode example
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t5_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson3 DB schema</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Create schema script generated by KittyORM for schema basic_database v. 1 CREATE TABLE IF NOT EXISTS cai (id INTEGER NOT NULL PRIMARY KEY, rnd_id INTEGER NOT NULL UNIQUE, animal TEXT CHECK (animal IN (&#34;CAT&#34;, &#34;TIGER&#34;, &#34;LION&#34;)), default_number INTEGER NOT NULL DEFAULT 28, creation_date TEXT NOT NULL DEFAULT CURRENT_DATE , creation_tmstmp INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP , CONSTRAINT CAI_FK FOREIGN KEY(rnd_id) REFERENCES random (id) ON UPDATE CASCADE ON DELETE CASCADE); CREATE INDEX IF NOT EXISTS basic_database_cai_creation_date_INDEX ON cai (creation_date); CREATE UNIQUE INDEX IF NOT EXISTS IAC_unique_index_creation_timestamp ON cai (creation_tmstmp); CREATE TABLE IF NOT EXISTS random (id INTEGER NOT NULL PRIMARY KEY ASC, random_int INTEGER, rnd_int_custom_column_name INTEGER, rndanimal TEXT, random_animal_name TEXT, random_animal_says TEXT); CREATE INDEX IF NOT EXISTS random_animal_index ON random (rndanimal); CREATE TABLE IF NOT EXISTS complex_random (id INTEGER NOT NULL PRIMARY KEY ASC, random_int INTEGER, rnd_int_custom_column_name INTEGER, rndanimal TEXT, random_animal_name TEXT, bool_f INTEGER, byte_f INTEGER, double_f REAL, long_f INTEGER, short_f INTEGER, float_f REAL, byte_array NONE, string_f TEXT, big_decimal_f TEXT, big_integer_f TEXT, uri_f TEXT, file_f TEXT, currency_f TEXT, string_s_d_f TEXT, bitmap_colour TEXT, byte_array_s_d_f BLOB, bool_f_f INTEGER, byte_f_f INTEGER, double_f_f REAL, short_f_f INTEGER, float_f_f REAL, long_f_f INTEGER, date_f INTEGER, calendar_f INTEGER, timestamp_f INTEGER); Drop schema script generated by KittyORM for schema basic_database v.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l3_schema/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson3 Tab1: Datatype affinities mapping</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM datatypes mapping By design instead of mapping java types to SQLite supported SQL datatypes KittyORM maps them directly into SQLite affinities, KittyORM supports predefined mapping for primitive java types, primitive wrappers, byte array, enumerations and following types: java.lang.String, java.util.Date, java.util.Currency, java.util.Calendar, java.sql.Timestamp, java.math.BigInteger, java.math.BigDecimal, java.io.File, android.net.Uri.
+ Click to view KittyORM mapping rules table: 
+TEXT datatype affinity mapping
+   SQLite affinity Java type Notes     TEXT Enumurations To SQLite: Enum someValue.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l3t1/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson3 Tab2: Constraints and indexes</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Defining data constraints and indexes with KittyORM KittyORM supports indexes and constraints declaration by using annotations. Right now KittyORM offers you functionality to define seven supported by SQLite constraints without any need to define them in raw SQL code. Also in such way you can define table indexes. KittyORM is capable to define database schema with nearly all features that are supported by SQLite (SQL As Understood By SQLite) with usage only of annotations.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l3t2/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson3 tab 1 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM custom mapping implementation example
+  Click to view model field annotation example:  1// Saving to text 2@KITTY_COLUMN( 3 columnOrder = 18, 4 columnAffinity = TypeAffinities.TEXT 5) 6@KITTY_COLUMN_SERIALIZATION 7public AnimalSounds stringSDF; 8 9// Saving to blob 10@KITTY_COLUMN( 11 columnOrder = 20, 12 columnAffinity = TypeAffinities.BLOB 13) 14@KITTY_COLUMN_SERIALIZATION 15public Bitmap byteArraySDF; 
+  Click to serialization\deserialization methods implementation examples:  1String stringSDFSerialize() { 2 if(stringSDF == null) return null; 3 return new GsonBuilder().
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l3t1_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson3 tab 2 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM constraint declaration examples
+  Click to view NOT NULL constraint declaration example:  1@KITTY_COLUMN(columnOrder = 0) 2@PRIMARY_KEY 3@NOT_NULL // NOT NULL constraint declaration 4public Long id; 
+  Click to view DEFAULT constraint declaration examples:  1@KITTY_COLUMN(columnOrder = 3) 2@DEFAULT(signedInteger = 28) // You can choose for options for default declaration, if nothing set than 0 value would be used 3@NOT_NULL 4public Integer defaultNumber; 5 6@KITTY_COLUMN(columnOrder = 4) 7@DEFAULT( 8 predefinedLiteralValue = LiteralValues.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l3t2_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson4 Tab1: Speed up your KittyORM</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  How to make your KittyORM faster? KittyORM build with Java7 for Android and main idea is to implement developer-friendly tool that would save your time and money on implementing business logic that needs SQLite database for storing data. KittyORM provides a lot of features that can save your time on developing and supporting your data model, but it uses reflection to avoid messing around with raw SQL code and some tools as generating data model from domain package.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l4t1/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson4 Tab2: Debugging KittyORM</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  How to debug your KittyORM? By design KittyORM able to log to logstream quite a lot of information in order to make it easier to implement KittyORM database in your application. Right now KittyORM has three types of logs: base log that logs main information such as errors and bootstrap messages, query log that logs queries sent to be executed by SQLite and dex utility log that logs what happens when KittyORM registry created from package.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l4t2/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson4 Tab3: Database encryption</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Database encryption with KittyORM Right now KittyORM has no built-in functionality to provided partial or full database encryption. In future there are plans to implement AES128\256 partial encryption but what if you want to encrypt your database right now? You can use third-party solutions for this. For example, you can use such great solution as SQLCipher. So, you want to encrypt your KittyORM database with SQLCipher. Here some steps to take:
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l4t3/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson4 tab 1 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Tip №1: Avoid using generating data model from packages
+   Click to view static registry initialization via annotations example:  1@KITTY_DATABASE( 2 databaseName = &#34;basic_database&#34;, 3 domainPackageNames = {&#34;net.akaish.kittyormdemo.sqlite.basicdb&#34;}, 4 logTag = LOG_TAG, 5 isLoggingOn = true, 6 isProductionOn = true, 7 isPragmaOn = true 8) 9@KITTY_DATABASE_REGISTRY( 10 // You can just define set of domain models and extended crud controllers (mappers) would 11 // be added only if those models are annotated with KITTY_EXTENDED_CRUD annotation.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l4t1_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 Tab 1: Migrations overview</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Migrations mechanism between different schema versions By design KittyORM has three main mechanisms for supporting migrations between different versions of database. Those utilities called Migrators and implements KittyORMVersionMigrator abstract class. By default, when your application needs to update database schema KittyORM would just wipe old version database and create new schema, however it is not suitable for production purposes. You can define what migration utility to use by annotating your KittyDatabase class implementation with @KITTY_DATABASE_HELPER annotation and set its onUpgradeBehavior from any option available at @KITTY_DATABASE_HELPER.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t1/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 Tab 2: DropCreate Migrator</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  DropCreate Migrator overview As mentioned earlier, DropCreate Migrator is just simple utility that would generate drop and create statements of your new schema version and would try to apply it at KittyDatabaseHelper.onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) method call. In this case DropCreate Migrator only process new schema table names, so if in new schema there is no table that is present in older one then this table would stay at database.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t2/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 Tab 3: SimpleMigrationScriptGenerator Migrator</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  SimpleMigrationScriptGenerator Migrator overview SimpleMigrationScriptGenerator Migrator is a simple migration utility that tries to generate migration script based on differences between current and new schema and save as many data as possible. It is implemented by KittySimpleMigrator.class that uses net.akaish.kitty.orm.util.KittySimpleMigrationScriptGenerator for generating migration script. KittySimpleMigrationScriptGenerator is capable only to delete and create new indexes and table as well as adding or deleting columns in existing tables, so use it only when you&rsquo;re sure that there are no constraints defined that can be violated with script created by this utility class.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t3/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 Tab 4: Filescript Migrator</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Using Filescript Migrator and stored SQLite scripts with KittyORM With KittyORM you can use stored at file system or at assets SQLite scripts for database creation, schema update or for filling your newly created\updated database with some initial data sets. Also, you may use those scripts to upgrade your schema when necessary with Filescript Migrator It is a bit complicated thing, so this lesson divided into two parts, use table of contents for navigation.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t4/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 tab 1 DB schema</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Create schema script generated by KittyORM for database mig version 1 CREATE TABLE IF NOT EXISTS mig_one (id INTEGER NOT NULL PRIMARY KEY ASC, creation_date TEXT NOT NULL, some_integer INTEGER); Drop schema script generated by KittyORM for database mig version 1 DROP TABLE IF EXISTS mig_one; This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit http://creativecommons.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t1_schema/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 tab 1 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM mig v.1 implementation sources
+  Click to view MigrationDBv1.class:  1@KITTY_DATABASE( 2 isLoggingOn = true, 3 isProductionOn = false, 4 databaseName = &#34;mig&#34;, 5 databaseVersion = 1, 6 logTag = MigrationDBv1.LTAG, 7 domainPackageNames = {&#34;net.akaish.kittyormdemo.sqlite.migrations.migv1&#34;} 8) 9@KITTY_DATABASE_REGISTRY( 10 domainModels = {net.akaish.kittyormdemo.sqlite.migrations.migv1.MigOneModel.class} 11) 12public class MigrationDBv1 extends KittyDatabase { 13 14 public static final String LTAG = &#34;MIGv1&#34;; 15 16 /** 17* KittyORM main database class that represents bootstrap and holder for all related with database 18* components.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t1_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 tab 2 DB schema</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Create schema script generated by KittyORM for database mig version 2 CREATE TABLE IF NOT EXISTS mig_one (id INTEGER NOT NULL PRIMARY KEY ASC, creation_date TEXT NOT NULL DEFAULT CURRENT_DATE , default_integer INTEGER DEFAULT 228, current_timestamp INTEGER); CREATE INDEX IF NOT EXISTS m1_di_index ON mig_one (default_integer); CREATE TABLE IF NOT EXISTS mig_two (id INTEGER NOT NULL PRIMARY KEY ASC, mig_one_reference INTEGER REFERENCES mig_one (id) ON UPDATE CASCADE ON DELETE CASCADE, some_animal TEXT); CREATE INDEX IF NOT EXISTS m2_sa_index ON mig_two (some_animal); Drop schema script generated by KittyORM for database mig version 2 DROP TABLE IF EXISTS mig_one; DROP TABLE IF EXISTS mig_two; Migration script generated by KittyORM for database mig from version 1 to version 2 (DC migrator) DROP TABLE IF EXISTS mig_one; DROP TABLE IF EXISTS mig_two; CREATE TABLE IF NOT EXISTS mig_one (id INTEGER NOT NULL PRIMARY KEY ASC, creation_date TEXT NOT NULL DEFAULT CURRENT_DATE , default_integer INTEGER DEFAULT 228, current_timestamp INTEGER); CREATE INDEX IF NOT EXISTS m1_di_index ON mig_one (default_integer); CREATE TABLE IF NOT EXISTS mig_two (id INTEGER NOT NULL PRIMARY KEY ASC, mig_one_reference INTEGER REFERENCES mig_one (id) ON UPDATE CASCADE ON DELETE CASCADE, some_animal TEXT); CREATE INDEX IF NOT EXISTS m2_sa_index ON mig_two (some_animal); This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t2_schema/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 tab 2 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM mig v.2 implementation sources
+  Click to view MigrationDBv2.class:  1@KITTY_DATABASE( 2 isLoggingOn = true, 3 isProductionOn = false, 4 databaseName = &#34;mig&#34;, 5 databaseVersion = 2, 6 logTag = MigrationDBv2.LTAG, 7 domainPackageNames = {&#34;net.akaish.kittyormdemo.sqlite.migrations.migv2&#34;} 8) 9@KITTY_DATABASE_REGISTRY( 10 domainModels = { 11 net.akaish.kittyormdemo.sqlite.migrations.migv2.MigOneModel.class, 12 net.akaish.kittyormdemo.sqlite.migrations.migv2.MigTwoModel.class 13 } 14) 15@KITTY_DATABASE_HELPER( 16 onUpgradeBehavior = KITTY_DATABASE_HELPER.UpgradeBehavior.DROP_AND_CREATE 17) 18public class MigrationDBv2 extends KittyDatabase { 19 20 public static final String LTAG = &#34;MIGv2&#34;; 21 22 /** 23* KittyORM main database class that represents bootstrap and holder for all related with database 24* components.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t2_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 tab 3 DB schema</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Create schema script generated by KittyORM for database mig version 3 CREATE TABLE IF NOT EXISTS mig_three (id INTEGER NOT NULL PRIMARY KEY ASC, some_value TEXT NOT NULL DEFAULT &#39;Something random&#39;); CREATE TABLE IF NOT EXISTS mig_one (id INTEGER NOT NULL PRIMARY KEY ASC, creation_date TEXT NOT NULL DEFAULT CURRENT_DATE , default_integer INTEGER DEFAULT 228); CREATE INDEX IF NOT EXISTS m1_di_index ON mig_one (default_integer); CREATE TABLE IF NOT EXISTS mig_two (id INTEGER NOT NULL PRIMARY KEY ASC, mig_one_reference INTEGER REFERENCES mig_one (id) ON UPDATE CASCADE ON DELETE CASCADE, some_animal TEXT, some_animal_sound TEXT); Drop schema script generated by KittyORM for database mig version 3 DROP TABLE IF EXISTS mig_one; DROP TABLE IF EXISTS mig_two; DROP TABLE IF EXISTS mig_three; Migration script generated by KittyORM for database mig from version 2 to version 3 (SimpleMigrationScriptGenerator migrator) ALTER TABLE mig_one RENAME TO mig_one_t_old; CREATE TABLE IF NOT EXISTS mig_one (id INTEGER NOT NULL PRIMARY KEY ASC, creation_date TEXT NOT NULL DEFAULT CURRENT_DATE , default_integer INTEGER DEFAULT 228); INSERT INTO mig_one (id, creation_date, default_integer) SELECT id, creation_date, default_integer FROM mig_one_t_old; DROP TABLE IF EXISTS mig_one_t_old; CREATE INDEX IF NOT EXISTS m1_di_index ON mig_one (default_integer); ALTER TABLE mig_two ADD COLUMN some_animal_sound; CREATE TABLE IF NOT EXISTS mig_three (id INTEGER NOT NULL PRIMARY KEY ASC, some_value TEXT NOT NULL DEFAULT &#39;Something random&#39;); DROP INDEX IF EXISTS mig.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t3_schema/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 tab 3 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM mig v.3 implementation sources
+  Click to view MigrationDBv3.class:  1@KITTY_DATABASE( 2 isLoggingOn = true, 3 isProductionOn = false, 4 isKittyDexUtilLoggingEnabled = false, 5 logTag = MigrationDBv3.LTAG, 6 databaseName = &#34;mig&#34;, 7 databaseVersion = 3, 8 domainPackageNames = {&#34;net.akaish.kittyormdemo.sqlite.migrations.migv3&#34;} 9) 10@KITTY_DATABASE_REGISTRY( 11 domainModels = { 12 net.akaish.kittyormdemo.sqlite.migrations.migv3.MigOneModel.class, 13 net.akaish.kittyormdemo.sqlite.migrations.migv3.MigTwoModel.class, 14 net.akaish.kittyormdemo.sqlite.migrations.migv3.MigThreeModel.class 15 } 16) 17@KITTY_DATABASE_HELPER( 18 onUpgradeBehavior = KITTY_DATABASE_HELPER.UpgradeBehavior.USE_SIMPLE_MIGRATIONS 19) 20public class MigrationDBv3 extends KittyDatabase { 21 22 public static final String LTAG = &#34;MIGv3&#34;; 23 /** 24* KittyORM main database class that represents bootstrap and holder for all related with database 25* components.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t3_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 tab 4 DB schema</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Create schema script for database mig version 4 CREATE TABLE IF NOT EXISTS mig_four (id INTEGER NOT NULL PRIMARY KEY ASC, mig_three_reference INTEGER NOT NULL REFERENCES mig_three (id) ON UPDATE NO ACTION ON DELETE NO ACTION, mig_two_reference INTEGER NOT NULL REFERENCES mig_two (id) ON UPDATE NO ACTION ON DELETE NO ACTION, creation_date INTEGER NOT NULL DEFAULT CURRENT_DATE ); CREATE TABLE IF NOT EXISTS mig_three (id INTEGER NOT NULL PRIMARY KEY ASC, new_sv_name TEXT NOT NULL DEFAULT &#39;Something random&#39;, random_long INTEGER DEFAULT 22); CREATE INDEX IF NOT EXISTS m3_rnd_long ON mig_three (random_long); CREATE TABLE IF NOT EXISTS mig_two (id INTEGER NOT NULL PRIMARY KEY ASC, mig_one_reference INTEGER, some_animal TEXT, some_animal_sound TEXT); Drop schema script for database mig version 4 DROP TABLE IF EXISTS mig_four; DROP TABLE IF EXISTS mig_three; DROP TABLE IF EXISTS mig_two; Migration script for database mig from version 3 to version 4 (Filescript migrator) -- minus FK M2.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t4_schema/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson5 tab 4 sources</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  KittyORM mig v.4 implementation sources
+  Click to view MigrationDBv4.class:  1@KITTY_DATABASE( 2 isLoggingOn = false, 3 isProductionOn = true, 4 isKittyDexUtilLoggingEnabled = false, 5 databaseName = &#34;mig&#34;, 6 domainPackageNames = {&#34;net.akaish.kittyormdemo.sqlite.migrations.migv4&#34;}, 7 databaseVersion = 4, 8 logTag = MigrationDBv4.LTAG 9) 10@KITTY_DATABASE_REGISTRY( 11 domainModels = { 12 net.akaish.kittyormdemo.sqlite.migrations.migv4.MigTwoModel.class, 13 net.akaish.kittyormdemo.sqlite.migrations.migv4.MigThreeModel.class, 14 net.akaish.kittyormdemo.sqlite.migrations.migv4.MigFourModel.class 15 } 16) 17@KITTY_DATABASE_HELPER( 18 onUpgradeBehavior = KITTY_DATABASE_HELPER.UpgradeBehavior.USE_FILE_MIGRATIONS 19) 20public class MigrationDBv4 extends KittyDatabase { 21 22 public static final String LTAG = &#34;MIGv4&#34;; 23 24 /** 25* KittyORM main database class that represents bootstrap and holder for all related with database 26* components.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l5t4_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson6 Tab1: Use KittyORM</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Use KittyORM in your projects and leave your feedback! It is very simple to make KittyORM even greater. Just use it in your projects and leave your feedback. Easy as a pie:
+ Visit KittyORM page located at https://akaish.github.io/KittyOrmPages/ or KittyORM GitHub repository located at https://github.com/akaish/KittyORM to acquire instructions on configuring your project in order to use KittyORM.
+ Implement your business logic without messing with SQL and a lot of boiler plate code for database operations.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l6t1/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson6 Tab2: Share KittyORM</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Like KittyORM? Share it! You use KittyORM and you like it? Share it with those who can use for their projects. That&rsquo;s simple. It is really easy way to help to improve KittyORM, more people use it means more feedback, bug reports or feature request would be received. Bigger community means greater opportunities for KittyORM project and all other projects that use it or would use it for database related operations.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l6t2/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson6 Tab3: Develop KittyORM</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Like KittyORM? Develop it! Like KittyORM and have some ideas how to improve it? Have some free time you want to spend to develop KittyORM? Would like to help to translate KittyORM documentation to more languages? You&rsquo;re welcome! Contact us via email kittyorm@gmail.com with subject contains !contribute and become a contributor! What things you can do right now?
+ KittyORM code right now not covered with unit tests. It would be awesome to fix this situation.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l6t3/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson6 Tab4: Sponsor KittyORM</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Like KittyORM? Sponsor it! A lot of time spent to develop KittyORM and right now KittyORM is capable to fulfill most of your needs related with implementing database operations to support your business processes. It was hard work to bring KittyORM to you. You can help KittyORM to become more efficient, fast, stable etc. Just use it, share it or contribute to it. However, it would be great if you consider to help KittyORM with voluntary donation.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l6t4/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson7 Tab2: Legal information</a>
+  </h1>
+  <span class="post-date">Thu, Nov 15, 2018</span>
+  Legal information KittyORM project legal information KittyORM project consists of three main components, two of them are hosted at GitHub repository at https://github.com/akaish/KittyORM and licensed under Creative Commons license:
+ KittyORM library - ORM library for SQLite\Android that implements data mapper pattern. Author: Denis Bogomolov (Bogomolov Denis Romanovich).
+Copyright © 2018 Denis Bogomolov. Some rights reserved.
+KittyORM is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. To view a copy of this license, visit http://creativecommons.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l7t2/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 DB schema</a>
+  </h1>
+  <span class="post-date">Sat, Aug 18, 2018</span>
+  Create schema script generated by KittyORM for schema basic_database v. 1 CREATE TABLE IF NOT EXISTS cai (id INTEGER NOT NULL PRIMARY KEY, rnd_id INTEGER NOT NULL UNIQUE, animal TEXT CHECK (animal IN (&#34;CAT&#34;, &#34;TIGER&#34;, &#34;LION&#34;)), default_number INTEGER NOT NULL DEFAULT 28, creation_date TEXT NOT NULL DEFAULT CURRENT_DATE , creation_tmstmp INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP , CONSTRAINT CAI_FK FOREIGN KEY(rnd_id) REFERENCES random (id) ON UPDATE CASCADE ON DELETE CASCADE); CREATE INDEX IF NOT EXISTS basic_database_cai_creation_date_INDEX ON cai (creation_date); CREATE UNIQUE INDEX IF NOT EXISTS IAC_unique_index_creation_timestamp ON cai (creation_tmstmp); CREATE TABLE IF NOT EXISTS random (id INTEGER NOT NULL PRIMARY KEY ASC, random_int INTEGER, rnd_int_custom_column_name INTEGER, rndanimal TEXT, random_animal_name TEXT, random_animal_says TEXT); CREATE INDEX IF NOT EXISTS random_animal_index ON random (rndanimal); CREATE TABLE IF NOT EXISTS complex_random (id INTEGER NOT NULL PRIMARY KEY ASC, random_int INTEGER, rnd_int_custom_column_name INTEGER, rndanimal TEXT, random_animal_name TEXT, bool_f INTEGER, byte_f INTEGER, double_f REAL, long_f INTEGER, short_f INTEGER, float_f REAL, byte_array NONE, string_f TEXT, big_decimal_f TEXT, big_integer_f TEXT, uri_f TEXT, file_f TEXT, currency_f TEXT, string_s_d_f TEXT, bitmap_colour TEXT, byte_array_s_d_f BLOB, bool_f_f INTEGER, byte_f_f INTEGER, double_f_f REAL, short_f_f INTEGER, float_f_f REAL, long_f_f INTEGER, date_f INTEGER, calendar_f INTEGER, timestamp_f INTEGER); Drop schema script generated by KittyORM for schema basic_database v.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2_schema/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson1 source code</a>
+  </h1>
+  <span class="post-date">Fri, Aug 17, 2018</span>
+  Database, model, supporting classes  Click to view SimpleDatabase.class 1package net.akaish.kittyormdemo.sqlite.introductiondb; 2 3import android.content.Context; 4 5import net.akaish.kitty.orm.KittyDatabase; 6import net.akaish.kitty.orm.annotations.KITTY_DATABASE; 7 8/** 9* Created by akaish on 09.08.18. 10*/ 11@KITTY_DATABASE( 12 isLoggingOn = true, 13 isProductionOn = false, 14 domainPackageNames = {&#34;net.akaish.kittyormdemo.sqlite.introductiondb&#34;} 15) 16public class SimpleDatabase extends KittyDatabase { 17 /** 18* KittyORM main database class that represents bootstrap and holder for all related with database 19* components. 20* &lt;br&gt; See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l1_code/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson1 Tab1: Introduction to KittyORM</a>
+  </h1>
+  <span class="post-date">Thu, Aug 16, 2018</span>
+  What is KittyORM? KittyORM is an Object-Relational Mapping library designed for use with Android and SQLite. It implements Data Mapper pattern design and its main purpose is to simplify interaction with SQLite database in Android applications. Written in Java 7 it supports devices from API level 9 Android.
+Main features we want to achieve with KittyORM are:  simple and clear API that handles database creation, version management and interaction with database tables; high flexibility of working with model POJO files via database mappers that grants you an ability to focus on your business processes not on working with raw SQL queries; full support of all features to create your SQLite schema via built-in annotations.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l1t1/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson1 Tab2: Getting started with KittyORM</a>
+  </h1>
+  <span class="post-date">Thu, Aug 16, 2018</span>
+  Gradle setup First step is to add KittyORM via Gradle to your project: [TODO code block gradle depencie]
+KittyORM configuration and implementation Create package for storing your POJO models, KittyORM database class, KittyORM helper class (if necessary) and KittyORM extended mappers (if necessary).
+First step: extend KittyDatabase class, implement default constructor and annotate it with @KITTY_DATABASE annotation (and, if necessary, with @KITTY_DATABASE_HELPER).
+Second step: create your first POJO model by extending KittyModel class, implement default constructor and annotate it with @KITTY_TABLE annotation.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l1t2/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson2 Tab1: new model insertion</a>
+  </h1>
+  <span class="post-date">Thu, Aug 16, 2018</span>
+  Configuring database setup In this lesson we work with a bit more complex KittyORM example. This example database contains four models and one extended CRUD controller.
+Firstly, create KittyDatabase implementation class annotated with @KITTY_DATABASE annotation.  Click to view this lesson KittyORM database implemetation:  1@KITTY_DATABASE( 2 databaseName = &#34;basic_database&#34;, 3 domainPackageNames = {&#34;net.akaish.kittyormdemo.sqlite.basicdb&#34;}, 4 logTag = LOG_TAG, 5 isLoggingOn = true, 6 isProductionOn = true, 7 isPragmaOn = true 8) 9@KITTY_DATABASE_REGISTRY( 10 domainPairs = { 11 @KITTY_REGISTRY_PAIR(model = ComplexRandomModel.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l2t1/">Read More…</a>
+  </div>
+  
+</div><div class="post">
+  <h1 class="post-title">
+    <a href="#ZgotmplZ">Lesson1 DB schema</a>
+  </h1>
+  <span class="post-date">Thu, Aug 16, 2018</span>
+  Create schema script generated by KittyORM for schema simple_database v. 1 CREATE TABLE IF NOT EXISTS simple_example (id INTEGER NOT NULL PRIMARY KEY ASC, random_integer INTEGER, first_name TEXT); Drop schema script generated by KittyORM for schema simple_database v. 1 DROP TABLE IF EXISTS simple_example; This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit http://creativecommons.
+  
+  <div class="read-more-link">
+    <a href="/android_asset/inapptut/lessons/l1_schema/">Read More…</a>
+  </div>
+  
+</div>
+</div>
+    </div>
+
+  </body>
+</html>

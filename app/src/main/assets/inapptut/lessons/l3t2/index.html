@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson3 Tab2: Constraints and indexes &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           
+
+<h2 id="defining-data-constraints-and-indexes-with-kittyorm">Defining data constraints and indexes with KittyORM</h2>
+
+<p>KittyORM supports indexes and constraints declaration by using annotations. Right now KittyORM offers you functionality to define seven supported by SQLite constraints without any need to define them in raw SQL code. Also in such way you can define table indexes. KittyORM is capable to define database schema with nearly all features that are supported by SQLite (<a href="https://sqlite.org/lang_createtable.html">SQL As Understood By SQLite</a>) with usage only of annotations. In demo you can play with form for creating and inserting entity that declares all constraints and index.</p>
+
+<h3 id="table-of-contents">Table of contents</h3>
+
+<ol>
+<li><a href="#not-null-constraint-declaration"><code>NOT NULL</code> constraint declaration</a></li>
+<li><a href="#default-constraint-declaration"><code>DEFAULT</code> constraint declaration</a></li>
+<li><a href="#unique-constraint-declaration"><code>UNIQUE</code> constraint declaration</a></li>
+<li><a href="#check-constraint-declaration"><code>CHECK</code> constraint declaration</a></li>
+<li><a href="#collate-constraint-declaration"><code>COLLATE</code> constraint declaration</a></li>
+<li><a href="#primary-key-constraint-declaration"><code>PRIMARY KEY</code> constraint declaration</a></li>
+<li><a href="#foreign-key-constraint-declaration"><code>FOREIGN KEY</code> constraint declaration</a></li>
+<li><a href="#indexes-declaration">Indexes declaration</a></li>
+</ol>
+
+<h3 id="not-null-constraint-declaration"><code>NOT NULL</code> constraint declaration</h3>
+
+<p>To declare <code>NOT NULL</code> constraint just annotate corresponding model field with <code>@NOT_NULL</code> annotation. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@PRIMARY_KEY</span>
+<span class="ln">3</span><span class="nd">@NOT_NULL</span> <span class="c1">// NOT NULL constraint declaration
+</span><span class="ln">4</span><span class="c1"></span><span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span></code></pre></div>
+<a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<h3 id="default-constraint-declaration"><code>DEFAULT</code> constraint declaration</h3>
+
+<p>To declare <code>DEFAULT</code> constraint just annotate corresponding model field with <code>@DEFAULT</code> annotation. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">3</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@DEFAULT</span><span class="o">(</span><span class="n">signedInteger</span> <span class="o">=</span> <span class="n">28</span><span class="o">)</span> <span class="c1">// You can choose for options for default declaration, if nothing set than 0 value would be used
+</span><span class="ln">3</span><span class="c1"></span><span class="nd">@NOT_NULL</span>
+<span class="ln">4</span><span class="kd">public</span> <span class="n">Integer</span> <span class="n">defaultNumber</span><span class="o">;</span></code></pre></div>
+Without setting any fields of <code>@DEFAULT</code> annotation then default value for annotated field would be 0 (int, zero). KittyORM provide you some options on declaring default constraints, for example, you can set as a default value for field predefined <code>LiteralValues</code> enum element, signed integer, literal value or expression. Example of declaring <code>DEFAULT</code> constraint from predefined literals:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">4</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@DEFAULT</span><span class="o">(</span>
+<span class="ln">3</span>        <span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_DATE</span>
+<span class="ln">4</span><span class="o">)</span>
+<span class="ln">5</span><span class="nd">@NOT_NULL</span>
+<span class="ln">6</span><span class="kd">public</span> <span class="n">String</span> <span class="n">creationDate</span><span class="o">;</span></code></pre></div>
+By design, KittyORM tries to insert NULL value from entity field to database at insert, so to avoid inserting NULL to database column that should acquire value from <code>DEFAULT</code> constraint before inserting model you have to invoke on this model <code>KittyModel.setFieldExclusion(&quot;modelFieldName&quot;)</code> method. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="n">IndexesAndConstraintsModel</span> <span class="n">model</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IndexesAndConstraintsModel</span><span class="o">();</span>
+<span class="ln">2</span><span class="n">model</span><span class="o">.</span><span class="na">animal</span> <span class="o">=</span> <span class="n">someAnimal</span><span class="o">;</span>
+<span class="ln">3</span><span class="o">...</span>
+<span class="ln">4</span><span class="n">model</span><span class="o">.</span><span class="na">setFieldExclusion</span><span class="o">(</span><span class="s">&#34;creationDate&#34;</span><span class="o">);</span> <span class="c1">// Forces KittyORM to exclude this field at insertion so DEFAULT constraint would be triggered
+</span><span class="ln">5</span><span class="c1"></span><span class="o">...</span>
+<span class="ln">6</span><span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">7</span><span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">model</span><span class="o">);</span>
+<span class="ln">8</span><span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span></code></pre></div>
+<a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<h3 id="unique-constraint-declaration"><code>UNIQUE</code> constraint declaration</h3>
+
+<p>You can declare <code>UNIQUE</code> constraint in two ways:</p>
+
+<ol>
+<li><p>To declare <code>UNIQUE</code> constraint only on one column than just annotate model corresponding field with <code>@UNIQUE</code> annotation. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@NOT_NULL</span>
+<span class="ln">3</span><span class="nd">@UNIQUE</span>
+<span class="ln">4</span><span class="kd">public</span> <span class="n">Long</span> <span class="n">rndId</span><span class="o">;</span></code></pre></div>
+In order to set conflict clause just set <code>@UNIQUE.onConflict</code> field with any suitable value from <code>ConflictClauses</code> enum.</p></li>
+
+<li><p>To declare <code>UNIQUE</code> constraint on more than one column annotate model with <code>@UNIQUE_T</code> annotation. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@FOREIGN_KEY_T</span><span class="o">(</span>
+<span class="ln"> 3</span>        <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;CAI_FK&#34;</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">RANDOM_ID_CNAME</span><span class="o">},</span>
+<span class="ln"> 5</span>        <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln"> 6</span>                <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;random&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>                <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln"> 8</span>                <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">10</span>        <span class="o">)</span>
+<span class="ln">11</span><span class="o">)</span>
+<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span> 
+<span class="ln">13</span><span class="nd">@UNIQUE_T</span><span class="o">(</span><span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;rnd_id, animal&#34;</span><span class="o">})</span> <span class="c1">// Declaring unique constraint on more than two columns
+</span><span class="ln">14</span><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln">15</span>    <span class="o">...</span>
+<span class="ln">16</span><span class="o">}</span></code></pre></div>
+In order to set conflict clause just set <code>@UNIQUE_T.onConflict</code> field with any suitable value from <code>ConflictClauses</code> enum.<br />
+In order to set <code>UNIQUE</code> constraint name set <code>@UNIQUE_T.name</code> otherwise it would be generated automatically.<br />
+If you need more than one <code>UNIQUE</code> constraint declaration defined with usage of <code>@UNIQUE_T</code> annotation, annotate model with <code>UNIQUE_T_ARRAY</code>.</p></li>
+</ol>
+
+<p><a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<h3 id="check-constraint-declaration"><code>CHECK</code> constraint declaration</h3>
+
+<p>To declare <code>CHECK</code> constraint just annotate corresponding model field with <code>@CHECK</code> annotation and specify check expression. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@CHECK</span><span class="o">(</span><span class="n">checkExpression</span> <span class="o">=</span> <span class="s">&#34;animal IN (\&#34;CAT\&#34;, \&#34;TIGER\&#34;, \&#34;LION\&#34;)&#34;</span><span class="o">)</span> <span class="c1">// only cats allowed to this party
+</span><span class="ln">3</span><span class="c1"></span><span class="kd">public</span> <span class="n">Animals</span> <span class="n">animal</span><span class="o">;</span></code></pre></div></p>
+
+<p><a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<h3 id="collate-constraint-declaration"><code>COLLATE</code> constraint declaration</h3>
+
+<p>To declare <code>COLLATE</code> constraint just annotate corresponding model field with <code>@COLLATE</code> annotation and specify built-in collation. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@COLLATE</span><span class="o">(</span><span class="n">collation</span> <span class="o">=</span> <span class="n">BuiltInCollations</span><span class="o">.</span><span class="na">NOCASE</span><span class="o">)</span> <span class="c1">// Collation example
+</span><span class="ln">3</span><span class="c1"></span><span class="nd">@CHECK</span><span class="o">(</span><span class="n">checkExpression</span> <span class="o">=</span> <span class="s">&#34;animal IN (\&#34;CAT\&#34;, \&#34;TIGER\&#34;, \&#34;LION\&#34;)&#34;</span><span class="o">)</span> 
+<span class="ln">4</span><span class="kd">public</span> <span class="n">Animals</span> <span class="n">animal</span><span class="o">;</span></code></pre></div></p>
+
+<p><a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<h3 id="primary-key-constraint-declaration"><code>PRIMARY KEY</code> constraint declaration</h3>
+
+<p>You can declare <code>PRIMARY KEY</code> constraint in three ways:</p>
+
+<ol>
+<li><p>To define <code>INTEGER PRIMARY KEY</code> just set <code>@KITTY_COLUMN.isIPK</code> field value to <code>true</code> of corresponding model field. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">2</span>        <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">,</span> 
+<span class="ln">3</span>        <span class="n">isIPK</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="ln">4</span><span class="o">)</span>
+<span class="ln">5</span><span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span></code></pre></div></p></li>
+
+<li><p>Second way to define <code>PRIMARY KEY</code> is to annotate corresponding model field with <code>@PRIMARY_KEY</code> annotation. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln">2</span><span class="nd">@PRIMARY_KEY</span>
+<span class="ln">3</span><span class="nd">@NOT_NULL</span>
+<span class="ln">4</span><span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span></code></pre></div>
+In order to set order just set <code>PRIMARY_KEY.orderAscDesc</code> field with any suitable value from <code>AscDesc</code> enum.<br />
+In order to set <code>AUTOIMCREMENT</code> flag set <code>@PRIMARY_KEY.autoincrement</code> field to true (default false).<br />
+In order to set conflict clause just set <code>@PRIMARY_KEY.onConflict</code> field with any suitable value from <code>ConflictClauses</code> enum.</p></li>
+
+<li><p>Third way to define <code>PRIMARY KEY</code> is to annotate model implementation with <code>@PRIMARY_KEY_T</code> annotation and specify <code>@PRIMARY_KEY_T.columns</code> array. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cpk_test&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@PRIMARY_KEY_T</span><span class="o">(</span>
+<span class="ln"> 3</span>    <span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;user_name&#34;</span><span class="o">,</span> <span class="s">&#34;email&#34;</span><span class="o">}</span>
+<span class="ln"> 4</span><span class="o">)</span>
+<span class="ln"> 5</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CPKModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 6</span>
+<span class="ln"> 7</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln"> 8</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">userName</span><span class="o">;</span>
+<span class="ln"> 9</span>
+<span class="ln">10</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">11</span>    <span class="nd">@UNIQUE</span>
+<span class="ln">12</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">email</span><span class="o">;</span>
+<span class="ln">13</span>    
+<span class="ln">14</span>    <span class="o">...</span>
+<span class="ln">15</span><span class="o">}</span></code></pre></div>
+In order to set <code>PRIMARY KEY</code> constraint name set <code>@PRIMARY_KEY_T.name</code> otherwise it would be generated automatically.<br />
+In order to set conflict clause just set <code>@PRIMARY_KEY_T.onConflict</code> field with any suitable value from <code>ConflictClauses</code> enum.</p></li>
+</ol>
+
+<p><a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<h3 id="foreign-key-constraint-declaration"><code>FOREIGN KEY</code> constraint declaration</h3>
+
+<p>You can declare <code>FOREIGN KEY</code> constraint in two ways:</p>
+
+<ol>
+<li><p>If you have only one column at table that refer to another table column you can just annotate corresponding model field with <code>@FOREIGN_KEY</code> annotation and specify <code>@FOREIGN_KEY.reference</code> with <code>@FOREIGN_KEY_REFERENCE</code>. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@NOT_NULL</span>
+<span class="ln"> 3</span><span class="nd">@UNIQUE</span>
+<span class="ln"> 4</span><span class="nd">@FOREIGN_KEY</span><span class="o">(</span>
+<span class="ln"> 5</span>        <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln"> 6</span>                <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;random&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>                <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln"> 8</span>                <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">10</span>        <span class="o">)</span>
+<span class="ln">11</span><span class="o">)</span>
+<span class="ln">12</span><span class="kd">public</span> <span class="n">Long</span> <span class="n">rndId</span><span class="o">;</span></code></pre></div></p></li>
+
+<li><p>If you have more than one reference column at <code>FOREIGN KEY</code> declaration, annotate model with <code>@FOREIGN_KEY_T</code> annotation and specify <code>@FOREIGN_KEY_T.reference</code> with <code>@FOREIGN_KEY_REFERENCE</code> and <code>@FOREIGN_KEY_T.columns</code> with string array of reference columns. Example:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@FOREIGN_KEY_T</span><span class="o">(</span>
+<span class="ln"> 3</span>        <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;CAI_FK&#34;</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">RANDOM_ID_CNAME</span><span class="o">},</span>
+<span class="ln"> 5</span>        <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln"> 6</span>                <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;random&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>                <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln"> 8</span>                <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">10</span>        <span class="o">)</span>
+<span class="ln">11</span><span class="o">)</span>
+<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span>
+<span class="ln">13</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln">14</span>    <span class="o">...</span>
+<span class="ln">15</span>    
+<span class="ln">16</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">17</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">18</span>    <span class="nd">@UNIQUE</span>
+<span class="ln">19</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">rndId</span><span class="o">;</span>
+<span class="ln">20</span>
+<span class="ln">21</span>    <span class="o">...</span>
+<span class="ln">22</span><span class="o">}</span></code></pre></div>
+In order to set <code>FOREIGN KEY</code> constraint name set <code>@FOREIGN_KEY_T.name</code> otherwise it would be generated automatically.</p></li>
+</ol>
+
+<p>If you need more than one <strong>FK</strong> that can be declared only with <code>@FOREIGN_KEY_T</code> you can annotate model implementation <code>@FOREIGN_KEY_T_ARRAY</code> and specify at <code>@FOREIGN_KEY_T_ARRAY.foreignKeys</code> all foreign keys you need.<br />
+At <code>@FOREIGN_KEY_REFERENCE</code> annotation you have to specify reference table and columns by setting <code>@FOREIGN_KEY_REFERENCE.foreignTableName</code> and <code>@FOREIGN_KEY_REFERENCE.foreignTableColumns</code>. Optionally you can specify <code>ON UPDATE</code> and <code>ON DELETE</code> actions by setting <code>@FOREIGN_KEY_REFERENCE.onUpdate</code> and <code>@FOREIGN_KEY_REFERENCE.onDelete</code> with enum element from <code>OnUpdateDeleteActions</code>. Also, you can specify defferable option by setting <code>@FOREIGN_KEY_REFERENCE.deferrableOption</code> with some value <code>DeferrableOptions</code> enumeration.</p>
+
+<blockquote>
+<p>Do not forget to turn on foreign keys supports by setting <code>@KITTY_DATABASE.isPragmaOn</code> to true at your KittyORM database implementation if you want to use them!</p>
+</blockquote>
+
+<p><a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<h3 id="indexes-declaration">Indexes declaration</h3>
+
+<p>In KittyORM indexes declarations stored at same POJO classes that are used for schema generation. To declare an index just annotate model implementation with columns that would be indexed with <code>@INDEX</code> annotation and set <code>@INDEX.indexColumns</code> with array of those indexed columns or in case when there is only one indexed column for one index declaration just annotate corresponding nodel implementation field with <code>@ONE_COLUMN_INDEX</code>. Example:</p>
+
+<ol>
+<li><p>Index declaration with <code>@INDEX</code> annotation:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="nd">@FOREIGN_KEY_T</span><span class="o">(</span>
+<span class="ln"> 3</span>        <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;CAI_FK&#34;</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">columns</span> <span class="o">=</span> <span class="o">{</span><span class="n">IndexesAndConstraintsModel</span><span class="o">.</span><span class="na">RANDOM_ID_CNAME</span><span class="o">},</span>
+<span class="ln"> 5</span>        <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln"> 6</span>                <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;random&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>                <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln"> 8</span>                <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">10</span>        <span class="o">)</span>
+<span class="ln">11</span><span class="o">)</span>
+<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span> <span class="c1">// index declaration
+</span><span class="ln">13</span><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln">14</span>    <span class="o">...</span>
+<span class="ln">15</span>
+<span class="ln">16</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">4</span><span class="o">)</span>
+<span class="ln">17</span>    <span class="nd">@DEFAULT</span><span class="o">(</span>
+<span class="ln">18</span>            <span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_DATE</span>
+<span class="ln">19</span>    <span class="o">)</span>
+<span class="ln">20</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">21</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">creationDate</span><span class="o">;</span> <span class="c1">// indexed column
+</span><span class="ln">22</span><span class="c1"></span>
+<span class="ln">23</span>    <span class="o">...</span>
+<span class="ln">24</span><span class="o">}</span></code></pre></div></p></li>
+
+<li><p>Index declaration with <code>@ONE_COLUMN_INDEX</code> annotation:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
+<span class="ln"> 2</span><span class="o">...</span>
+<span class="ln"> 3</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 4</span>    <span class="o">...</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">5</span><span class="o">)</span>
+<span class="ln"> 7</span>    <span class="nd">@DEFAULT</span><span class="o">(</span>
+<span class="ln"> 8</span>            <span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_TIMESTAMP</span>
+<span class="ln"> 9</span>    <span class="o">)</span>
+<span class="ln">10</span>    <span class="c1">// One column indexe declaration example
+</span><span class="ln">11</span><span class="c1"></span>    <span class="nd">@ONE_COLUMN_INDEX</span><span class="o">(</span><span class="n">unique</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">indexName</span> <span class="o">=</span> <span class="s">&#34;IAC_unique_index_creation_timestamp&#34;</span><span class="o">)</span> 
+<span class="ln">12</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">13</span>    <span class="kd">public</span> <span class="n">Timestamp</span> <span class="n">creationTmstmp</span><span class="o">;</span>
+<span class="ln">14</span>
+<span class="ln">15</span>    <span class="o">...</span>
+<span class="ln">16</span><span class="o">}</span></code></pre></div></p></li>
+</ol>
+
+<p>For both <code>@INDEX</code> and <code>@ONE_COLUMN_INDEX</code> index declaration you can specify index uniqueness (<code>@INDEX.unique</code> and <code>@ONE_COLUMN_INDEX.unique</code> fields), <code>IF NOT EXISTS</code> flag (<code>@INDEX.ifNotExists</code> and <code>@ONE_COLUMN_INDEX.ifNotExists</code> fields), where expression (<code>@INDEX.whereExpression</code> and <code>@ONE_COLUMN_INDEX.whereExpression</code> fields) and index name (<code>@INDEX.indexName</code> and <code>@ONE_COLUMN_INDEX.indexName</code> fields).<br />
+If you need more than one index declaration with more than one indexed columns than annotate model implementation with <code>@INDEX_ARRAY</code> annotation and define your indexes there.</p>
+
+<p><a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

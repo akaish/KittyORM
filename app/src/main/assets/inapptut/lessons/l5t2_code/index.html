@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson5 tab 2 sources &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           <p><strong>KittyORM <code>mig</code> v.2 implementation sources</strong></p>
+
+<ol>
+<li><p><details>
+<summary>Click to view <code>MigrationDBv2.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln"> 2</span>        <span class="n">isLoggingOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln"> 3</span>        <span class="n">isProductionOn</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#34;mig&#34;</span><span class="o">,</span>
+<span class="ln"> 5</span>        <span class="n">databaseVersion</span> <span class="o">=</span> <span class="n">2</span><span class="o">,</span>
+<span class="ln"> 6</span>        <span class="n">logTag</span> <span class="o">=</span> <span class="n">MigrationDBv2</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span>
+<span class="ln"> 7</span>        <span class="n">domainPackageNames</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;net.akaish.kittyormdemo.sqlite.migrations.migv2&#34;</span><span class="o">}</span>
+<span class="ln"> 8</span><span class="o">)</span>
+<span class="ln"> 9</span><span class="nd">@KITTY_DATABASE_REGISTRY</span><span class="o">(</span>
+<span class="ln">10</span>        <span class="n">domainModels</span> <span class="o">=</span> <span class="o">{</span>
+<span class="ln">11</span>                <span class="n">net</span><span class="o">.</span><span class="na">akaish</span><span class="o">.</span><span class="na">kittyormdemo</span><span class="o">.</span><span class="na">sqlite</span><span class="o">.</span><span class="na">migrations</span><span class="o">.</span><span class="na">migv2</span><span class="o">.</span><span class="na">MigOneModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+<span class="ln">12</span>                <span class="n">net</span><span class="o">.</span><span class="na">akaish</span><span class="o">.</span><span class="na">kittyormdemo</span><span class="o">.</span><span class="na">sqlite</span><span class="o">.</span><span class="na">migrations</span><span class="o">.</span><span class="na">migv2</span><span class="o">.</span><span class="na">MigTwoModel</span><span class="o">.</span><span class="na">class</span>
+<span class="ln">13</span>        <span class="o">}</span>
+<span class="ln">14</span><span class="o">)</span>
+<span class="ln">15</span><span class="nd">@KITTY_DATABASE_HELPER</span><span class="o">(</span>
+<span class="ln">16</span>        <span class="n">onUpgradeBehavior</span> <span class="o">=</span> <span class="n">KITTY_DATABASE_HELPER</span><span class="o">.</span><span class="na">UpgradeBehavior</span><span class="o">.</span><span class="na">DROP_AND_CREATE</span>
+<span class="ln">17</span><span class="o">)</span>
+<span class="ln">18</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MigrationDBv2</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln">19</span>
+<span class="ln">20</span>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">LTAG</span> <span class="o">=</span> <span class="s">&#34;MIGv2&#34;</span><span class="o">;</span>
+<span class="ln">21</span>
+<span class="ln">22</span>    <span class="cm">/**
+</span><span class="ln">23</span><span class="cm">     * KittyORM main database class that represents bootstrap and holder for all related with database
+</span><span class="ln">24</span><span class="cm">     * components.
+</span><span class="ln">25</span><span class="cm">     *
+</span><span class="ln">26</span><span class="cm">     * @param ctx
+</span><span class="ln">27</span><span class="cm">     */</span>
+<span class="ln">28</span>    <span class="kd">public</span> <span class="nf">MigrationDBv2</span><span class="o">(</span><span class="n">Context</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">29</span>        <span class="kd">super</span><span class="o">(</span><span class="n">ctx</span><span class="o">);</span>
+<span class="ln">30</span>    <span class="o">}</span>
+<span class="ln">31</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>MigOneModel.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span>
+<span class="ln"> 2</span>        <span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;mig_one&#34;</span>
+<span class="ln"> 3</span><span class="o">)</span>
+<span class="ln"> 4</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MigOneModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 5</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln"> 6</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">,</span>
+<span class="ln"> 7</span>            <span class="n">isIPK</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+<span class="ln"> 8</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+<span class="ln"> 9</span>
+<span class="ln">10</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">11</span>    <span class="nd">@NOT_NULL</span>
+<span class="ln">12</span>    <span class="nd">@DEFAULT</span><span class="o">(</span><span class="n">predefinedLiteralValue</span> <span class="o">=</span> <span class="n">LiteralValues</span><span class="o">.</span><span class="na">CURRENT_DATE</span><span class="o">)</span>
+<span class="ln">13</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">creationDate</span><span class="o">;</span>
+<span class="ln">14</span>
+<span class="ln">15</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span><span class="o">)</span>
+<span class="ln">16</span>    <span class="nd">@DEFAULT</span><span class="o">(</span><span class="n">signedInteger</span> <span class="o">=</span> <span class="n">228</span><span class="o">)</span>
+<span class="ln">17</span>    <span class="nd">@ONE_COLUMN_INDEX</span><span class="o">(</span><span class="n">indexName</span> <span class="o">=</span> <span class="s">&#34;m1_di_index&#34;</span><span class="o">)</span>
+<span class="ln">18</span>    <span class="kd">public</span> <span class="n">Integer</span> <span class="n">defaultInteger</span><span class="o">;</span>
+<span class="ln">19</span>
+<span class="ln">20</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">3</span><span class="o">)</span>
+<span class="ln">21</span>    <span class="kd">public</span> <span class="n">Timestamp</span> <span class="n">currentTimestamp</span><span class="o">;</span>
+<span class="ln">22</span>
+<span class="ln">23</span>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">24</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">64</span><span class="o">)</span>
+<span class="ln">25</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;[ id = &#34;</span><span class="o">)</span>
+<span class="ln">26</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">id</span><span class="o">)</span>
+<span class="ln">27</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; creationDate = &#34;</span><span class="o">)</span>
+<span class="ln">28</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">creationDate</span><span class="o">)</span>
+<span class="ln">29</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; someInteger = &#34;</span><span class="o">)</span>
+<span class="ln">30</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">defaultInteger</span><span class="o">)</span>
+<span class="ln">31</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; currentTimestamp = &#34;</span><span class="o">)</span>
+<span class="ln">32</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">currentTimestamp</span><span class="o">)</span>
+<span class="ln">33</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ]&#34;</span><span class="o">).</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">34</span>    <span class="o">}</span>
+<span class="ln">35</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>MigTwoModel.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span>
+<span class="ln"> 2</span>        <span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;mig_two&#34;</span>
+<span class="ln"> 3</span><span class="o">)</span>
+<span class="ln"> 4</span><span class="nd">@INDEX</span><span class="o">(</span>
+<span class="ln"> 5</span>        <span class="n">indexName</span> <span class="o">=</span> <span class="s">&#34;m2_sa_index&#34;</span><span class="o">,</span>
+<span class="ln"> 6</span>        <span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;some_animal&#34;</span><span class="o">}</span>
+<span class="ln"> 7</span><span class="o">)</span>
+<span class="ln"> 8</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MigTwoModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 9</span>
+<span class="ln">10</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">11</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span><span class="o">,</span>
+<span class="ln">12</span>            <span class="n">isIPK</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="ln">13</span>    <span class="o">)</span>
+<span class="ln">14</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+<span class="ln">15</span>
+<span class="ln">16</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">17</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span>
+<span class="ln">18</span>    <span class="o">)</span>
+<span class="ln">19</span>    <span class="nd">@FOREIGN_KEY</span><span class="o">(</span>
+<span class="ln">20</span>            <span class="n">reference</span> <span class="o">=</span> <span class="nd">@FOREIGN_KEY_REFERENCE</span><span class="o">(</span>
+<span class="ln">21</span>                    <span class="n">foreignTableName</span> <span class="o">=</span> <span class="s">&#34;mig_one&#34;</span><span class="o">,</span>
+<span class="ln">22</span>                    <span class="n">foreignTableColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;id&#34;</span><span class="o">},</span>
+<span class="ln">23</span>                    <span class="n">onUpdate</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span><span class="o">,</span>
+<span class="ln">24</span>                    <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
+<span class="ln">25</span>            <span class="o">)</span>
+<span class="ln">26</span>    <span class="o">)</span>
+<span class="ln">27</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">migOneReference</span><span class="o">;</span>
+<span class="ln">28</span>
+<span class="ln">29</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">30</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span>
+<span class="ln">31</span>    <span class="o">)</span>
+<span class="ln">32</span>    <span class="kd">public</span> <span class="n">Animals</span> <span class="n">someAnimal</span><span class="o">;</span>
+<span class="ln">33</span>
+<span class="ln">34</span>    <span class="nd">@Override</span>
+<span class="ln">35</span>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">36</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">64</span><span class="o">)</span>
+<span class="ln">37</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;[ id = &#34;</span><span class="o">)</span>
+<span class="ln">38</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">id</span><span class="o">)</span>
+<span class="ln">39</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; migOneReference = &#34;</span><span class="o">)</span>
+<span class="ln">40</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">migOneReference</span><span class="o">)</span>
+<span class="ln">41</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; someAnimal = &#34;</span><span class="o">)</span>
+<span class="ln">42</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">someAnimal</span><span class="o">)</span>
+<span class="ln">43</span>                <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ] &#34;</span><span class="o">).</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">44</span>    <span class="o">}</span>
+<span class="ln">45</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+</ol>
+
+<p><strong>Fragment and utility code used in this tutorial</strong></p>
+
+<ol>
+<li><p><details>
+<summary>Click to view <code>MigV2RandomModelFactory.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MigV2RandomModelFactory</span> <span class="o">{</span>
+<span class="ln"> 2</span>    <span class="kd">final</span> <span class="n">Context</span> <span class="n">ctx</span><span class="o">;</span>
+<span class="ln"> 3</span>    <span class="kd">final</span> <span class="n">Random</span> <span class="n">rnd</span><span class="o">;</span>
+<span class="ln"> 4</span>
+<span class="ln"> 5</span>    <span class="kd">public</span> <span class="nf">MigV2RandomModelFactory</span><span class="o">(</span><span class="n">Context</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 6</span>        <span class="k">this</span><span class="o">.</span><span class="na">ctx</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">;</span>
+<span class="ln"> 7</span>        <span class="k">this</span><span class="o">.</span><span class="na">rnd</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+<span class="ln"> 8</span>    <span class="o">}</span>
+<span class="ln"> 9</span>
+<span class="ln">10</span>    <span class="kd">public</span> <span class="n">MigOneModel</span> <span class="nf">newM1RndModel</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">11</span>        <span class="k">return</span> <span class="n">newM1RndModel</span><span class="o">(</span><span class="n">rnd</span><span class="o">.</span><span class="na">nextBoolean</span><span class="o">());</span>
+<span class="ln">12</span>    <span class="o">}</span>
+<span class="ln">13</span>
+<span class="ln">14</span>    <span class="kd">public</span> <span class="n">MigOneModel</span> <span class="nf">newM1RndModel</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">setCDDefault</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">15</span>        <span class="n">MigOneModel</span> <span class="n">model</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MigOneModel</span><span class="o">();</span>
+<span class="ln">16</span>        <span class="k">if</span><span class="o">(</span><span class="n">setCDDefault</span><span class="o">)</span>
+<span class="ln">17</span>            <span class="n">model</span><span class="o">.</span><span class="na">setFieldExclusion</span><span class="o">(</span><span class="s">&#34;creationDate&#34;</span><span class="o">);</span>
+<span class="ln">18</span>        <span class="k">else</span>
+<span class="ln">19</span>            <span class="n">model</span><span class="o">.</span><span class="na">creationDate</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Date</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()).</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">20</span>        <span class="n">model</span><span class="o">.</span><span class="na">defaultInteger</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+<span class="ln">21</span>        <span class="n">model</span><span class="o">.</span><span class="na">currentTimestamp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timestamp</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+<span class="ln">22</span>        <span class="k">return</span> <span class="n">model</span><span class="o">;</span>
+<span class="ln">23</span>    <span class="o">}</span>
+<span class="ln">24</span>
+<span class="ln">25</span>    <span class="kd">public</span> <span class="n">MigTwoModel</span> <span class="nf">newM2RndModel</span><span class="o">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;</span> <span class="n">models</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">26</span>        <span class="kt">int</span> <span class="n">mlSize</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+<span class="ln">27</span>        <span class="k">return</span> <span class="n">newM2RndModel</span><span class="o">(</span><span class="n">models</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rnd</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">mlSize</span><span class="o">)).</span><span class="na">id</span><span class="o">);</span>
+<span class="ln">28</span>    <span class="o">}</span>
+<span class="ln">29</span>
+<span class="ln">30</span>    <span class="kd">public</span> <span class="n">MigTwoModel</span> <span class="nf">newM2RndModel</span><span class="o">(</span><span class="n">Long</span> <span class="n">migOneReference</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">31</span>        <span class="n">MigTwoModel</span> <span class="n">model</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MigTwoModel</span><span class="o">();</span>
+<span class="ln">32</span>        <span class="n">model</span><span class="o">.</span><span class="na">someAnimal</span> <span class="o">=</span> <span class="n">Animals</span><span class="o">.</span><span class="na">rndAnimal</span><span class="o">(</span><span class="n">rnd</span><span class="o">);</span>
+<span class="ln">33</span>        <span class="n">model</span><span class="o">.</span><span class="na">migOneReference</span> <span class="o">=</span> <span class="n">migOneReference</span><span class="o">;</span>
+<span class="ln">34</span>        <span class="k">return</span> <span class="n">model</span><span class="o">;</span>
+<span class="ln">35</span>    <span class="o">}</span>
+<span class="ln">36</span>    
+<span class="ln">37</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+
+<li><p><details>
+<summary>Click to view <code>Lesson5Tab2DCMigrations.class</code>: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">  1</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Lesson5Tab2DCMigrations</span> <span class="kd">extends</span> <span class="n">Lesson5BaseFragment</span> <span class="o">{</span>
+<span class="ln">  2</span>
+<span class="ln">  3</span>    <span class="kd">private</span> <span class="n">MigrationDBv2</span> <span class="n">databaseV2</span><span class="o">;</span>
+<span class="ln">  4</span>    <span class="kd">private</span> <span class="n">SharedPreferencesMigDB</span> <span class="n">sf</span><span class="o">;</span>
+<span class="ln">  5</span>
+<span class="ln">  6</span>    <span class="kd">private</span> <span class="n">Button</span> <span class="n">insertRandomButton</span><span class="o">;</span>
+<span class="ln">  7</span>    <span class="kd">private</span> <span class="n">Button</span> <span class="n">clearTableButton</span><span class="o">;</span>
+<span class="ln">  8</span>    <span class="kd">private</span> <span class="n">Button</span> <span class="n">deleteDatabaseButton</span><span class="o">;</span>
+<span class="ln">  9</span>
+<span class="ln"> 10</span>    <span class="kd">private</span> <span class="n">ListView</span> <span class="n">eventsListView</span><span class="o">;</span>
+<span class="ln"> 11</span>
+<span class="ln"> 12</span>    <span class="kd">private</span> <span class="n">TextView</span> <span class="n">statusTV</span><span class="o">;</span>
+<span class="ln"> 13</span>
+<span class="ln"> 14</span>    <span class="kd">private</span> <span class="n">MigDatabaseState</span> <span class="n">mdbState</span><span class="o">;</span>
+<span class="ln"> 15</span>
+<span class="ln"> 16</span>
+<span class="ln"> 17</span>    <span class="kd">final</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">DB_IMPLEMENTATION_VERSION</span> <span class="o">=</span> <span class="n">2</span><span class="o">;</span>
+<span class="ln"> 18</span>    <span class="kd">final</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">TABLE_AMOUNT</span> <span class="o">=</span> <span class="n">2</span><span class="o">;</span>
+<span class="ln"> 19</span>
+<span class="ln"> 20</span>    <span class="kd">public</span> <span class="nf">Lesson5Tab2DCMigrations</span><span class="o">()</span> <span class="o">{}</span>
+<span class="ln"> 21</span>
+<span class="ln"> 22</span>    <span class="nd">@Override</span>
+<span class="ln"> 23</span>    <span class="kd">public</span> <span class="n">View</span> <span class="nf">onCreateView</span><span class="o">(</span><span class="n">LayoutInflater</span> <span class="n">inflater</span><span class="o">,</span> <span class="n">ViewGroup</span> <span class="n">container</span><span class="o">,</span> <span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 24</span>        <span class="n">View</span> <span class="n">rootView</span> <span class="o">=</span> <span class="n">inflater</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">lesson5_tab2_dc_migration</span><span class="o">,</span> <span class="n">container</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+<span class="ln"> 25</span>
+<span class="ln"> 26</span>        <span class="n">insertRandomButton</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l5_t2_go_button</span><span class="o">);</span>
+<span class="ln"> 27</span>        <span class="n">clearTableButton</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l5_t2_clear_button</span><span class="o">);</span>
+<span class="ln"> 28</span>        <span class="n">deleteDatabaseButton</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l5_t2_delete_database_button</span><span class="o">);</span>
+<span class="ln"> 29</span>
+<span class="ln"> 30</span>        <span class="n">eventsListView</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l5_t2_actions</span><span class="o">);</span>
+<span class="ln"> 31</span>
+<span class="ln"> 32</span>        <span class="n">insertRandomButton</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 33</span>            <span class="nd">@Override</span>
+<span class="ln"> 34</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 35</span>                <span class="n">insert25RND</span><span class="o">();</span>
+<span class="ln"> 36</span>            <span class="o">}</span>
+<span class="ln"> 37</span>        <span class="o">});</span>
+<span class="ln"> 38</span>
+<span class="ln"> 39</span>        <span class="n">clearTableButton</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 40</span>            <span class="nd">@Override</span>
+<span class="ln"> 41</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 42</span>                <span class="n">clearTable</span><span class="o">();</span>
+<span class="ln"> 43</span>            <span class="o">}</span>
+<span class="ln"> 44</span>        <span class="o">});</span>
+<span class="ln"> 45</span>
+<span class="ln"> 46</span>        <span class="n">deleteDatabaseButton</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 47</span>            <span class="nd">@Override</span>
+<span class="ln"> 48</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 49</span>                <span class="n">deleteDatabase</span><span class="o">();</span>
+<span class="ln"> 50</span>            <span class="o">}</span>
+<span class="ln"> 51</span>        <span class="o">});</span>
+<span class="ln"> 52</span>
+<span class="ln"> 53</span>        <span class="n">statusTV</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l5_t2_status</span><span class="o">);</span>
+<span class="ln"> 54</span>
+<span class="ln"> 55</span>
+<span class="ln"> 56</span>        <span class="n">setUpExpandedList</span><span class="o">(</span>
+<span class="ln"> 57</span>                <span class="n">rootView</span><span class="o">,</span>
+<span class="ln"> 58</span>                <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">_l5_t2_expanded_panel_list</span><span class="o">,</span>
+<span class="ln"> 59</span>                <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">_l5_t2_expanded_panel_text</span><span class="o">,</span>
+<span class="ln"> 60</span>                <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_expanded_text_pattern</span>
+<span class="ln"> 61</span>        <span class="o">);</span>
+<span class="ln"> 62</span>
+<span class="ln"> 63</span>        <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln"> 64</span>        <span class="n">reloadStatus</span><span class="o">();</span>
+<span class="ln"> 65</span>        <span class="k">return</span> <span class="n">rootView</span><span class="o">;</span>
+<span class="ln"> 66</span>    <span class="o">}</span>
+<span class="ln"> 67</span>
+<span class="ln"> 68</span>    <span class="kd">public</span> <span class="n">MigDatabaseState</span> <span class="nf">getMdbState</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="kt">int</span> <span class="n">implVersion</span><span class="o">,</span> <span class="n">String</span><span class="o">[]</span> <span class="n">tables</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 69</span>        <span class="k">if</span><span class="o">(</span><span class="n">mdbState</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="n">mdbState</span><span class="o">;</span>
+<span class="ln"> 70</span>        <span class="n">mdbState</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MigDatabaseState</span><span class="o">(</span><span class="n">implVersion</span><span class="o">,</span> <span class="n">tables</span><span class="o">,</span> <span class="n">context</span><span class="o">,</span> <span class="n">getSf</span><span class="o">());</span>
+<span class="ln"> 71</span>        <span class="k">return</span> <span class="n">mdbState</span><span class="o">;</span>
+<span class="ln"> 72</span>    <span class="o">}</span>
+<span class="ln"> 73</span>
+<span class="ln"> 74</span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">reloadStatus</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 75</span>        <span class="k">if</span><span class="o">(</span><span class="n">statusTV</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 76</span>            <span class="n">statusTV</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">getMdbState</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">,</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]</span> <span class="o">{</span><span class="n">M1M1TN</span><span class="o">,</span> <span class="n">M1M2TN</span><span class="o">}).</span><span class="na">toString</span><span class="o">());</span>
+<span class="ln"> 77</span>        <span class="o">}</span>
+<span class="ln"> 78</span>    <span class="o">}</span>
+<span class="ln"> 79</span>
+<span class="ln"> 80</span>
+<span class="ln"> 81</span>    <span class="nd">@Override</span>
+<span class="ln"> 82</span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onVisible</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 83</span>        <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln"> 84</span>        <span class="n">reloadStatus</span><span class="o">();</span>
+<span class="ln"> 85</span>    <span class="o">}</span>
+<span class="ln"> 86</span>
+<span class="ln"> 87</span>    <span class="kd">private</span> <span class="n">SharedPreferencesMigDB</span> <span class="nf">getSf</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 88</span>        <span class="k">if</span><span class="o">(</span><span class="n">sf</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="n">sf</span><span class="o">;</span>
+<span class="ln"> 89</span>        <span class="n">sf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SharedPreferencesMigDB</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln"> 90</span>        <span class="k">return</span> <span class="n">sf</span><span class="o">;</span>
+<span class="ln"> 91</span>    <span class="o">}</span>
+<span class="ln"> 92</span>
+<span class="ln"> 93</span>    <span class="kd">private</span> <span class="n">MigrationDBv2</span> <span class="nf">getDatabase</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 94</span>        <span class="c1">// retrieving existing database after upgrade -&gt; downgrade would cause onUpgrade() script would be run after mapper fetching
+</span><span class="ln"> 95</span><span class="c1"></span>        <span class="n">databaseV2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MigrationDBv2</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln"> 96</span>        <span class="k">return</span> <span class="n">databaseV2</span><span class="o">;</span>
+<span class="ln"> 97</span>    <span class="o">}</span>
+<span class="ln"> 98</span>
+<span class="ln"> 99</span>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">insert25RND</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">100</span>        <span class="k">new</span> <span class="n">InsertRandomAsync</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">0l</span><span class="o">);</span>
+<span class="ln">101</span>    <span class="o">}</span>
+<span class="ln">102</span>
+<span class="ln">103</span>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">clearTable</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">104</span>        <span class="k">new</span> <span class="n">WipeAsync</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">0l</span><span class="o">);</span>
+<span class="ln">105</span>    <span class="o">}</span>
+<span class="ln">106</span>
+<span class="ln">107</span>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">deleteDatabase</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">108</span>        <span class="k">new</span> <span class="n">DeleteDatabaseAsync</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">0l</span><span class="o">);</span>
+<span class="ln">109</span>    <span class="o">}</span>
+<span class="ln">110</span>
+<span class="ln">111</span>    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">reloadTableExpandedList</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">112</span>        <span class="k">new</span> <span class="n">ReloadTableAsync</span><span class="o">().</span><span class="na">execute</span><span class="o">(</span><span class="n">0l</span><span class="o">);</span>
+<span class="ln">113</span>    <span class="o">}</span>
+<span class="ln">114</span>
+<span class="ln">115</span>    <span class="nd">@Override</span>
+<span class="ln">116</span>    <span class="kd">protected</span> <span class="kt">int</span> <span class="nf">snackbarMessageResource</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">117</span>        <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_snackbar_message</span><span class="o">;</span>
+<span class="ln">118</span>    <span class="o">}</span>
+<span class="ln">119</span>
+<span class="ln">120</span>
+<span class="ln">121</span>
+<span class="ln">122</span>    <span class="c1">// Asyncs
+</span><span class="ln">123</span><span class="c1"></span>
+<span class="ln">124</span>    <span class="kd">class</span> <span class="nc">ReloadTableAsync</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Long</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="o">{</span>
+<span class="ln">125</span>
+<span class="ln">126</span>        <span class="nd">@Override</span>
+<span class="ln">127</span>        <span class="kd">protected</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Long</span><span class="o">...</span> <span class="n">params</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">128</span>            <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">toListView</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">129</span>            <span class="k">if</span><span class="o">(</span><span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseCreated</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseDeletedManually</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span> <span class="o">==</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">130</span>                <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">MigOneModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">131</span>                <span class="n">List</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;</span> <span class="n">m1Models</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+<span class="ln">132</span>                <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">133</span>                <span class="n">KittyMapper</span> <span class="n">mapperT2</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">MigTwoModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">134</span>                <span class="n">List</span><span class="o">&lt;</span><span class="n">MigTwoModel</span><span class="o">&gt;</span> <span class="n">m2Models</span> <span class="o">=</span> <span class="n">mapperT2</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+<span class="ln">135</span>                <span class="k">if</span><span class="o">(</span><span class="n">m1Models</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">136</span>                    <span class="n">toListView</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_m1_db</span><span class="o">),</span> <span class="n">0</span><span class="o">));</span>
+<span class="ln">137</span>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">138</span>                    <span class="n">toListView</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_m1_db</span><span class="o">),</span> <span class="n">m1Models</span><span class="o">.</span><span class="na">size</span><span class="o">()));</span>
+<span class="ln">139</span>                    <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;</span> <span class="n">mI</span> <span class="o">=</span> <span class="n">m1Models</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+<span class="ln">140</span>                    <span class="k">while</span> <span class="o">(</span><span class="n">mI</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+<span class="ln">141</span>                        <span class="n">toListView</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">mI</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+<span class="ln">142</span>                    <span class="o">}</span>
+<span class="ln">143</span>                <span class="o">}</span>
+<span class="ln">144</span>                <span class="k">if</span><span class="o">(</span><span class="n">m2Models</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">145</span>                    <span class="n">toListView</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_m2_db</span><span class="o">),</span> <span class="n">0</span><span class="o">));</span>
+<span class="ln">146</span>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">147</span>                    <span class="n">toListView</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_m2_db</span><span class="o">),</span> <span class="n">m2Models</span><span class="o">.</span><span class="na">size</span><span class="o">()));</span>
+<span class="ln">148</span>                    <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">MigTwoModel</span><span class="o">&gt;</span> <span class="n">mI</span> <span class="o">=</span> <span class="n">m2Models</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+<span class="ln">149</span>                    <span class="k">while</span> <span class="o">(</span><span class="n">mI</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+<span class="ln">150</span>                        <span class="n">toListView</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">mI</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+<span class="ln">151</span>                    <span class="o">}</span>
+<span class="ln">152</span>                <span class="o">}</span>
+<span class="ln">153</span>                <span class="k">return</span> <span class="n">toListView</span><span class="o">;</span>
+<span class="ln">154</span>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">155</span>                <span class="k">if</span><span class="o">(!</span><span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseCreated</span><span class="o">()</span> <span class="o">||</span> <span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseDeletedManually</span><span class="o">())</span> <span class="o">{</span>
+<span class="ln">156</span>                    <span class="n">toListView</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_m1_db_doesnt_exist</span><span class="o">));</span>
+<span class="ln">157</span>                    <span class="k">return</span> <span class="n">toListView</span><span class="o">;</span>
+<span class="ln">158</span>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">159</span>                    <span class="n">toListView</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_m1_db_has_different_version</span><span class="o">),</span> <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()));</span>
+<span class="ln">160</span>                    <span class="k">return</span> <span class="n">toListView</span><span class="o">;</span>
+<span class="ln">161</span>                <span class="o">}</span>
+<span class="ln">162</span>            <span class="o">}</span>
+<span class="ln">163</span>        <span class="o">}</span>
+<span class="ln">164</span>
+<span class="ln">165</span>        <span class="nd">@Override</span>
+<span class="ln">166</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">167</span>            <span class="kt">int</span> <span class="n">tableAmount</span> <span class="o">=</span> <span class="n">TABLE_AMOUNT</span><span class="o">;</span>
+<span class="ln">168</span>            <span class="k">if</span><span class="o">(</span><span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseDeletedManually</span><span class="o">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseCreated</span><span class="o">()</span> <span class="o">||</span> <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span> <span class="o">!=</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">)</span>
+<span class="ln">169</span>                <span class="n">tableAmount</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+<span class="ln">170</span>            <span class="k">if</span><span class="o">(</span><span class="n">result</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">171</span>                <span class="n">events</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">MigAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="n">result</span><span class="o">));</span>
+<span class="ln">172</span>                <span class="kt">int</span> <span class="n">recordsAmount</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">-</span> <span class="n">TABLE_AMOUNT</span><span class="o">;</span>
+<span class="ln">173</span>                <span class="k">if</span><span class="o">(</span><span class="n">tableAmount</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln">174</span>                    <span class="n">recordsAmount</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+<span class="ln">175</span>                <span class="n">expandedTitle</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">expandeddTitlePattern</span><span class="o">,</span> <span class="n">recordsAmount</span><span class="o">,</span> <span class="n">tableAmount</span><span class="o">));</span>
+<span class="ln">176</span>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">177</span>                <span class="n">events</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">MigAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;()));</span>
+<span class="ln">178</span>                <span class="n">expandedTitle</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">expandeddTitlePattern</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">tableAmount</span><span class="o">));</span>
+<span class="ln">179</span>            <span class="o">}</span>
+<span class="ln">180</span>        <span class="o">}</span>
+<span class="ln">181</span>    <span class="o">}</span>
+<span class="ln">182</span>
+<span class="ln">183</span>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">ERR_STRING_WIPE</span> <span class="o">=</span> <span class="s">&#34;Lesson5tab2WipeDataError, see exception details!&#34;</span><span class="o">;</span>
+<span class="ln">184</span>
+<span class="ln">185</span>    <span class="kd">class</span> <span class="nc">WipeAsync</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Long</span><span class="o">,</span> <span class="n">WipeAsyncResult</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="ln">186</span>
+<span class="ln">187</span>        <span class="n">ProgressDialog</span> <span class="n">dialog</span><span class="o">;</span>
+<span class="ln">188</span>
+<span class="ln">189</span>        <span class="nd">@Override</span>
+<span class="ln">190</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPreExecute</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">191</span>            <span class="n">dialog</span> <span class="o">=</span> <span class="n">ProgressDialog</span><span class="o">.</span><span class="na">show</span><span class="o">(</span>
+<span class="ln">192</span>                    <span class="n">getLessonActivity</span><span class="o">(),</span>
+<span class="ln">193</span>                    <span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_running_requested_operation_pg_title</span><span class="o">),</span>
+<span class="ln">194</span>                    <span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_running_requested_operation_pg_body</span><span class="o">)</span>
+<span class="ln">195</span>            <span class="o">);</span>
+<span class="ln">196</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">setCancelable</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="ln">197</span>        <span class="o">}</span>
+<span class="ln">198</span>
+<span class="ln">199</span>        <span class="nd">@Override</span>
+<span class="ln">200</span>        <span class="kd">protected</span> <span class="n">WipeAsyncResult</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Long</span><span class="o">...</span> <span class="n">params</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">201</span>            <span class="k">if</span><span class="o">(</span><span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseCreated</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseDeletedManually</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span> <span class="o">==</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">202</span>                <span class="k">try</span> <span class="o">{</span>
+<span class="ln">203</span>                    <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">MigOneModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">204</span>                    <span class="n">KittyMapper</span> <span class="n">mapper2</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">MigTwoModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">205</span>                    <span class="kt">long</span> <span class="n">recordsCount</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()</span> <span class="o">+</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">countAll</span><span class="o">();</span>
+<span class="ln">206</span>                    <span class="kt">long</span> <span class="n">affected</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">deleteAll</span><span class="o">()</span> <span class="o">+</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">deleteAll</span><span class="o">();</span>
+<span class="ln">207</span>                    <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">208</span>                    <span class="k">return</span> <span class="k">new</span> <span class="n">WipeAsyncResult</span><span class="o">(</span><span class="kc">true</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">,</span> <span class="n">affected</span><span class="o">,</span> <span class="n">recordsCount</span><span class="o">);</span>
+<span class="ln">209</span>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">210</span>                    <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">MigrationDBv2</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span> <span class="n">ERR_STRING_WIPE</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+<span class="ln">211</span>                    <span class="k">if</span> <span class="o">(</span><span class="n">e</span> <span class="k">instanceof</span> <span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">212</span>                        <span class="k">if</span> <span class="o">(((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">213</span>                            <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">MigrationDBv2</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span> <span class="n">ERR_STRING_WIPE</span><span class="o">,</span> <span class="o">((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">());</span>
+<span class="ln">214</span>                        <span class="o">}</span>
+<span class="ln">215</span>                    <span class="o">}</span>
+<span class="ln">216</span>                    <span class="k">return</span> <span class="k">new</span> <span class="n">WipeAsyncResult</span><span class="o">(</span><span class="kc">true</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">,</span> <span class="o">-</span><span class="n">1l</span><span class="o">,</span> <span class="o">-</span><span class="n">1l</span><span class="o">);</span>
+<span class="ln">217</span>                <span class="o">}</span>
+<span class="ln">218</span>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">219</span>                <span class="k">return</span> <span class="k">new</span> <span class="n">WipeAsyncResult</span><span class="o">(</span>
+<span class="ln">220</span>                        <span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseCreated</span><span class="o">(),</span>
+<span class="ln">221</span>                        <span class="n">getSf</span><span class="o">().</span><span class="na">isDatabaseDeletedManually</span><span class="o">(),</span>
+<span class="ln">222</span>                        <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">(),</span>
+<span class="ln">223</span>                        <span class="o">-</span><span class="n">1l</span><span class="o">,</span> <span class="o">-</span><span class="n">1l</span><span class="o">);</span>
+<span class="ln">224</span>            <span class="o">}</span>
+<span class="ln">225</span>        <span class="o">}</span>
+<span class="ln">226</span>
+<span class="ln">227</span>        <span class="nd">@Override</span>
+<span class="ln">228</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">WipeAsyncResult</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">229</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+<span class="ln">230</span>
+<span class="ln">231</span>            <span class="k">if</span> <span class="o">(</span><span class="n">eventsListView</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">232</span>                <span class="n">eventsListView</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">BasicArrayAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;()));</span>
+<span class="ln">233</span>                <span class="n">eventsListView</span><span class="o">.</span><span class="na">setOnTouchListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnTouchListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">234</span>
+<span class="ln">235</span>                    <span class="c1">// Setting on Touch Listener for handling the touch inside ScrollView
+</span><span class="ln">236</span><span class="c1"></span>                    <span class="nd">@Override</span>
+<span class="ln">237</span>                    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTouch</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">,</span> <span class="n">MotionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">238</span>                        <span class="c1">// Disallow the touch request for parent scroll on touch of child view
+</span><span class="ln">239</span><span class="c1"></span>                        <span class="n">v</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">requestDisallowInterceptTouchEvent</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln">240</span>                        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="ln">241</span>                    <span class="o">}</span>
+<span class="ln">242</span>                <span class="o">});</span>
+<span class="ln">243</span>
+<span class="ln">244</span>                <span class="k">if</span><span class="o">(!</span><span class="n">result</span><span class="o">.</span><span class="na">isCreated</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">245</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_op_not_existing</span><span class="o">));</span>
+<span class="ln">246</span>                <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">isDeleted</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">247</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_op_deleted</span><span class="o">));</span>
+<span class="ln">248</span>                <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">dbVersion</span> <span class="o">!=</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">249</span>                    <span class="k">if</span><span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">dbVersion</span> <span class="o">&lt;</span> <span class="n">1</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">250</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_op_mig_version_is_lower</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">dbVersion</span><span class="o">,</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">));</span>
+<span class="ln">251</span>                    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">252</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_op_mig_version_is_higher</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">dbVersion</span><span class="o">,</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">));</span>
+<span class="ln">253</span>                    <span class="o">}</span>
+<span class="ln">254</span>                <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">recordsCount</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">1</span> <span class="o">&amp;&amp;</span> <span class="n">result</span><span class="o">.</span><span class="na">affectedRows</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">1</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">255</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_count_to_events</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">recordsCount</span><span class="o">));</span>
+<span class="ln">256</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_deleted_to_events</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">affectedRows</span><span class="o">));</span>
+<span class="ln">257</span>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">258</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_error_event</span><span class="o">));</span>
+<span class="ln">259</span>                <span class="o">}</span>
+<span class="ln">260</span>                <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">notifyDataSetChanged</span><span class="o">();</span>
+<span class="ln">261</span>                <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln">262</span>                <span class="n">reloadStatus</span><span class="o">();</span>
+<span class="ln">263</span>            <span class="o">}</span>
+<span class="ln">264</span>        <span class="o">}</span>
+<span class="ln">265</span>    <span class="o">}</span>
+<span class="ln">266</span>
+<span class="ln">267</span>    <span class="kd">class</span> <span class="nc">WipeAsyncResult</span> <span class="o">{</span>
+<span class="ln">268</span>        <span class="kt">boolean</span> <span class="n">isCreated</span><span class="o">;</span>
+<span class="ln">269</span>        <span class="kt">boolean</span> <span class="n">isDeleted</span><span class="o">;</span>
+<span class="ln">270</span>        <span class="kt">int</span> <span class="n">dbVersion</span><span class="o">;</span>
+<span class="ln">271</span>        <span class="n">Long</span> <span class="n">affectedRows</span><span class="o">;</span>
+<span class="ln">272</span>        <span class="n">Long</span> <span class="n">recordsCount</span><span class="o">;</span>
+<span class="ln">273</span>
+<span class="ln">274</span>        <span class="kd">public</span> <span class="nf">WipeAsyncResult</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">isCreated</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">isDeleted</span><span class="o">,</span> <span class="kt">int</span> <span class="n">dbVersion</span><span class="o">,</span>
+<span class="ln">275</span>                               <span class="n">Long</span> <span class="n">affectedRows</span><span class="o">,</span> <span class="n">Long</span> <span class="n">recordsCount</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">276</span>            <span class="k">this</span><span class="o">.</span><span class="na">isCreated</span> <span class="o">=</span> <span class="n">isCreated</span><span class="o">;</span>
+<span class="ln">277</span>            <span class="k">this</span><span class="o">.</span><span class="na">isDeleted</span> <span class="o">=</span> <span class="n">isDeleted</span><span class="o">;</span>
+<span class="ln">278</span>            <span class="k">this</span><span class="o">.</span><span class="na">dbVersion</span> <span class="o">=</span> <span class="n">dbVersion</span><span class="o">;</span>
+<span class="ln">279</span>            <span class="k">this</span><span class="o">.</span><span class="na">affectedRows</span> <span class="o">=</span> <span class="n">affectedRows</span><span class="o">;</span>
+<span class="ln">280</span>            <span class="k">this</span><span class="o">.</span><span class="na">recordsCount</span> <span class="o">=</span> <span class="n">recordsCount</span><span class="o">;</span>
+<span class="ln">281</span>        <span class="o">}</span>
+<span class="ln">282</span>    <span class="o">}</span>
+<span class="ln">283</span>
+<span class="ln">284</span>    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">INSERT_AMOUNT</span> <span class="o">=</span> <span class="n">25</span><span class="o">;</span>
+<span class="ln">285</span>    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">INSERT_FK_AMOUNT</span> <span class="o">=</span> <span class="n">10</span><span class="o">;</span>
+<span class="ln">286</span>
+<span class="ln">287</span>    <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">ERR_INSERT_RND</span> <span class="o">=</span> <span class="s">&#34;Lesson5tab2InsertRNDDataError, see exception details!&#34;</span><span class="o">;</span>
+<span class="ln">288</span>
+<span class="ln">289</span>    <span class="kd">class</span> <span class="nc">InsertRandomAsync</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Long</span><span class="o">,</span> <span class="n">InsertRandomResults</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="ln">290</span>        <span class="n">ProgressDialog</span> <span class="n">dialog</span><span class="o">;</span>
+<span class="ln">291</span>
+<span class="ln">292</span>        <span class="nd">@Override</span>
+<span class="ln">293</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPreExecute</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">294</span>            <span class="n">dialog</span> <span class="o">=</span> <span class="n">ProgressDialog</span><span class="o">.</span><span class="na">show</span><span class="o">(</span>
+<span class="ln">295</span>                    <span class="n">getLessonActivity</span><span class="o">(),</span>
+<span class="ln">296</span>                    <span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_running_requested_operation_pg_title</span><span class="o">),</span>
+<span class="ln">297</span>                    <span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_running_requested_operation_pg_body</span><span class="o">)</span>
+<span class="ln">298</span>            <span class="o">);</span>
+<span class="ln">299</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">setCancelable</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="ln">300</span>        <span class="o">}</span>
+<span class="ln">301</span>
+<span class="ln">302</span>        <span class="nd">@Override</span>
+<span class="ln">303</span>        <span class="kd">protected</span> <span class="n">InsertRandomResults</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Long</span><span class="o">...</span> <span class="n">strings</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">304</span>            <span class="k">if</span><span class="o">(</span><span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">305</span>                <span class="k">return</span> <span class="k">new</span> <span class="n">InsertRandomResults</span><span class="o">(</span>
+<span class="ln">306</span>                        <span class="kc">null</span><span class="o">,</span>
+<span class="ln">307</span>                        <span class="kc">null</span><span class="o">,</span>
+<span class="ln">308</span>                        <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln">309</span>                        <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln">310</span>                        <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln">311</span>                        <span class="kc">false</span><span class="o">,</span>
+<span class="ln">312</span>                        <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span>
+<span class="ln">313</span>                <span class="o">);</span>
+<span class="ln">314</span>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">315</span>                <span class="k">try</span> <span class="o">{</span>
+<span class="ln">316</span>                    <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">MigOneModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">317</span>                    <span class="n">KittyMapper</span> <span class="n">mapper2</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">getMapper</span><span class="o">(</span><span class="n">MigTwoModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">318</span>                    <span class="kt">long</span> <span class="n">recordsCount</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()</span> <span class="o">+</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">countAll</span><span class="o">();</span>
+<span class="ln">319</span>                    <span class="kt">long</span> <span class="n">affected</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">deleteAll</span><span class="o">()</span> <span class="o">+</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">deleteAll</span><span class="o">();</span>
+<span class="ln">320</span>                    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;</span> <span class="n">modelsToInsert</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">321</span>                    <span class="n">getSf</span><span class="o">().</span><span class="na">setDatabaseCreated</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln">322</span>                    <span class="n">getSf</span><span class="o">().</span><span class="na">setCurrentMigDBVersion</span><span class="o">(</span><span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">);</span>
+<span class="ln">323</span>                    <span class="n">getSf</span><span class="o">().</span><span class="na">setDatabaseDeletedManually</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="ln">324</span>                    <span class="n">MigV2RandomModelFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MigV2RandomModelFactory</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln">325</span>                    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">INSERT_AMOUNT</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<span class="ln">326</span>                        <span class="n">MigOneModel</span> <span class="n">m</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">newM1RndModel</span><span class="o">();</span>
+<span class="ln">327</span>                        <span class="n">modelsToInsert</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+<span class="ln">328</span>                    <span class="o">}</span>
+<span class="ln">329</span>                    <span class="n">mapper</span><span class="o">.</span><span class="na">insertInTransaction</span><span class="o">(</span><span class="n">modelsToInsert</span><span class="o">);</span>
+<span class="ln">330</span>                    <span class="n">List</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;</span> <span class="n">models</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+<span class="ln">331</span>
+<span class="ln">332</span>                    <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;</span> <span class="n">mI</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+<span class="ln">333</span>                    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">out</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">334</span>                    <span class="k">while</span> <span class="o">(</span><span class="n">mI</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+<span class="ln">335</span>                        <span class="n">out</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">mI</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+<span class="ln">336</span>                    <span class="o">}</span>
+<span class="ln">337</span>
+<span class="ln">338</span>                    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">MigTwoModel</span><span class="o">&gt;</span> <span class="n">models2ToInsert</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">339</span>                    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">INSERT_FK_AMOUNT</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+<span class="ln">340</span>                        <span class="n">MigTwoModel</span> <span class="n">m</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">newM2RndModel</span><span class="o">((</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MigOneModel</span><span class="o">&gt;)</span> <span class="n">models</span><span class="o">);</span>
+<span class="ln">341</span>                        <span class="n">models2ToInsert</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+<span class="ln">342</span>                    <span class="o">}</span>
+<span class="ln">343</span>                    <span class="n">mapper2</span><span class="o">.</span><span class="na">insertInTransaction</span><span class="o">(</span><span class="n">models2ToInsert</span><span class="o">);</span>
+<span class="ln">344</span>                    <span class="n">List</span><span class="o">&lt;</span><span class="n">MigTwoModel</span><span class="o">&gt;</span> <span class="n">models2</span> <span class="o">=</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+<span class="ln">345</span>
+<span class="ln">346</span>                    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">out2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">347</span>                    <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">MigTwoModel</span><span class="o">&gt;</span> <span class="n">mI2</span> <span class="o">=</span> <span class="n">models2</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+<span class="ln">348</span>                    <span class="k">while</span> <span class="o">(</span><span class="n">mI2</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+<span class="ln">349</span>                        <span class="n">out2</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">mI2</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+<span class="ln">350</span>                    <span class="o">}</span>
+<span class="ln">351</span>
+<span class="ln">352</span>                    <span class="kt">long</span> <span class="n">recordsCountAfter</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()</span> <span class="o">+</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">countAll</span><span class="o">();</span>
+<span class="ln">353</span>                    <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> <span class="n">mapper2</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">354</span>                    <span class="k">return</span> <span class="k">new</span> <span class="n">InsertRandomResults</span><span class="o">(</span><span class="n">out</span><span class="o">,</span> <span class="n">out2</span><span class="o">,</span> <span class="n">affected</span><span class="o">,</span> <span class="n">recordsCount</span><span class="o">,</span> <span class="n">recordsCountAfter</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">());</span>
+<span class="ln">355</span>                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">356</span>                    <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">MigrationDBv1</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span> <span class="n">ERR_INSERT_RND</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+<span class="ln">357</span>                    <span class="k">if</span> <span class="o">(</span><span class="n">e</span> <span class="k">instanceof</span> <span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">358</span>                        <span class="k">if</span> <span class="o">(((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">359</span>                            <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">MigrationDBv1</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span> <span class="n">ERR_INSERT_RND</span><span class="o">,</span> <span class="o">((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">());</span>
+<span class="ln">360</span>                        <span class="o">}</span>
+<span class="ln">361</span>                    <span class="o">}</span>
+<span class="ln">362</span>                    <span class="k">return</span> <span class="k">new</span> <span class="n">InsertRandomResults</span><span class="o">(</span>
+<span class="ln">363</span>                            <span class="kc">null</span><span class="o">,</span>
+<span class="ln">364</span>                            <span class="kc">null</span><span class="o">,</span>
+<span class="ln">365</span>                            <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln">366</span>                            <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln">367</span>                            <span class="o">-</span><span class="n">1l</span><span class="o">,</span>
+<span class="ln">368</span>                            <span class="kc">false</span><span class="o">,</span>
+<span class="ln">369</span>                            <span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span>
+<span class="ln">370</span>                    <span class="o">);</span>
+<span class="ln">371</span>                <span class="o">}</span>
+<span class="ln">372</span>            <span class="o">}</span>
+<span class="ln">373</span>        <span class="o">}</span>
+<span class="ln">374</span>
+<span class="ln">375</span>        <span class="nd">@Override</span>
+<span class="ln">376</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">InsertRandomResults</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">377</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+<span class="ln">378</span>            <span class="k">if</span> <span class="o">(</span><span class="n">eventsListView</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">379</span>                <span class="n">eventsListView</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">BasicArrayAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;()));</span>
+<span class="ln">380</span>                <span class="n">eventsListView</span><span class="o">.</span><span class="na">setOnTouchListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnTouchListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">381</span>
+<span class="ln">382</span>                    <span class="c1">// Setting on Touch Listener for handling the touch inside ScrollView
+</span><span class="ln">383</span><span class="c1"></span>                    <span class="nd">@Override</span>
+<span class="ln">384</span>                    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTouch</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">,</span> <span class="n">MotionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">385</span>                        <span class="c1">// Disallow the touch request for parent scroll on touch of child view
+</span><span class="ln">386</span><span class="c1"></span>                        <span class="n">v</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">requestDisallowInterceptTouchEvent</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln">387</span>                        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="ln">388</span>                    <span class="o">}</span>
+<span class="ln">389</span>                <span class="o">});</span>
+<span class="ln">390</span>                <span class="k">if</span> <span class="o">(</span><span class="n">result</span><span class="o">.</span><span class="na">operationSuccess</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">391</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_count_to_events</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">modelsCountBefore</span><span class="o">));</span>
+<span class="ln">392</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_deleted_to_events</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">deletedModelsAffectedRows</span><span class="o">));</span>
+<span class="ln">393</span>                    <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">modelString</span> <span class="o">:</span> <span class="n">result</span><span class="o">.</span><span class="na">modelInsertionsM1</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">394</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_inserted_to_events</span><span class="o">),</span> <span class="n">M1M1TN</span><span class="o">,</span> <span class="n">modelString</span><span class="o">));</span>
+<span class="ln">395</span>                    <span class="o">}</span>
+<span class="ln">396</span>                    <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">modelString2</span> <span class="o">:</span> <span class="n">result</span><span class="o">.</span><span class="na">modelInsertionsM2</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">397</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_inserted_to_events</span><span class="o">),</span> <span class="n">M1M2TN</span><span class="o">,</span> <span class="n">modelString2</span><span class="o">));</span>
+<span class="ln">398</span>                    <span class="o">}</span>
+<span class="ln">399</span>                    <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_count_to_events</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">modelsCountAfter</span><span class="o">));</span>
+<span class="ln">400</span>                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">401</span>                    <span class="k">if</span><span class="o">(</span><span class="n">getSf</span><span class="o">().</span><span class="na">currentMigDBVersion</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">402</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_op_mig_version_is_higher</span><span class="o">),</span> <span class="n">result</span><span class="o">.</span><span class="na">dbVersion</span><span class="o">,</span> <span class="n">DB_IMPLEMENTATION_VERSION</span><span class="o">));</span>
+<span class="ln">403</span>                    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+<span class="ln">404</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_error_event</span><span class="o">));</span>
+<span class="ln">405</span>                    <span class="o">}</span>
+<span class="ln">406</span>                <span class="o">}</span>
+<span class="ln">407</span>                <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">notifyDataSetChanged</span><span class="o">();</span>
+<span class="ln">408</span>                <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln">409</span>                <span class="n">reloadStatus</span><span class="o">();</span>
+<span class="ln">410</span>            <span class="o">}</span>
+<span class="ln">411</span>        <span class="o">}</span>
+<span class="ln">412</span>
+<span class="ln">413</span>
+<span class="ln">414</span>    <span class="o">}</span>
+<span class="ln">415</span>
+<span class="ln">416</span>    <span class="kd">class</span> <span class="nc">InsertRandomResults</span> <span class="o">{</span>
+<span class="ln">417</span>        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">modelInsertionsM1</span><span class="o">;</span>
+<span class="ln">418</span>        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">modelInsertionsM2</span><span class="o">;</span>
+<span class="ln">419</span>        <span class="kt">long</span> <span class="n">deletedModelsAffectedRows</span><span class="o">;</span>
+<span class="ln">420</span>        <span class="kt">long</span> <span class="n">modelsCountBefore</span><span class="o">;</span>
+<span class="ln">421</span>        <span class="kt">long</span> <span class="n">modelsCountAfter</span><span class="o">;</span>
+<span class="ln">422</span>        <span class="kt">boolean</span> <span class="n">operationSuccess</span><span class="o">;</span>
+<span class="ln">423</span>        <span class="kt">int</span> <span class="n">dbVersion</span><span class="o">;</span>
+<span class="ln">424</span>
+<span class="ln">425</span>        <span class="kd">public</span> <span class="nf">InsertRandomResults</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">modelInsertionsM1</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">modelInsertionsM2</span><span class="o">,</span>
+<span class="ln">426</span>                                   <span class="kt">long</span> <span class="n">deletedModelsAffectedRows</span><span class="o">,</span>
+<span class="ln">427</span>                                   <span class="kt">long</span> <span class="n">modelsCountBefore</span><span class="o">,</span> <span class="kt">long</span> <span class="n">modelsCountAfter</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">opSuccess</span><span class="o">,</span>
+<span class="ln">428</span>                                   <span class="kt">int</span> <span class="n">dbVersion</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">429</span>            <span class="k">this</span><span class="o">.</span><span class="na">modelInsertionsM1</span> <span class="o">=</span> <span class="n">modelInsertionsM1</span><span class="o">;</span>
+<span class="ln">430</span>            <span class="k">this</span><span class="o">.</span><span class="na">modelInsertionsM2</span> <span class="o">=</span> <span class="n">modelInsertionsM2</span><span class="o">;</span>
+<span class="ln">431</span>            <span class="k">this</span><span class="o">.</span><span class="na">deletedModelsAffectedRows</span> <span class="o">=</span> <span class="n">deletedModelsAffectedRows</span><span class="o">;</span>
+<span class="ln">432</span>            <span class="k">this</span><span class="o">.</span><span class="na">modelsCountBefore</span> <span class="o">=</span> <span class="n">modelsCountBefore</span><span class="o">;</span>
+<span class="ln">433</span>            <span class="k">this</span><span class="o">.</span><span class="na">modelsCountAfter</span> <span class="o">=</span> <span class="n">modelsCountAfter</span><span class="o">;</span>
+<span class="ln">434</span>            <span class="k">this</span><span class="o">.</span><span class="na">operationSuccess</span> <span class="o">=</span> <span class="n">opSuccess</span><span class="o">;</span>
+<span class="ln">435</span>            <span class="k">this</span><span class="o">.</span><span class="na">dbVersion</span> <span class="o">=</span> <span class="n">dbVersion</span><span class="o">;</span>
+<span class="ln">436</span>        <span class="o">}</span>
+<span class="ln">437</span>    <span class="o">}</span>
+<span class="ln">438</span>
+<span class="ln">439</span>    <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">ERR_DELETION</span> <span class="o">=</span> <span class="s">&#34;Lesson5tab2DBDeleteError, see exception details!&#34;</span><span class="o">;</span>
+<span class="ln">440</span>
+<span class="ln">441</span>    <span class="kd">class</span> <span class="nc">DeleteDatabaseAsync</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">,</span> <span class="n">Long</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="o">{</span>
+<span class="ln">442</span>        <span class="n">ProgressDialog</span> <span class="n">dialog</span><span class="o">;</span>
+<span class="ln">443</span>
+<span class="ln">444</span>        <span class="kd">final</span> <span class="kt">int</span> <span class="n">DELETED</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
+<span class="ln">445</span>        <span class="kd">final</span> <span class="kt">int</span> <span class="n">NOT_DELETED</span> <span class="o">=</span> <span class="n">2</span><span class="o">;</span>
+<span class="ln">446</span>        <span class="kd">final</span> <span class="kt">int</span> <span class="n">ERROR</span> <span class="o">=</span> <span class="n">3</span><span class="o">;</span>
+<span class="ln">447</span>
+<span class="ln">448</span>        <span class="nd">@Override</span>
+<span class="ln">449</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPreExecute</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">450</span>            <span class="n">dialog</span> <span class="o">=</span> <span class="n">ProgressDialog</span><span class="o">.</span><span class="na">show</span><span class="o">(</span>
+<span class="ln">451</span>                    <span class="n">getLessonActivity</span><span class="o">(),</span>
+<span class="ln">452</span>                    <span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_running_requested_operation_pg_title</span><span class="o">),</span>
+<span class="ln">453</span>                    <span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_running_requested_operation_pg_body</span><span class="o">)</span>
+<span class="ln">454</span>            <span class="o">);</span>
+<span class="ln">455</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">setCancelable</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="ln">456</span>        <span class="o">}</span>
+<span class="ln">457</span>
+<span class="ln">458</span>        <span class="nd">@Override</span>
+<span class="ln">459</span>        <span class="kd">protected</span> <span class="n">Integer</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Long</span><span class="o">...</span> <span class="n">strings</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">460</span>            <span class="k">try</span> <span class="o">{</span>
+<span class="ln">461</span>                <span class="kt">boolean</span> <span class="n">deleted</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="o">().</span><span class="na">deleteDatabase</span><span class="o">();</span>
+<span class="ln">462</span>                <span class="n">getSf</span><span class="o">().</span><span class="na">setDatabaseDeletedManually</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln">463</span>                <span class="n">getSf</span><span class="o">().</span><span class="na">setDatabaseCreated</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="ln">464</span>                <span class="n">getSf</span><span class="o">().</span><span class="na">setCurrentMigDBVersion</span><span class="o">(-</span><span class="n">1</span><span class="o">);</span>
+<span class="ln">465</span>                <span class="k">if</span><span class="o">(</span><span class="n">deleted</span><span class="o">)</span>
+<span class="ln">466</span>                    <span class="k">return</span> <span class="n">DELETED</span><span class="o">;</span>
+<span class="ln">467</span>                <span class="k">else</span>
+<span class="ln">468</span>                    <span class="k">return</span> <span class="n">NOT_DELETED</span><span class="o">;</span>
+<span class="ln">469</span>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">470</span>                <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">MigrationDBv2</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span> <span class="n">ERR_DELETION</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+<span class="ln">471</span>                <span class="k">if</span> <span class="o">(</span><span class="n">e</span> <span class="k">instanceof</span> <span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">472</span>                    <span class="k">if</span> <span class="o">(((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">473</span>                        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">MigrationDBv2</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span> <span class="n">ERR_DELETION</span><span class="o">,</span> <span class="o">((</span><span class="n">KittyRuntimeException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getNestedException</span><span class="o">());</span>
+<span class="ln">474</span>                    <span class="o">}</span>
+<span class="ln">475</span>                <span class="o">}</span>
+<span class="ln">476</span>                <span class="k">return</span> <span class="n">ERROR</span><span class="o">;</span>
+<span class="ln">477</span>            <span class="o">}</span>
+<span class="ln">478</span>        <span class="o">}</span>
+<span class="ln">479</span>
+<span class="ln">480</span>        <span class="nd">@Override</span>
+<span class="ln">481</span>        <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">Integer</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">482</span>            <span class="n">dialog</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+<span class="ln">483</span>            <span class="k">if</span> <span class="o">(</span><span class="n">eventsListView</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">484</span>                <span class="n">eventsListView</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">BasicArrayAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;()));</span>
+<span class="ln">485</span>                <span class="n">eventsListView</span><span class="o">.</span><span class="na">setOnTouchListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnTouchListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">486</span>
+<span class="ln">487</span>                    <span class="c1">// Setting on Touch Listener for handling the touch inside ScrollView
+</span><span class="ln">488</span><span class="c1"></span>                    <span class="nd">@Override</span>
+<span class="ln">489</span>                    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTouch</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">,</span> <span class="n">MotionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">490</span>                        <span class="c1">// Disallow the touch request for parent scroll on touch of child view
+</span><span class="ln">491</span><span class="c1"></span>                        <span class="n">v</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">requestDisallowInterceptTouchEvent</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln">492</span>                        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="ln">493</span>                    <span class="o">}</span>
+<span class="ln">494</span>                <span class="o">});</span>
+<span class="ln">495</span>                <span class="k">switch</span> <span class="o">(</span><span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">496</span>                    <span class="k">case</span> <span class="nl">DELETED:</span>
+<span class="ln">497</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_delete_db_success</span><span class="o">)));</span>
+<span class="ln">498</span>                        <span class="k">break</span><span class="o">;</span>
+<span class="ln">499</span>                    <span class="k">case</span> <span class="nl">NOT_DELETED:</span>
+<span class="ln">500</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_delete_db_fail</span><span class="o">)));</span>
+<span class="ln">501</span>                        <span class="k">break</span><span class="o">;</span>
+<span class="ln">502</span>                    <span class="k">case</span> <span class="nl">ERROR:</span>
+<span class="ln">503</span>                        <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l5_t2_error_event</span><span class="o">)));</span>
+<span class="ln">504</span>                        <span class="k">break</span><span class="o">;</span>
+<span class="ln">505</span>                <span class="o">}</span>
+<span class="ln">506</span>                <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">eventsListView</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">notifyDataSetChanged</span><span class="o">();</span>
+<span class="ln">507</span>                <span class="n">reloadTableExpandedList</span><span class="o">();</span>
+<span class="ln">508</span>                <span class="n">reloadStatus</span><span class="o">();</span>
+<span class="ln">509</span>            <span class="o">}</span>
+<span class="ln">510</span>        <span class="o">}</span>
+<span class="ln">511</span>    <span class="o">}</span>
+<span class="ln">512</span>
+<span class="ln">513</span>    <span class="c1">// Expanded list
+</span><span class="ln">514</span><span class="c1"></span>    <span class="n">MigAdapter</span> <span class="n">migAdapter</span><span class="o">;</span>
+<span class="ln">515</span>
+<span class="ln">516</span>    <span class="nd">@Override</span>
+<span class="ln">517</span>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setUpExpandedList</span><span class="o">(</span><span class="n">View</span> <span class="n">rootView</span><span class="o">,</span> <span class="kt">int</span> <span class="n">eventsId</span><span class="o">,</span> <span class="kt">int</span> <span class="n">eventsTitleId</span><span class="o">,</span> <span class="kt">int</span> <span class="n">eventTitleStringPattern</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">518</span>        <span class="n">events</span> <span class="o">=</span> <span class="o">(</span><span class="n">ListView</span><span class="o">)</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">eventsId</span><span class="o">);</span>
+<span class="ln">519</span>        <span class="n">expandedTitle</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">eventsTitleId</span><span class="o">);</span>
+<span class="ln">520</span>        <span class="n">expandeddTitlePattern</span> <span class="o">=</span> <span class="n">getString</span><span class="o">(</span><span class="n">eventTitleStringPattern</span><span class="o">);</span>
+<span class="ln">521</span>
+<span class="ln">522</span>        <span class="n">expandedTitle</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">expandeddTitlePattern</span><span class="o">,</span> <span class="n">0</span><span class="o">));</span>
+<span class="ln">523</span>
+<span class="ln">524</span>        <span class="k">if</span><span class="o">(</span><span class="n">expandedAdapter</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">525</span>            <span class="n">migAdapter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MigAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;());</span>
+<span class="ln">526</span>        <span class="o">}</span>
+<span class="ln">527</span>
+<span class="ln">528</span>        <span class="n">events</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="n">migAdapter</span><span class="o">);</span>
+<span class="ln">529</span>        <span class="n">events</span><span class="o">.</span><span class="na">setOnTouchListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnTouchListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">530</span>
+<span class="ln">531</span>            <span class="c1">// Setting on Touch Listener for handling the touch inside ScrollView
+</span><span class="ln">532</span><span class="c1"></span>            <span class="nd">@Override</span>
+<span class="ln">533</span>            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTouch</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">,</span> <span class="n">MotionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">534</span>                <span class="c1">// Disallow the touch request for parent scroll on touch of child view
+</span><span class="ln">535</span><span class="c1"></span>                <span class="n">v</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">requestDisallowInterceptTouchEvent</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln">536</span>                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="ln">537</span>            <span class="o">}</span>
+<span class="ln">538</span>        <span class="o">});</span>
+<span class="ln">539</span>    <span class="o">}</span>
+<span class="ln">540</span>
+<span class="ln">541</span>    <span class="c1">// Fab menu section
+</span><span class="ln">542</span><span class="c1"></span>
+<span class="ln">543</span>    <span class="nd">@Override</span>
+<span class="ln">544</span>    <span class="kd">public</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="nf">helpFabMenuAction</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">545</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">546</span>
+<span class="ln">547</span>            <span class="cm">/**
+</span><span class="ln">548</span><span class="cm">             * Called when a view has been clicked.
+</span><span class="ln">549</span><span class="cm">             *
+</span><span class="ln">550</span><span class="cm">             * @param v The view that was clicked.
+</span><span class="ln">551</span><span class="cm">             */</span>
+<span class="ln">552</span>            <span class="nd">@Override</span>
+<span class="ln">553</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">554</span>                <span class="o">((</span><span class="n">KittyTutorialActivity</span><span class="o">)</span> <span class="n">getParentFragment</span><span class="o">().</span><span class="na">getActivity</span><span class="o">()).</span><span class="na">showWebViewDialog</span><span class="o">(</span><span class="n">L5_T2_TUTORIAL</span><span class="o">);</span>
+<span class="ln">555</span>            <span class="o">}</span>
+<span class="ln">556</span>        <span class="o">};</span>
+<span class="ln">557</span>    <span class="o">}</span>
+<span class="ln">558</span>
+<span class="ln">559</span>    <span class="nd">@Override</span>
+<span class="ln">560</span>    <span class="kd">public</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="nf">sourceFabMenuAction</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">561</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">562</span>
+<span class="ln">563</span>            <span class="cm">/**
+</span><span class="ln">564</span><span class="cm">             * Called when a view has been clicked.
+</span><span class="ln">565</span><span class="cm">             *
+</span><span class="ln">566</span><span class="cm">             * @param v The view that was clicked.
+</span><span class="ln">567</span><span class="cm">             */</span>
+<span class="ln">568</span>            <span class="nd">@Override</span>
+<span class="ln">569</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">570</span>                <span class="o">((</span><span class="n">KittyTutorialActivity</span><span class="o">)</span> <span class="n">getParentFragment</span><span class="o">().</span><span class="na">getActivity</span><span class="o">()).</span><span class="na">showWebViewDialog</span><span class="o">(</span><span class="n">L5_T2_SOURCE</span><span class="o">);</span>
+<span class="ln">571</span>            <span class="o">}</span>
+<span class="ln">572</span>        <span class="o">};</span>
+<span class="ln">573</span>    <span class="o">}</span>
+<span class="ln">574</span>
+<span class="ln">575</span>    <span class="nd">@Override</span>
+<span class="ln">576</span>    <span class="kd">public</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="nf">schemaFabMenuAction</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">577</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">578</span>
+<span class="ln">579</span>            <span class="cm">/**
+</span><span class="ln">580</span><span class="cm">             * Called when a view has been clicked.
+</span><span class="ln">581</span><span class="cm">             *
+</span><span class="ln">582</span><span class="cm">             * @param v The view that was clicked.
+</span><span class="ln">583</span><span class="cm">             */</span>
+<span class="ln">584</span>            <span class="nd">@Override</span>
+<span class="ln">585</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">586</span>                <span class="o">((</span><span class="n">KittyTutorialActivity</span><span class="o">)</span> <span class="n">getParentFragment</span><span class="o">().</span><span class="na">getActivity</span><span class="o">()).</span><span class="na">showWebViewDialog</span><span class="o">(</span><span class="n">L5_T2_SCHEMA</span><span class="o">);</span>
+<span class="ln">587</span>            <span class="o">}</span>
+<span class="ln">588</span>        <span class="o">};</span>
+<span class="ln">589</span>    <span class="o">}</span>
+<span class="ln">590</span><span class="o">}</span></code></pre></div>
+</details></p></li>
+</ol>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

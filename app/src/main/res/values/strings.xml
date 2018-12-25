@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Denis Bogomolov (akaish)
+  ~
+  ~ This work is licensed under a
+  ~ Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~ This file is a part of KittyORM project (KittyORM Demo), more information at
+  ~ https://akaish.github.io/KittyORMPages/license/
+  -->
+<resources>
+    <string name="app_name">KittyORM Demo</string>
+    <string name="title_lesson_detail">Lesson Details</string>
+
+    <string name="_a_animal_DOG">Dog</string>
+    <string name="_a_animal_CAT">Cat</string>
+    <string name="_a_animal_GOAT">Goat</string>
+    <string name="_a_animal_SHEEP">Sheep</string>
+    <string name="_a_animal_TIGER">Tiger</string>
+    <string name="_a_animal_LION">Lion</string>
+    <string name="_a_animal_WOLF">Wolf</string>
+    <string name="_a_animal_BEAR">Bear</string>
+
+    <string name="_a_animal_DOG_says">Woof! Woof!</string>
+    <string name="_a_animal_cat_says">Meeeooow ;)</string>
+    <string name="_a_animal_GOAT_says">Maaaaah</string>
+    <string name="_a_animal_SHEEP_says">Baaaaaaaah</string>
+    <string name="_a_animal_TIGER_says">Arrrrrrrrr</string>
+    <string name="_a_animal_LION_says">I am better than tiger cause I am the King of the Animals!</string>
+    <string name="_a_animal_WOLF_says">Awhooo</string>
+    <string name="_a_animal_BEAR_says">Privet, comrade!</string>
+
+    <!-- Do not translate animal_emum -->
+    <string-array name="animal_enum">
+        <item>DOG</item>
+        <item>CAT</item>
+        <item>GOAT</item>
+        <item>SHEEP</item>
+        <item>TIGER</item>
+        <item>LION</item>
+        <item>WOLF</item>
+        <item>BEAR</item>
+    </string-array>
+
+    <!-- Main menu UI strings -->
+    <string name="_menu_lesson">Lesson #{0}</string>
+    <string name="_menu_lesson_1_title_introduction">Introduction to KittyORM</string>
+    <string name="_menu_lesson_2_title_basic_implementation">KittyORM basic implementation</string>
+    <string name="_menu_lesson_3_title_datatypes_and_constraints">Datatype affinities, constraints and indexes declarations</string>
+    <string name="_menu_lesson_4_title_optimisation_debug_and_ecyptyon">Performance tweaks, debugging and database encryption</string>
+    <string name="_menu_lesson_5_title_migrations">Migrations between different database versions</string>
+    <string name="_menu_lesson_6_make_kitty_orm_greater">Make KittyORM even greater, use, share, develop or support</string>
+    <string name="_menu_lesson_7_contact_and_license">Contact and legal information</string>
+    <string name="_warning_dialog_title">Warning!</string>
+    <string name="_warning_dialog_ok_button_text">OK</string>
+    <string name="_warning_dialog_test_message_little">I\'m test message. Do not translate me.</string>
+    <string name="_warning_dialog_test_message_big">I\'m test message for warning dialog. Do not translate me. Also I\'m big (means it is not enough one row to show me).</string>
+
+
+    <string name="_mm_fab_contact">Mail us</string>
+    <string name="_mm_fab_legal_info">View legal info</string>
+    <string name="_mm_follow_us">Follow KittyORM at twitter</string>
+
+    <string name="_menu_choose_mail_client">Choose mail client:</string>
+    <string name="_menu_mail_header">sent from KittyORM demo application</string>
+
+    <string name="_menu_share_link_subject">Hey, found good SQLite ORM for android: KittyORM</string>
+    <string name="_menu_share_link_chooser_title">Use way to share KittyORM:</string>
+
+    <!-- Some common strings -->
+    <!-- Pagination -->
+    <string name="paginator_first_page">&#60;&#60;</string>
+    <string name="paginator_page_up">&#60;</string>
+    <string name="paginator_page_down">&#62;</string>
+    <string name="paginator_last_page">&#62;&#62;</string>
+
+    <!-- Lesson 1 UI strings -->
+    <!-- Lesson 1 common strings -->
+    <string name="_l1_tab_intro">Introduction to KittyORM</string>
+    <string name="_l1_tab_getting_started">Getting started</string>
+
+    <!-- Lesson 1 UI strings Tab 1 -->
+    <string name="_l1_t1_snackbar_message">Introduction to KittyORM, what it can and why it was created.</string>
+
+    <!-- Lesson 1 UI strings Tab 2 -->
+    <string name="_l1_t2_go_button">RUN CRUD OPERATIONS</string>
+    <string name="_l1_t2_clear_button">CLEAR TABLE</string>
+
+    <string name="_l1_t2_inserting">Inserting new record from entity {0} to table simple_database.simple_example.</string>
+    <string name="_l1_t2_inserted">New record from entity {0} inserted successfully to table simple_database.simple_example.</string>
+
+    <string name="_l1_t2_count">Right now simple_database.simple_example has {0} records.</string>
+
+    <string name="_l1_t2_retrieving">Retrieving existing record from simple_database.simple_example table; method: {0}, parameters: {1}, operation id: {2} .</string>
+    <string name="_l1_t2_retrieved">{0} model(s) successfully retrieved from simple_database.simple_example table; operation id = {1} .</string>
+    <string name="_l1_t2_retrieved_model_show">Operation id = {0}, model number = {1}, model data: {2} .</string>
+
+    <string name="_l1_t2_random_save">Ten random models generated and successfully inserted into simple_database.simple_example.</string>
+
+    <string name="_l1_t2_one_alex_to_delete_found">Found one "Alex" to delete, deleting...</string>
+    <string name="_l1_t2_one_alex_deleted">One "Alex" deleted successfully!</string>
+
+    <string name="_l1_2_one_marina_deleting">Deleting record where record value random_integer = 445555 ...</string>
+    <string name="_l1_2_one_marina_deleted">Record\'s where record value random_integer = 445555 deleted successfully!</string>
+
+    <string name="_l1_t2_updating_entity">Updating entity {0} to {1}.</string>
+    <string name="_l1_t2_updated">Entity updated successfully from {0} to {1}.</string>
+
+    <string name="_l1_t2_random_save_tx">Ten random models generated and successfully inserted into simple_database.simple_example (TX mode).</string>
+
+    <string name="_l1_t2_updating_query_like">Updating with query like method, entity {0}, WHERE first_name = Marina .</string>
+    <string name="_l1_t2_updating_query_like_updated">Update successfully finished with query like method, entity {0}, WHERE first_name = Marina .</string>
+
+    <string name="_l1_t2_clear">{0} record(s) deleted from simple_database.simple_example.</string>
+
+    <string name="_l1_t2_expanded_text_pattern">Records in simple_example: {0} (clickable)</string>
+
+    <string name="_l1_t2_snackbar_message">Basic usage of KittyORM CRUD controller. Click \'RUN CRUD OPERATIONS\' to run CRUD operations with DB.</string>
+
+    <!-- Lesson 2 UI strings -->
+    <!-- Lesson 2 UI string (common) -->
+
+    <string name="_l2_common_current_model_not_set">Current model: not set</string>
+    <string name="_l2_common_current_model_id">Current model: id ({0})</string>
+    <string name="_l2_common_sliding_expand">&#8657; Action log, click here to expand &#8657;</string>
+    <string name="_l2_common_sliding_minimize">&#8659; Action log, click here to minimize &#8659;</string>
+
+    <string name="_l2_tab_new">NEW</string>
+    <string name="_l2_tab_update">UPDATE</string>
+    <string name="_l2_tab_delete">DELETE</string>
+    <string name="_l2_tab_find">FIND</string>
+    <string name="_l2_tab_random">RND</string>
+
+    <string name="_l2_fab_menu_source_code">View source code</string>
+    <string name="_l2_fab_menu_db_schema">View DB schema</string>
+    <string name="_l2_fab_menu_help">View tutorial</string>
+
+    <!-- Lesson 2 UI strings Tab 1 -->
+    <string name="_l2_t1_warning_text">Please set randomInt field, randomInteger field and select animal from randomAnimal spinner before saving new model!</string>
+    <string name="_l2_t1_warning_bad_input">Bad input data for fields randomInt or randomInteger (or both). Please provide numeric string that can be parsed to Integer!</string>
+
+    <string name="_l2_t1_random_int">Field: randomInt</string>
+    <string name="_l2_t1_random_int_hint">Enter random integer value here</string>
+
+    <string name="_l2_t1_random_integer">Field: randomInteger</string>
+    <string name="_l2_t1_random_integer_hint">Enter random integer value here</string>
+
+    <string name="_l2_t1_random_animal">Field: randomAnimal</string>
+    <string name="_l2_t1_random_animal_hint">Select random animal...</string>
+
+    <string name="_l2_t1_animal_name">Field: randomAnimalName</string>
+    <string name="_l2_t1_animal_says">Field: randomAnimalSays</string>
+
+    <string name="_l2_t1_save_model">SAVE NEW MODEL</string>
+
+    <string name="_l2_t1_save_model_input_warning_dialog_title">Warning!</string>
+    <string name="_l2_t1_save_model_input_warning_dialog_text">Please enter both random integers and select animal from selector as well!</string>
+    
+    <string name="_l2_t1_new_model">Action: inserting new model; Result: {0}</string>
+    <string name="_l2_t1_new_model_completed"> new model saved successfully, model data: {0}</string>
+    <string name="_l2_t1_new_model_failed"> error! See exception details at ADB logcat, app: net.akaish.kittyormdemo, tag: {0}, exception class (unwrapped from kitty runtime exception): {1}</string>
+
+    <string name="_l2_t1_snackbar_message">Example of creation and insertion of new model with KittyORM, set all field and press \'save\' button to process.</string>
+
+    <string name="_l2_t1_expanded_panel_text_pattern">Insertion log ({0} event(s), clickable)</string>
+    <string name="_l2_t1_expanded_event_pattern">Event #{0}: {1}</string>
+    <string name="_l2_t1_expanded_added">Successfully inserted new record (rowid = {0}) into basic_database.random (entity = {1}). Now basic_database.random has {2} records!</string>
+    <string name="_l2_t1_expanded_error">Failed to insert new record in basic_database.random (entity = {0}).</string>
+
+    <!-- Lesson 2 UI strings Tab 2 -->
+    <string name="_l2_t2_current_model_pattern">Current model: {0}</string>
+    <string name="_l2_t2_current_model_not_set">not set. Please load model by id or select model from find results at #FIND tab.</string>
+
+    <string name="_l2_t2_warning_bad_id_input">Bad input data for id field. Please provide numeric string that can be parsed to Long!</string>
+    <string name="_l2_t2_warning_no_record_with_id">Record with provided id doesn\'t exist in basic_database.random. Please provide id of existing record to load!</string>
+
+    <string name="_l2_t2_id">Enter model id to load:</string>
+    <string name="_l2_t2_id_load_button">LOAD MODEL</string>
+    <string name="_l2_t2_update_model_button">UPDATE MODEL</string>
+    <string name="_l2_t2_snackbar_message">Example of updating existing model with KittyORM, load model, modify it and save it with \'update\' button.</string>
+
+    <string name="_l2_t2_update_model">Action: updating model; Result: {0}</string>
+    <string name="_l2_t2_update_model_completed"> updated model saved successfully, model data: {0}</string>
+    <string name="_l2_t2_update_model_failed"> error! See exception details at ADB logcat, app: net.akaish.kittyormdemo, tag: {0}, exception class (unwrapped from kitty runtime exception): {1}</string>
+
+    <string name="_l2_t2_expanded_text_pattern">Update log ({0} event(s), clickable)</string>
+    <string name="_l2_t2_expanded_event_pattern">Event #{0}: {1}</string>
+    <string name="_l2_t2_expanded_added">Successfully updated record (rowid = {0}) from {1} to {2}. Right now basic_database.random has {3} records!</string>
+    <string name="_l2_t2_expanded_error">Failed to update record at basic_database.random (entity = {0})!</string>
+    <string name="_l2_t2_expanded_error_unable">Unable to update record (id = {0}). Record associated with this entity was deleted or doesn\'t exists!</string>
+
+    <!-- Lesson 2 UI strings Tab 3 -->
+    <string name="_l2_t3_delete_by_id">Enter model\'s id to delete and press \'DELETE BY ID\' button OR</string>
+    <string name="_l2_t3_delete_by_id_button">DELETE BY ID</string>
+
+    <string name="_l2_t3_delete_by_range">Enter range for model\'s field \'randomInt\' and press \'DELETE BY RANGE\' button OR</string>
+    <string name="_l2_t3_delete_by_range_button">DELETE BY RANGE</string>
+
+    <string name="_l2_t3_delete_by_animal">Select from dropdown menu animal from animals enum and press \'DELETE BY ANIMAL\' button.</string>
+    <string name="_l2_t3_delete_by_animal_button">DELETE BY ANIMAL</string>
+    <string name="_l2_t3_wipe_data">WIPE DATA FROM basic_database.random</string>
+    <string name="_l2_t3_snackbar_message">Example of deleting existing model with KittyORM. Select the way to delete model(s) and try it.</string>
+
+    <string name="_l2_t3_delete_by_id_message">Bad input data for id field. Please provide numeric string value for id that can be parsed to Long.</string>
+    <string name="_l2_t3_delete_by_range_message">Bad input data for range start or (and) range end field(s). Please provide numeric string values for those fields that can be parsed to Integer.</string>
+    <string name="_l2_t3_delete_by_animal_message">Please select animal from animal spinner to delete all records in basic_database.random that has this animal first!</string>
+
+    <string name="_l2_t3_delete_model_action">Action: {0}; Result: {1}</string>
+    <string name="_l2_t3_delete_model_action_delete">deleting model(s)</string>
+    <string name="_l2_t3_delete_model_action_count">counting models</string>
+    <string name="_l2_t3_delete_model_count_completed">Right now basic_database.random has {0} records!</string>
+    <string name="_l2_t3_delete_model_completed"> model(s) deleted successfully, affected rows: {0}, operation = delete where {1}</string>
+    <string name="_l2_t3_delete_model_error"> error! See exception details at ADB logcat, app: net.akaish.kittyormdemo, tag: {0}, operation = delete where {1}</string>
+    <string name="_l2_t3_expanded_text_pattern">Delete log ({0} event(s), clickable)</string>
+
+    <string name="_l2_t3_delete_dialog_title">Please wait while requested operation in progress.</string>
+    <string name="_l2_t3_delete_message">Deleting requested entities&#8230;</string>
+
+    <!-- Lesson 2 UI strings Tab 4 -->
+    <string name="_l2_t4_find_by_id">Enter model\'s id to find and press \'FIND BY ID\' button OR</string>
+    <string name="_l2_t4_find_by_id_button">FIND BY ID</string>
+    <string name="_l2_t4_find_by_id_message">Bad input data for id field. Please provide numeric string value for id that can be parsed to Long.</string>
+    <string name="_l2_t4_find_by_id_must_be_positive">Bad input data for id field. Id must be positive value.</string>
+
+    <string name="_l2_t4_find_by_range">Enter range for model\'s field \'randomInt\' and press \'FIND BY RANGE\'button OR</string>
+    <string name="_l2_t4_find_by_range_button">FIND BY RANGE</string>
+    <string name="_l2_t4_find_by_range_message">Bad input data for range start or (and) range end field(s). Please provide numeric string values for those fields that can be parsed to Integer.</string>
+
+    <string name="_l2_t4_find_by_animal">Select from dropdown menu animal from animals enum and press \'FIND BY ANIMAL\' button OR</string>
+    <string name="_l2_t4_find_by_animal_button">FIND BY ANIMAL</string>
+    <string name="_l2_t4_find_by_animal_message">Please select animal from animal spinner to find all records in basic_database.random that has this animal first!</string>
+
+    <string name="_l2_t4_find_all">Just press \'FIND ALL\' button to display all rows from database table.</string>
+    <string name="_l2_t4_find_all_button">FIND ALL</string>
+
+    <string name="_l2_t4_snackbar_message">Example of finding and loading existing models with KittyORM, select the way to find models and try it!.</string>
+
+    <string name="_l2_t4_sliding_expand">&#8657; Result list for find ({0} items found), click here to expand &#8657;</string>
+    <string name="_l2_t4_sliding_expand_default">&#8657; Result list for find (nothing found), click here to expand &#8657;</string>
+    <string name="_l2_t4_sliding_minimize">&#8659; Result list for find ({0} items found), click here to minimize &#8659;</string>
+    <string name="_l2_t4_sliding_minimize_default">&#8659; Result list for find (nothing found), click here to minimize &#8659;</string>
+
+    <string name="_l2_t4_pager_pattern">Page {0} of {1}; tap to select entity</string>
+    <string name="_l2_t4_pager_select_entity_pattern">Record with id = {0} selected. You can update it at #UPDATE tab.</string>
+    <string name="_l2_t4_expanded_title_pattern">Find result ({0} item(s), clickable)</string>
+
+    <string name="_l2_t4_find_model">Action: find models; Result: {0}</string>
+    <string name="_l2_t4_find_model_completed"> found {0} models!</string>
+    <string name="_l2_t4_find_model_error"> error! See exception details at ADB logcat, app: net.akaish.kittyormdemo, tag: {0}, exception class (unwrapped from kitty runtime exception): {1}</string>
+
+    <!-- Lesson 2 UI strings Tab 5 -->
+    <string name="_l2_t5_use_new_db_instance">Use new KittyORM database instance for random insert operations.</string>
+    <string name="_l2_t5_undb_description">Initialization costs time&#8230;</string>
+    <string name="_l2_t5_generate_10_rnd">Generate 10 instances of RandomModel and insert them into database table: </string>
+    <string name="_l2_t5_generate_10_rnd_button">GENERATE 10 NEW</string>
+    <string name="_l2_t5_generate_50k_rnd">Generate 50k instances of RandomModel and insert them into database table in AssyncTask: </string>
+    <string name="_l2_t5_generate_50k_rnd_button">GENERATE 50k NEW</string>
+    <string name="_l2_t5_generate_50k_rnd_tx">Generate 50k instances of RandomModel and insert them into database table in AssyncTask with transactions usage: </string>
+    <string name="_l2_t5_generate_50k_rnd_button_tx">GENERATE 50k NEW (TX)</string>
+
+    <string name="_l2_t5_snackbar_message">Example of bulk operations and common approaches for saving data with KittyORM.</string>
+
+    <string name="_l2_t5_inserting_dialog_title">Inserting new randomly generated records into basic_database.random.</string>
+    <string name="_l2_t5_inserting_10">Inserting 10 records&#8230;</string>
+    <string name="_l2_t5_inserting_50k">Inserting 50k records&#8230;</string>
+    <string name="_l2_t5_inserting_50kTX">Inserting 50k records in transaction mode&#8230;</string>
+
+    <string name="_l2_t5_inserting_10_OP">10 records insertion</string>
+    <string name="_l2_t5_inserting_50k_OP">50k records insertion</string>
+    <string name="_l2_t5_inserting_50kTX_OP">50k records insertion in transaction mode</string>
+
+    <string name="_l2_t5_inserted_event">Operation: {0}, new KittyORM database instance: {1}, execution times in nanos: execution time (summary): {2}, execution time (getting mapper instance): {3}, execution time (generating random models): {4}, execution time (db insertion): {5}.</string>
+    <string name="_l2_t5_inserted_event_error">Operation: {0}, some error occured. See exception details at ADB logcat, app: net.akaish.kittyormdemo, tag: {1}.</string>
+
+    <string name="_l2_t5_count_completed">Right now basic_database.random has {0} records!</string>
+    <string name="_l2_t5_expanded_text_pattern">RND insert log ({0} event(s), clickable)</string>
+    <string name="_l2_t5_rnd">Action: find models; Result: {0}</string>
+    <string name="_l2_t5_rnd_completed"> found {0} models!</string>
+    <string name="_l2_t5_rnd_error"> error! See exception details at ADB logcat, app: net.akaish.kittyormdemo, tag: {0}, exception class (unwrapped from kitty runtime exception): {1}</string>
+
+    <!-- Lesson 3 -->
+    <string name="_l3_tab_datatypes_affinities">Datatype affinities</string>
+    <string name="_l3_tab_constatints_and_indexes">Constraints and indexes</string>
+    
+    <!-- Lesson 3 tab 1 -->
+    <string name="_l3_t1_snackbar_message">Supported by KittyORM datatype affinities and mapping rules.</string>
+
+    <string name="_l3_t1_go_button">Run insertions to basic_database.complex_random</string>
+    <string name="_l3_t1_clear_table">Wipe data from basic_database.complex_random</string>
+    <string name="_l3_t1_running_requested_operation_pg_title">Performing requested operation...</string>
+    <string name="_l3_t1_running_requested_operation_pg_body">Please wait until requested operation would be finished.</string>
+
+    <string name="_l3_t1_count_to_events">Right now basic_database.complex_random has {0} records.</string>
+    <string name="_l3_t1_deleted_to_events">Deleted {0} records from basic_database.complex_random.</string>
+
+    <string name="_l3_t1_inserted_to_events">Inserted new model to basic_database.complex_random: {0}</string>
+
+    <string name="_l3_t1_error_event">Some error occured, see logcat with tag "BASIC DB DEMO" for more details!</string>
+
+    <string name="_l3_t1_expanded_text_pattern">complex_random ({0} record(s), clickable)</string>
+
+    <!-- Lesson 3 tab 2 -->
+    <string name="_l3_t2_snackbar_message">Defining constraints and indexes with KittyORM.</string>
+    <string name="_l3_t2_expanded_text_pattern">basic_database.cai ({0} record(s), clickable)</string>
+
+    <!-- Lesson 3 tab 2 form -->
+    <string name="_l3_t2_fk_info_hint">This field is used in FK (basic_database.random.id), has to be unique and has ON UPDATE\\DELETE CASCADE set</string>
+    <string name="_l3_t2_fk_long">Long rndId</string>
+    <string name="_l3_t2_fk_et_hint">Enter integer or leave it blank</string>
+    <string name="_l3_t2_animal_cats_only_hint">Only cats allowed to this party!</string>
+    <string name="_l3_t2_animal_tw">Animals animal</string>
+    <string name="_l3_t2_default_num_tw">Integer defaultNumber</string>
+    <string name="_l3_t2_default_num_et_hint">Default (28)</string>
+    <string name="_l3_t2_creation_date_tw">String creationDate</string>
+    <string name="_l3_t2_et_creation_date_hint">Default (CURRENT_DATE)</string>
+    <string name="_l3_t2_current_timestamp_tw">Timestamp creationTmstmp</string>
+    <string name="_l3_t2_et_current_timestamp_hint">Default (CURRENT_TIMESTAMP)</string>
+
+    <string name="_l3_t2_save_new_model">Save new model</string>
+    <string name="_l3_t2_wipe_data">Wipe data</string>
+
+    <string name="_l3_t2_running_requested_operation_pg_title">Performing requested operation...</string>
+    <string name="_l3_t2_running_requested_operation_pg_body">Please wait until requested operation would be finished.</string>
+
+    <string name="_l3_t2_rnd_id_cant_be_treated_as_null_or_long_only">Input value for field rndId should be blank or integer.</string>
+    <string name="_l3_t2_default_number_can_be_treated_as_null_or_long_only">Input value for field defaultNumber should be blank or integer.</string>
+    <string name="_l3_t2_creation_timestamp_can_be_treated_as_null_or_long_only">Input value for field creationTmstmp should be blank or integer.</string>
+    <string name="_l3_t2_some_error_on_insertion">Unable to insert new record into basic_database.cai with provided values, likely because those values causes constraint violation. Check logcat with tag "BASIC DB DEMO" for more details!</string>
+    <string name="_l3_t2_some_error_on_deleting">Unable to wipe data from basic_database.cai, check logcat with tag "BASIC DB DEMO" for more details!</string>
+
+    <!-- Lesson 4 -->
+    <string name="_l4_tab_optimisation">Speed up KittyORM</string>
+    <string name="_l4_tab_debug">Debug KittyORM</string>
+    <string name="_l4_tab_encryption">Encrypt KittyORM</string>
+
+    <!-- Lesson 4 tab 1 -->
+    <string name="_l4_t1_snackbar_message">Receipts how to make your KittyORM database faster.</string>
+
+    <!-- Lesson 4 tab 2 -->
+    <string name="_l4_t2_snackbar_message">Receipts how to debug your KittyORM database.</string>
+
+    <!-- Lesson 4 tab 3 -->
+    <string name="_l4_t3_snackbar_message">Receipts how to encrypt you KittyORM database.</string>
+
+    <!-- Lesson 5 -->
+    <string name="_l5_tab_initial_db">V1 (initial)</string>
+    <string name="_l5_tab_cd_migration">V2 (DC migration)</string>
+    <string name="_l5_tab_auto_migration">V3 (Auto migration)</string>
+    <string name="_l5_tab_fs_migrations">V4 (FS migration)</string>
+
+    <string name="_l5_op_not_existing">Database mig doesn\'t exist! Create it first to run requested operation!</string>
+    <string name="_l5_op_deleted">Database mig was deleted. Create it first to run requested operation!</string>
+    <string name="_l5_op_mig_version_is_lower">Current mig database has lower version (v. {0}) than this implementation requires (v. {1})! Update it first to run requested operation!</string>
+    <string name="_l5_op_mig_version_is_higher">Current mig database has higher version (v. {0}) than this implementation requires (v. {1})! Delete it and recreate to run requested operation!</string>
+
+    <string name="_l5_op_mig_version">Database name: {0}; implementation version: {1}; database version: {2}; database created: {3}; database was deleted manually: {4}; \nImplementation table names: {5}</string>
+
+    <!-- Lesson 5 tab 1 -->
+    <string name="_l5_t1_go_button_text">Create mig database if not exists (ver.1) and fill it tables with randomly generated values</string>
+    <string name="_l5_t1_wipe_button_text">Wipe all values from mig database tables</string>
+    <string name="_l5_t1_delete_database">Delete mig database</string>
+
+    <string name="_l5_t1_m1_db">mig.mig_one (v.1; {0} record(s)):</string>
+    <string name="_l5_t1_m1_db_doesnt_exist">Database mig was deleted or not created yet, nothing to display.</string>
+    <string name="_l5_t1_m1_db_has_different_version">Database mig has different version, this view design to display data from mig v.1 but current version of mig database is {0}!</string>
+
+    <string name="_l5_t1_running_requested_operation_pg_title">Performing requested operation&#8230;</string>
+    <string name="_l5_t1_running_requested_operation_pg_body">Please wait until requested operation would be finished.</string>
+
+    <string name="_l5_t1_count_to_events">Right now mig database has {0} records in all tables.</string>
+    <string name="_l5_t1_deleted_to_events">Deleted {0} records from tables of mig database.</string>
+    <string name="_l5_t1_inserted_to_events">New record successfully inserted to {0}, model: {1} </string>
+
+    <string name="_l5_t1_delete_db_success">Database MIG deleted successfully!</string>
+    <string name="_l5_t1_delete_db_fail">Unable to delete MIG database, most likey because it does not exist!</string>
+
+    <string name="_l5_t1_error_event">Some error occurred, see logcat with tag "MIGv1" for more details!</string>
+
+
+    <string name="_l5_t1_expanded_text_pattern">mig db ({0} record(s) in {1} table(s), clickable)</string>
+    <string name="_l5_t1_snackbar_message">Initial database setup.</string>
+
+    <!-- Lesson 5 tab 2 -->
+    <string name="_l5_t2_go_button_text">Create mig database if not exists (ver.2) and fill it tables with randomly generated values</string>
+    <string name="_l5_t2_wipe_button_text">Wipe all values from mig database tables</string>
+    <string name="_l5_t2_delete_database">Delete mig database</string>
+
+    <string name="_l5_t2_m1_db">mig.mig_one (v.2; {0} record(s)):</string>
+    <string name="_l5_t2_m2_db">mig.mig_two (v.2; {0} record(s)):</string>
+
+    <string name="_l5_t2_m1_db_doesnt_exist">Database mig was deleted or not created yet, nothing to display.</string>
+    <string name="_l5_t2_m1_db_has_different_version">Database mig has different version, this view design to display data from mig v.2 but current version of mig database is {0}!</string>
+
+    <string name="_l5_t2_running_requested_operation_pg_title">Performing requested operation&#8230;</string>
+    <string name="_l5_t2_running_requested_operation_pg_body">Please wait until requested operation would be finished.</string>
+
+    <string name="_l5_t2_count_to_events">Right now mig database has {0} records in all tables.</string>
+    <string name="_l5_t2_deleted_to_events">Deleted {0} records from tables of mig database.</string>
+    <string name="_l5_t2_inserted_to_events">New record successfully inserted to {0}, model: {1} </string>
+
+    <string name="_l5_t2_delete_db_success">Database MIG deleted successfully!</string>
+    <string name="_l5_t2_delete_db_fail">Unable to delete MIG database, most likey because it does not exist!</string>
+
+    <string name="_l5_t2_error_event">Some error occurred, see logcat with tag "MIGv2" for more details!</string>
+
+
+    <string name="_l5_t2_expanded_text_pattern">mig db ({0} record(s) in {1} table(s), clickable)</string>
+
+
+    <string name="_l5_t2_snackbar_message">Database version migrations with simple Drop/Create scripts.</string>
+
+    <!-- Lesson 5 tab 3 -->
+    <string name="_l5_t3_go_button_text">Create mig database if not exists (ver.3) and fill it tables with randomly generated values</string>
+    <string name="_l5_t3_wipe_button_text">Wipe all values from mig database tables</string>
+    <string name="_l5_t3_delete_database">Delete mig database</string>
+
+    <string name="_l5_t3_m1_db">mig.mig_one (v.3; {0} record(s)):</string>
+    <string name="_l5_t3_m2_db">mig.mig_two (v.3; {0} record(s)):</string>
+    <string name="_l5_t3_m3_db">mig.mig_three (v.3; {0} record(s)):</string>
+
+    <string name="_l5_t3_m1_db_doesnt_exist">Database mig was deleted or not created yet, nothing to display.</string>
+    <string name="_l5_t3_m1_db_has_different_version">Database mig has different version, this view design to display data from mig v.3 but current version of mig database is {0}!</string>
+
+    <string name="_l5_t3_running_requested_operation_pg_title">Performing requested operation&#8230;</string>
+    <string name="_l5_t3_running_requested_operation_pg_body">Please wait until requested operation would be finished.</string>
+
+    <string name="_l5_t3_count_to_events">Right now mig database has {0} records in all tables.</string>
+    <string name="_l5_t3_deleted_to_events">Deleted {0} records from tables of mig database.</string>
+    <string name="_l5_t3_inserted_to_events">New record successfully inserted to {0}, model: {1} </string>
+
+    <string name="_l5_t3_delete_db_success">Database MIG deleted successfully!</string>
+    <string name="_l5_t3_delete_db_fail">Unable to delete MIG database, most likey because it does not exist!</string>
+
+    <string name="_l5_t3_error_event">Some error occurred, see logcat with tag "MIGv3" for more details!</string>
+
+
+    <string name="_l5_t3_expanded_text_pattern">mig db ({0} record(s) in {1} table(s), clickable)</string>
+
+    <string name="_l5_t3_snackbar_message">Database version migrations with autogenerated migration script.</string>
+
+    <!-- Lesson 5 tab 4 -->
+    <string name="_l5_t4_go_button_text">Create mig database if not exists (ver.4) and fill it tables with randomly generated values</string>
+    <string name="_l5_t4_wipe_button_text">Wipe all values from mig database tables</string>
+    <string name="_l5_t4_delete_database">Delete mig database</string>
+
+    <string name="_l5_t4_m2_db">mig.mig_two (v.3; {0} record(s)):</string>
+    <string name="_l5_t4_m3_db">mig.mig_three (v.3; {0} record(s)):</string>
+    <string name="_l5_t4_m4_db">mig.mig_four (v.3; {0} record(s)):</string>
+
+    <string name="_l5_t4_m1_db_doesnt_exist">Database mig was deleted or not created yet, nothing to display.</string>
+    <string name="_l5_t4_m1_db_has_different_version">Database mig has different version, this view design to display data from mig v.4 but current version of mig database is {0}!</string>
+
+    <string name="_l5_t4_running_requested_operation_pg_title">Performing requested operation&#8230;</string>
+    <string name="_l5_t4_running_requested_operation_pg_body">Please wait until requested operation would be finished.</string>
+
+    <string name="_l5_t4_count_to_events">Right now mig database has {0} records in all tables.</string>
+    <string name="_l5_t4_deleted_to_events">Deleted {0} records from tables of mig database.</string>
+    <string name="_l5_t4_inserted_to_events">New record successfully inserted to {0}, model: {1} </string>
+
+    <string name="_l5_t4_delete_db_success">Database MIG deleted successfully!</string>
+    <string name="_l5_t4_delete_db_fail">Unable to delete MIG database, most likey because it does not exist!</string>
+
+    <string name="_l5_t4_error_event">Some error occurred, see logcat with tag "MIGv4" for more details!</string>
+
+
+    <string name="_l5_t4_expanded_text_pattern">mig db ({0} record(s) in {1} table(s), clickable)</string>
+
+    <string name="_l5_t4_snackbar_message">Database version migrations with usage of SQLite scripts stored at assets or at FS.</string>
+
+    <!-- Lesson 6 -->
+    <string name="_l6_tab_use">Use KittyORM</string>
+    <string name="_l6_tab_share">Share KittyORM</string>
+    <string name="_l6_tab_commit">Develop KittyORM</string>
+    <string name="_l6_tab_donate_or_sponsor">Donate or sponsor</string>
+
+    <string name="_l6_fab_use">Try KittyORM</string>
+    <string name="_l6_fab_share">Share KittyORM</string>
+    <string name="_l6_fab_commit">Develop KittyORM</string>
+    <string name="_l6_fab_donate_or_sponsor">Sponsor KittyORM</string>
+
+    <!-- Lesson 6 tab 1 -->
+    <string name="_l6_t1_snackbar_message">Make KittyORM greater, use it in your projects and leave feedback!</string>
+
+    <!-- Lesson 6 tab 2 -->
+    <string name="_l6_t2_snackbar_message">Make KittyORM greater, share it!</string>
+
+    <!-- Lesson 6 tab 3 -->
+    <string name="_l6_t3_snackbar_message">Make KittyORM greater, commit translates, unit test etc. Become a developer!</string>
+
+    <!-- Lesson 6 tab 4 -->
+    <string name="_l6_t4_snackbar_message">Make KittyORM greater, donate or even become a sponsor!</string>
+
+    <!-- Lesson 7 -->
+    <string name="_l7_tab_contact">Contact with our team</string>
+    <string name="_l7_tab_legal_info">KittyORM legal information</string>
+
+    <string name="_l7_fab_contact">Mail us</string>
+    <string name="_l7_fab_follow">Follow KittyORM at twitter</string>
+    <string name="_l7_fab_legal_info">View legal info</string>
+
+    <!-- Lesson 7 tab 1 -->
+    <string name="_l7_t1_snackbar_message">Ways to contact with us.</string>
+
+    <!-- Lesson 7 tab 2 -->
+    <string name="_l7_t2_snackbar_message">KittyORM licensing and copyright information.</string>
+
+
+</resources>

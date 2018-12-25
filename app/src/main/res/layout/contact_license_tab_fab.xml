@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Denis Bogomolov (akaish)
+  ~
+  ~ This work is licensed under a
+  ~ Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~ This file is a part of KittyORM project (KittyORM Demo), more information at
+  ~ https://akaish.github.io/KittyORMPages/license/
+  -->
+<!-- TODO add some shit with follow button -->
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/l7_new_fab_container_layout"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:layout_behavior="net.akaish.kittyormdemo.view.MoveUpwardBehavior"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom|end">
+
+    <LinearLayout
+        android:id="@+id/mail_fab_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/fab_margin_outer"
+        android:padding="@dimen/fab_12"
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:layout_gravity="bottom|end"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGrayLightest"
+            android:background="@drawable/fab_menu_text_bg"
+            android:layout_marginRight="@dimen/fab_12"
+            android:text="@string/_l7_fab_contact"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/mail_fab"
+            android:layout_width="@dimen/fab_46"
+            android:layout_height="@dimen/fab_46"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@drawable/ic_fab_mail"
+            app:fabSize="mini"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/follow_fab_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/fab_margin_outer"
+        android:padding="@dimen/fab_12"
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:layout_gravity="bottom|end"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fab_menu_text_bg"
+            android:textColor="@color/colorGrayLightest"
+            android:layout_marginRight="@dimen/fab_12"
+            android:text="@string/_l7_fab_follow"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/follow_fab"
+            android:layout_width="@dimen/fab_46"
+            android:layout_height="@dimen/fab_46"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@drawable/ic_fab_follow"
+            app:fabSize="mini"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/licence_fab_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/fab_margin_outer"
+        android:padding="@dimen/fab_12"
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:layout_gravity="bottom|end"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fab_menu_text_bg"
+            android:textColor="@color/colorGrayLightest"
+            android:layout_marginRight="@dimen/fab_12"
+            android:text="@string/_l7_fab_legal_info"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/license_fab"
+            android:layout_width="@dimen/fab_46"
+            android:layout_height="@dimen/fab_46"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@drawable/ic_fab_license"
+            app:fabSize="mini"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:gravity="center_vertical"
+        android:clipToPadding="false"
+        android:padding="@dimen/fab_12"
+        android:layout_gravity="bottom|end">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/contact_and_license_fab"
+            android:layout_gravity="bottom|end"
+            android:layout_width="@dimen/fab_56"
+            android:layout_height="@dimen/fab_56"
+            app:srcCompat="@drawable/ic_fab_up_bigger"
+            app:fabSize="normal"/>
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
+

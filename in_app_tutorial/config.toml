@@ -1,0 +1,15 @@
+baseURL = "http://example.com"
+languageCode = "en-us"
+title = "My New Hugo Site"
+theme = "hyde"
+pygmentsUseClasses=true
+
+[languages]
+	[languages.en]
+		title = "KittyORM Demo"
+		weight = 1
+		languageName = "English"
+	[languages.ru]
+		title = "KittyORM Демо"
+		weight = 2
+		languageName = "Русский"

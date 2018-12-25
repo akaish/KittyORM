@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson3 Tab1: Datatype affinities mapping &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           
+
+<h2 id="kittyorm-datatypes-mapping">KittyORM datatypes mapping</h2>
+
+<p>By design instead of mapping java types to SQLite supported SQL datatypes KittyORM maps them directly into SQLite affinities, KittyORM supports predefined mapping for primitive java types, primitive wrappers, byte array, enumerations and following types: <code>java.lang.String</code>, <code>java.util.Date</code>, <code>java.util.Currency</code>, <code>java.util.Calendar</code>, <code>java.sql.Timestamp</code>, <code>java.math.BigInteger</code>, <code>java.math.BigDecimal</code>, <code>java.io.File</code>, <code>android.net.Uri</code>.<br />
+<details>
+  <summary>Click to view KittyORM mapping rules table: </summary></p>
+
+<p><strong><code>TEXT</code> datatype affinity mapping</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>SQLite affinity</th>
+<th>Java type</th>
+<th>Notes</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>TEXT</code></td>
+<td>Enumurations</td>
+<td>To SQLite: <code>Enum someValue.name()</code>; from SQLite: <code>fieldType.getMethod(&quot;valueOf&quot;, String.class).invoke(fieldType, cursor.getString(someIndex))</code></td>
+</tr>
+
+<tr>
+<td><code>TEXT</code></td>
+<td><code>java.lang.String</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>TEXT</code></td>
+<td><code>java.math.BigDecimal</code></td>
+<td>To SQLite: <code>BigDecimal someValue.toString()</code>; from SQLite: <code>new BigDecimal(cursor.getString(someIndex))</code></td>
+</tr>
+
+<tr>
+<td><code>TEXT</code></td>
+<td><code>android.net.Uri</code></td>
+<td>To SQLite: <code>Uri someValue.toString()</code>; from SQLite: <code>Uri.parse(cursor.getString(someIndex))</code></td>
+</tr>
+
+<tr>
+<td><code>TEXT</code></td>
+<td><code>java.io.File</code></td>
+<td>To SQLite: <code>File someValue.getAbsolutePath()</code>; from SQLite: <code>new File(cursor.getString(someIndex))</code></td>
+</tr>
+
+<tr>
+<td><code>TEXT</code></td>
+<td><code>java.math.BigInteger</code></td>
+<td>To SQLite: <code>BigInteger someValue.toString()</code>; from SQLite: <code>new BigInteger(cursor.getString(someIndex))</code></td>
+</tr>
+
+<tr>
+<td><code>TEXT</code></td>
+<td><code>java.util.Currency</code></td>
+<td>To SQLite: <code>Currency someValue.getCurrencyCode()</code>; from SQLite: <code>Currency.getInstance(cursor.getString(someIndex))</code></td>
+</tr>
+</tbody>
+</table>
+
+<p><strong><code>INTEGER</code> datatype affinity mapping</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>SQLite affinity</th>
+<th>Java type</th>
+<th>Notes</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>java.util.Calendar</code></td>
+<td>To SQLite: <code>Calendar someValue.getTimeInMillis()</code>; from SQLite: <code>Calendar.getInstance().setTimeInMillis(cursor.getLong(someIndex))</code></td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>java.sql.Timestamp</code></td>
+<td>To SQLite: <code>Timestamp someValue.getTime()</code>; from SQLite: <code>new Timestamp(cursor.getLong(someIndex))</code></td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>java.util.Date</code></td>
+<td>To SQLite: <code>Date someValue.getTime()</code>; from SQLite: <code>new Date(cursor.getLong(someIndex))</code></td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>byte</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>int</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>long</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>short</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>boolean</code></td>
+<td>To SQLite: <code>boolean someValue ? 1 : 0</code>; from SQLite: <code>cursor.getInt(someIndex) == 1</code></td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>java.lang.Byte</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>java.lang.Integer</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>java.lang.Long</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>java.lang.Short</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>INTEGER</code></td>
+<td><code>java.lang.Boolean</code></td>
+<td>To SQLite: <code>Boolean someValue ? 1 : 0</code>; from SQLite: <code>cursor.getInt(someIndex) == 1</code></td>
+</tr>
+</tbody>
+</table>
+
+<p><strong><code>REAL</code> datatype affinity mapping</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>SQLite affinity</th>
+<th>Java type</th>
+<th>Notes</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>REAL</code></td>
+<td><code>float</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>REAL</code></td>
+<td><code>double</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>REAL</code></td>
+<td><code>java.lang.Float</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>REAL</code></td>
+<td><code>java.lang.Double</code></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong><code>NONE</code> datatype affinity mapping</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>SQLite affinity</th>
+<th>Java type</th>
+<th>Notes</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>NONE</code></td>
+<td><code>byte[]</code></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>NONE</code></td>
+<td><code>java.lang.Byte[]</code></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+
+<p></details></p>
+
+<p>By default, KittyORM provides mapping of most java types that you may want to use. However, KittyORM also offers some functionality for user defined mapping rules e.g. you can tell KittyORM how to store and retrieve any java objects you want. For those purposes KittyORM has <code>KITTY_COLUMN_SERIALIZATION</code> annotation with what you can achieve storing your objects or objects data as <code>TEXT</code> or <code>NONE</code> SQLite datatype affinities at your database. To use it, take following steps:</p>
+
+<ol>
+<li><p>Define at <code>KittyModel.class</code> implementation model table field with SQLite datatype affinity specified explicitly (<code>TypeAffinities.TEXT</code>, <code>TypeAffinities.BLOB</code> or <code>TypeAffinities.NONE</code> only).
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="c1">// Saving to text
+</span><span class="ln"> 2</span><span class="c1"></span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln"> 3</span>        <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">18</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">columnAffinity</span> <span class="o">=</span> <span class="n">TypeAffinities</span><span class="o">.</span><span class="na">TEXT</span>
+<span class="ln"> 5</span><span class="o">)</span>
+<span class="ln"> 6</span><span class="nd">@KITTY_COLUMN_SERIALIZATION</span>
+<span class="ln"> 7</span><span class="kd">public</span> <span class="n">AnimalSounds</span> <span class="n">stringSDF</span><span class="o">;</span>
+<span class="ln"> 8</span>
+<span class="ln"> 9</span><span class="c1">// Saving to blob
+</span><span class="ln">10</span><span class="c1"></span><span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">11</span>        <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">20</span><span class="o">,</span>
+<span class="ln">12</span>        <span class="n">columnAffinity</span> <span class="o">=</span> <span class="n">TypeAffinities</span><span class="o">.</span><span class="na">BLOB</span>
+<span class="ln">13</span><span class="o">)</span>
+<span class="ln">14</span><span class="nd">@KITTY_COLUMN_SERIALIZATION</span>
+<span class="ln">15</span><span class="kd">public</span> <span class="n">Bitmap</span> <span class="n">byteArraySDF</span><span class="o">;</span></code></pre></div></p></li>
+
+<li><p>Write your methods how to transform your object to string\blob and back. If <code>serializationMethodName</code> or <code>deserializationMethodName</code> of <code>KITTY_COLUMN_SERIALIZATION</code> were not specified explicitly than KittyORM would try to call method <code>String\byte[] &quot;fieldname&quot; + Serialize</code> for serialization (no parameters) and <code>YourType &quot;fieldName&quot; + Deserialize</code> for deserialization (<code>String\byte[] fromCursor</code> as parameter). For example, for model field <code>AnimalSounds stringSDF</code> default serialization method would be <code>String stringSDFSerialize()</code> and default deserialization method would be <code>AnimalSounds stringSDFDeserialize(String cvData)</code>.
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="n">String</span> <span class="nf">stringSDFSerialize</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 2</span>    <span class="k">if</span><span class="o">(</span><span class="n">stringSDF</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 3</span>    <span class="k">return</span> <span class="k">new</span> <span class="n">GsonBuilder</span><span class="o">().</span><span class="na">create</span><span class="o">().</span><span class="na">toJson</span><span class="o">(</span><span class="n">stringSDF</span><span class="o">);</span>
+<span class="ln"> 4</span><span class="o">}</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span><span class="n">AnimalSounds</span> <span class="nf">stringSDFDeserialize</span><span class="o">(</span><span class="n">String</span> <span class="n">cvData</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 7</span>    <span class="k">if</span><span class="o">(</span><span class="n">cvData</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 8</span>    <span class="k">if</span><span class="o">(</span><span class="n">cvData</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln"> 9</span>    <span class="k">return</span> <span class="k">new</span> <span class="n">GsonBuilder</span><span class="o">().</span><span class="na">create</span><span class="o">().</span><span class="na">fromJson</span><span class="o">(</span><span class="n">cvData</span><span class="o">,</span> <span class="n">AnimalSounds</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">10</span><span class="o">}</span>
+<span class="ln">11</span>
+<span class="ln">12</span><span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">byteArraySDFSerialize</span><span class="o">()</span> <span class="o">{</span><span class="c1">//byteArraySDFSerialize
+</span><span class="ln">13</span><span class="c1"></span>    <span class="k">if</span><span class="o">(</span><span class="n">byteArraySDF</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln">14</span>    <span class="n">ByteArrayOutputStream</span> <span class="n">bmpStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteArrayOutputStream</span><span class="o">();</span>
+<span class="ln">15</span>    <span class="n">byteArraySDF</span><span class="o">.</span><span class="na">compress</span><span class="o">(</span><span class="n">Bitmap</span><span class="o">.</span><span class="na">CompressFormat</span><span class="o">.</span><span class="na">PNG</span><span class="o">,</span> <span class="n">100</span><span class="o">,</span> <span class="n">bmpStream</span><span class="o">);</span>
+<span class="ln">16</span>    <span class="k">return</span> <span class="n">bmpStream</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">();</span>
+<span class="ln">17</span><span class="o">}</span>
+<span class="ln">18</span>
+<span class="ln">19</span><span class="kd">public</span> <span class="n">Bitmap</span> <span class="nf">byteArraySDFDeserialize</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">cursorData</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">20</span>    <span class="k">if</span><span class="o">(</span><span class="n">cursorData</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln">21</span>    <span class="k">if</span><span class="o">(</span><span class="n">cursorData</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="ln">22</span>    <span class="k">return</span> <span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeByteArray</span><span class="o">(</span><span class="n">cursorData</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">cursorData</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+<span class="ln">23</span><span class="o">}</span></code></pre></div></p></li>
+</ol>
+
+<p>Now you are ready for using custom mapping rules with KittyORM. Congratulations.</p>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

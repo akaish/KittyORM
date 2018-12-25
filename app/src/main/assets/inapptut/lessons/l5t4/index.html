@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson5 Tab 4: Filescript Migrator &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           
+
+<h2 id="using-filescript-migrator-and-stored-sqlite-scripts-with-kittyorm">Using Filescript Migrator and stored SQLite scripts with KittyORM</h2>
+
+<p>With KittyORM you can use stored at file system or at assets SQLite scripts for database creation, schema update or for filling your newly created\updated database with some initial data sets. Also, you may use those scripts to upgrade your schema when necessary with <code>Filescript Migrator</code> It is a bit complicated thing, so this lesson divided into two parts, use table of contents for navigation.</p>
+
+<h3 id="table-of-contents">Table of contents</h3>
+
+<ol>
+<li><a href="#using-file-scripts-with-kittyorm">Using file scripts with KittyORM</a></li>
+<li><a href="#using-filescript-migrator-for-updating-your-schema">Using Filescript Migrator for updating your schema</a></li>
+</ol>
+
+<h3 id="using-file-scripts-with-kittyorm">Using file scripts with KittyORM</h3>
+
+<p>KittyORM supports running SQLite scripts from files stored in assets or at device file system. This feature can be used for storing create and drop scripts. Also, you can define after create and after update scripts to run. All those scripts should comply two following rules:</p>
+
+<ol>
+<li>Each statement should be written on its own line at text file. One statement is one line that ends with <code>;</code> character.</li>
+<li>KittyORM supports one line comments.</li>
+</ol>
+
+<p><details>
+  <summary>Click here to view an example of proper SQLite script file content supported by KittyORM: </summary>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="c1">-- Some comment here
+</span><span class="ln">2</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_four</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">mig_three_reference</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">UPDATE</span> <span class="k">NO</span> <span class="n">ACTION</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">NO</span> <span class="n">ACTION</span><span class="p">,</span> <span class="n">mig_two_reference</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">mig_two</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">UPDATE</span> <span class="k">NO</span> <span class="n">ACTION</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">NO</span> <span class="n">ACTION</span><span class="p">,</span> <span class="n">creation_date</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span>  <span class="k">CURRENT_DATE</span> <span class="p">);</span>
+<span class="ln">3</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">new_sv_name</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">&#39;Something random&#39;</span><span class="p">,</span> <span class="n">random_long</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">22</span><span class="p">);</span>
+<span class="ln">4</span>
+<span class="ln">5</span><span class="c1">-- Also blank lines as well as lines that contain only whitespaces are OK (they would be skipped)
+</span><span class="ln">6</span><span class="c1"></span>
+<span class="ln">7</span><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">m3_rnd_long</span> <span class="k">ON</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">random_long</span><span class="p">);</span>
+<span class="ln">8</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_two</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">mig_one_reference</span> <span class="nb">INTEGER</span><span class="p">,</span> <span class="n">some_animal</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">some_animal_sound</span> <span class="nb">TEXT</span><span class="p">);</span></code></pre></div>
+</details></p>
+
+<p>By default, you can specify following scripts that can be run at your database lifetime:</p>
+
+<ol>
+<li><strong>Create script</strong> - you can define your script that would be used for schema generation at schema creation. You can specify path to create schema script at <code>createScriptPath</code> property of <code>@KITTY_DATABASE_HELPER</code> annotation.</li>
+<li><strong>Drop script</strong> - you can define your script that should be used for dropping schema. You can specify path to drop schema script at <code>dropScriptPath</code> property of <code>@KITTY_DATABASE_HELPER</code> annotation.</li>
+<li><strong>After create script</strong> - you can run some SQLite script right after creation of your schema. It is useful in cases when you would like to fill your database with some initial data. You can specify path to after create schema script at <code>afterCreateScriptPath</code> property of <code>@KITTY_DATABASE_HELPER</code> annotation.</li>
+<li><strong>After migrate script</strong> - same as after create script but this script will be run after schema upgrade at <code>onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion)</code> method call of <code>KittyDatabaseHelper</code> or its implementation. Use it for same purposes as after create script: in situations when you need to fill your database with some initial data set.</li>
+</ol>
+
+<p>Also, notice that you have no need to explicitly specify location of those scripts, you may just locate them at default location and name them with use if default naming pattern. Default location for those scripts is path <code>kittysqliteorm/{sql_database_name}</code>, and default naming pattern for files is <code>{0}-v-{1}-{2}.sql</code> where <code>{0}</code> is schema name, <code>{1}</code> is schema version and <code>{2}</code> is script type (<code>create</code>, <code>drop</code>, <code>after_create</code> or <code>after_migrate</code>). So, for example, for database used in this lesson for schema version 4 default naming of after create script would be <code>file:///android_asset/kittysqliteorm/mig/mig-v-4-after_create.sql</code>.</p>
+
+<p>However, if you want to explicitly define locations of those scripts try to avoid absolute paths and use instead following uries: <code>KittyNamingUtils.ASSETS_URI_START</code>, <code>KittyNamingUtils.INTERNAL_MEM_URI_START</code> and <code>KittyNamingUtils.EXTERNAL_MEM_URI_START</code>. This would force KittyORM to use asset locations or to acquire base path with <code>ctx.getFilesDir()</code> or <code>ctx.getExternalFilesDir()</code> methods. See example of explicit definition of those scripts locations:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln"> 2</span>    <span class="o">...</span>
+<span class="ln"> 3</span><span class="o">)</span>
+<span class="ln"> 4</span><span class="nd">@KITTY_DATABASE_REGISTRY</span><span class="o">(</span>
+<span class="ln"> 5</span>    <span class="o">...</span>
+<span class="ln"> 6</span><span class="o">)</span>
+<span class="ln"> 7</span><span class="nd">@KITTY_DATABASE_HELPER</span><span class="o">(</span>
+<span class="ln"> 8</span>        <span class="n">onUpgradeBehavior</span> <span class="o">=</span> <span class="n">KITTY_DATABASE_HELPER</span><span class="o">.</span><span class="na">UpgradeBehavior</span><span class="o">.</span><span class="na">USE_FILE_MIGRATIONS</span><span class="o">,</span>
+<span class="ln"> 9</span>        <span class="n">migrationScriptsPath</span> <span class="o">=</span> <span class="n">KittyNamingUtils</span><span class="o">.</span><span class="na">INTERNAL_MEM_URI_START</span> <span class="o">+</span> <span class="s">&#34;kittysqliteorm/mig/version_migrations&#34;</span><span class="o">,</span>
+<span class="ln">10</span>        <span class="c1">// Defining create script location at external memory
+</span><span class="ln">11</span><span class="c1"></span>        <span class="n">createScriptPath</span> <span class="o">=</span>  <span class="n">KittyNamingUtils</span><span class="o">.</span><span class="na">EXTERNAL_MEM_URI_START</span> <span class="o">+</span> <span class="s">&#34;one/script/at/sd/card_for_create.sql&#34;</span><span class="o">,</span>
+<span class="ln">12</span>        <span class="c1">// Defining drop script location at internal memory
+</span><span class="ln">13</span><span class="c1"></span>        <span class="n">dropScriptPath</span> <span class="o">=</span> <span class="n">KittyNamingUtils</span><span class="o">.</span><span class="na">INTERNAL_MEM_URI_START</span> <span class="o">+</span> <span class="s">&#34;and_one/at_internal/memory/to_drop.sql&#34;</span><span class="o">,</span>
+<span class="ln">14</span>        <span class="c1">// Defining after migrate script location at assets
+</span><span class="ln">15</span><span class="c1"></span>        <span class="n">afterMigrateScriptPath</span> <span class="o">=</span> <span class="n">KittyNamingUtils</span><span class="o">.</span><span class="na">ASSETS_URI_START</span> <span class="o">+</span> <span class="s">&#34;and/after_migrate/script_at_assets.sql&#34;</span><span class="o">,</span>
+<span class="ln">16</span>        <span class="c1">// Defining after create script location at internal memory
+</span><span class="ln">17</span><span class="c1"></span>        <span class="n">afterCreateScriptPath</span> <span class="o">=</span> <span class="n">KittyNamingUtils</span><span class="o">.</span><span class="na">INTERNAL_MEM_URI_START</span> <span class="o">+</span> <span class="s">&#34;should/be_reference/to_lord_of_the_rings/or_rhyme/but_no.sql&#34;</span>
+<span class="ln">18</span><span class="o">)</span>
+<span class="ln">19</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MigrationDBv4</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln">20</span>    <span class="o">...</span>
+<span class="ln">21</span><span class="o">}</span></code></pre></div>
+<a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<h3 id="using-filescript-migrator-for-updating-your-schema">Using Filescript Migrator for updating your schema</h3>
+
+<p>As mentioned in lesson 5.1: Migrations overview KittyORM provides you some utilities for migration between different schema versions. One of these utilities is <strong>Filescript Migrator</strong> that uses stored at asset directory or at file system scripts that would be applied to your database at <code>onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion)</code> method call of <code>KittyDatabaseHelper</code> or its implementation when there would be a need to update your schema. <strong>Filescript Migrator</strong> checks set of files named on one pattern and run SQLite scripts stored in at defined path if such migration sequence is applicable for new schema version. Implemented by <code>KittyORMVersionFileDumpMigrator.class</code>. To set this behavior you have to set <code>onUpgradeBehavior</code> property value of <code>@KITTY_DATABASE_HELPER</code> to <code>KITTY_DATABASE_HELPER.UpgradeBehavior.USE_FILE_MIGRATIONS</code>. By default, as migration root would be used scripts located at path <code>kittysqliteorm/{sql_database_name}/version_migrations</code>, however you can define custom path by setting <code>migrationScriptsPath</code> property of <code>@KITTY_DATABASE_HELPER</code>.</p>
+
+<p>Filescript Migrator takes file list from migration directory and tries to create from this list migration sequence. It requires those files to be named with usage of special pattern: <code>{0}-{1}-{2}-{3}.sql</code>, where <code>{0}</code> is min lower, <code>{1}</code> is min upper, <code>{2}</code> is max lower and <code>{3}</code> is max upper schema version numbers. Filescript Migrator would try to create inseparable sequence of scripts based on those numbers to be applied to upgrade your schema from current version to new. In simple situation, for example, to be able upgrade your database <code>awesome_db</code> with Filescript Migrator from version <code>4</code> to <code>6</code> you should have at migration directory following files: <code>4-4-5-5.sql</code> and <code>5-5-6-6.sql</code>.
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln"> 2</span>    <span class="o">...</span>
+<span class="ln"> 3</span><span class="o">)</span>
+<span class="ln"> 4</span><span class="nd">@KITTY_DATABASE_REGISTRY</span><span class="o">(</span>
+<span class="ln"> 5</span>    <span class="o">...</span>
+<span class="ln"> 6</span><span class="o">)</span>
+<span class="ln"> 7</span><span class="nd">@KITTY_DATABASE_HELPER</span><span class="o">(</span>
+<span class="ln"> 8</span>        <span class="c1">// Defining onUpgrade behavior
+</span><span class="ln"> 9</span><span class="c1"></span>        <span class="n">onUpgradeBehavior</span> <span class="o">=</span> <span class="n">KITTY_DATABASE_HELPER</span><span class="o">.</span><span class="na">UpgradeBehavior</span><span class="o">.</span><span class="na">USE_FILE_MIGRATIONS</span><span class="o">,</span>
+<span class="ln">10</span>        <span class="c1">// Setting migrations root path
+</span><span class="ln">11</span><span class="c1"></span>        <span class="n">migrationScriptsPath</span> <span class="o">=</span> <span class="n">KittyNamingUtils</span><span class="o">.</span><span class="na">EXTERNAL_MEM_URI_START</span> <span class="o">+</span> <span class="s">&#34;kittysqliteorm/mig/version_migrations&#34;</span><span class="o">,</span>
+<span class="ln">12</span><span class="o">)</span>
+<span class="ln">13</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MigrationDBv4</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln">14</span>    <span class="o">...</span>
+<span class="ln">15</span><span class="o">}</span></code></pre></div></p>
+
+<p>To demonstrate Filescript Migrator, in this lesson we would migrate database <code>mig</code> from version <code>3</code> to <code>4</code>. For those purposes we create at assets following path <code>kittysqliteorm/mig/version_migrations</code> that contains only one script: <code>3-3-4-4.sql</code>. When you hit &ldquo;CREATE MIG&hellip;&rdquo; button following can happen:</p>
+
+<ol>
+<li>If database not created yet, then it would be created using script located at <code>KittyNamingUtils.ASSETS_URI_START + &quot;kittysqliteorm/mig/mig-v-4-create.sql</code> and after this would be applied script located at <code>KittyNamingUtils.EXTERNAL_MEM_URI_START + &quot;kittysqliteorm/mig/mig-v-4-after_create.sql</code>.</li>
+<li>If database already exists and has version code <code>4</code> then all data would be wiped and then tables in database would be filled with some randomly generated records.</li>
+<li>If database already exists and has version code <code>3</code> then KittyORM will try to migrate from version <code>3</code> to version <code>4</code> using script located at <code>KittyNamingUtils.ASSETS_URI_START + &quot;kittysqliteorm/mig/version_migrations/3-3-4-4.sql</code>. After this script applied, KittyORM will run after create script located at <code>KittyNamingUtils.ASSETS_URI_START + &quot;kittysqliteorm/mig/mig-v-4-after_migrate.sql</code>.</li>
+<li>If database already exists, but have version code lower than <code>3</code>, then migration will fail, because file located at migration root can be used only for creating inseparable migration script sequence from version code <code>3</code> to version code <code>4</code>.</li>
+<li>If for some reason version code is higher than <code>4</code> then nothing would happen because fragment is not designed to work with database <code>mig</code> version <code>5</code> or higher.</li>
+</ol>
+
+<p><details>
+  <summary>Click here to view mig v.4 schema: </summary>
+<strong>Mig v.4</strong></p>
+
+<p><strong>MigTwoModel (mig_two)</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Java type</th>
+<th>Name</th>
+<th>SQLite name</th>
+<th>Constraints</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Long</code></td>
+<td>id</td>
+<td>id</td>
+<td>PRIMARY KEY</td>
+</tr>
+
+<tr>
+<td><code>Long</code></td>
+<td>migOneReference</td>
+<td>mig_one_reference</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>Animals</code></td>
+<td>someAnimal</td>
+<td>some_animal</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>AnimalSounds</code></td>
+<td>someAnimalSound</td>
+<td>some_animal_sound</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>MigThreeModel (mig_three)</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Java type</th>
+<th>Name</th>
+<th>SQLite name</th>
+<th>Constraints</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Long</code></td>
+<td>id</td>
+<td>id</td>
+<td>PRIMARY KEY</td>
+</tr>
+
+<tr>
+<td><code>String</code></td>
+<td>someValue</td>
+<td>new_sv_name</td>
+<td>DEFAULT(&ldquo;Something random&rdquo;)</td>
+</tr>
+
+<tr>
+<td><code>Long</code></td>
+<td>randomLong</td>
+<td>random_long</td>
+<td>DEFAULT(22)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Index on <code>random_long</code>.</p>
+
+<p><strong>MigFourModel (mig_four)</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Java type</th>
+<th>Name</th>
+<th>SQLite name</th>
+<th>Constraints</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Long</code></td>
+<td>id</td>
+<td>id</td>
+<td>PRIMARY KEY</td>
+</tr>
+
+<tr>
+<td><code>Long</code></td>
+<td>migThreeReference</td>
+<td>mig_three_reference</td>
+<td>NOT NULL FOREIGN KEY</td>
+</tr>
+
+<tr>
+<td><code>Long</code></td>
+<td>migTwoReference</td>
+<td>mig_two_reference</td>
+<td>NOT NULL FOREIGN KEY</td>
+</tr>
+
+<tr>
+<td><code>Date</code></td>
+<td>creationDate</td>
+<td>creation_date</td>
+<td>NOT NULL DEFAULT(CURRENT_DATE)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>v.3 -&gt; v.4 diffs</strong></p>
+
+<ol>
+<li>- constraint FOREIGN KEY (mig_one_reference) reference on mig_one.id</li>
+<li>- table mig_one</li>
+<li>+ table mig_four</li>
+<li>= mig_three.some_value rename to mig_three.new_sv_name</li>
+<li>+ mig_three.random_long</li>
+<li>+ index on mig_three (random_long)</li>
+</ol>
+
+<p></details></p>
+
+<p><details>
+  <summary>Click here to view mig v.4 schema SQLite creation and version migration scripts: </summary>
+<strong>Create schema script for database <code>mig</code> version <code>4</code> (<code>KittyNamingUtils.ASSETS_URI_START + &quot;kittysqliteorm/mig/mig-v-4-create.sql</code>)</strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_four</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">mig_three_reference</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">UPDATE</span> <span class="k">NO</span> <span class="n">ACTION</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">NO</span> <span class="n">ACTION</span><span class="p">,</span> <span class="n">mig_two_reference</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">mig_two</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">UPDATE</span> <span class="k">NO</span> <span class="n">ACTION</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">NO</span> <span class="n">ACTION</span><span class="p">,</span> <span class="n">creation_date</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span>  <span class="k">CURRENT_DATE</span> <span class="p">);</span>
+<span class="ln">2</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">new_sv_name</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">&#39;Something random&#39;</span><span class="p">,</span> <span class="n">random_long</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">22</span><span class="p">);</span>
+<span class="ln">3</span><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">m3_rnd_long</span> <span class="k">ON</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">random_long</span><span class="p">);</span>
+<span class="ln">4</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_two</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">mig_one_reference</span> <span class="nb">INTEGER</span><span class="p">,</span> <span class="n">some_animal</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">some_animal_sound</span> <span class="nb">TEXT</span><span class="p">);</span></code></pre></div>
+<strong>Drop schema script for database <code>mig</code> version <code>4</code> (<code>KittyNamingUtils.ASSETS_URI_START + &quot;kittysqliteorm/mig/mig-v-4-drop.sql</code>)</strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln">1</span><span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_four</span><span class="p">;</span>
+<span class="ln">2</span><span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_three</span><span class="p">;</span>
+<span class="ln">3</span><span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_two</span><span class="p">;</span></code></pre></div>
+<strong>After create schema script for database <code>mig</code> version <code>4</code> (<code>KittyNamingUtils.ASSETS_URI_START + &quot;kittysqliteorm/mig/mig-v-4-after_create.sql</code>)</strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln"> 1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="ln"> 2</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="ln"> 3</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="ln"> 4</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+<span class="ln"> 5</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+<span class="ln"> 6</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">);</span>
+<span class="ln"> 7</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
+<span class="ln"> 8</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+<span class="ln"> 9</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">);</span>
+<span class="ln">10</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="ln">11</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<span class="ln">12</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+<span class="ln">13</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER CREATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">13</span><span class="p">);</span></code></pre></div>
+<strong>After migrate schema script for database <code>mig</code> version <code>4</code> (<code>KittyNamingUtils.ASSETS_URI_START + &quot;kittysqliteorm/mig/mig-v-4-after_migrate.sql</code>)</strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln"> 1</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="ln"> 2</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<span class="ln"> 3</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">111</span><span class="p">);</span>
+<span class="ln"> 4</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">1111</span><span class="p">);</span>
+<span class="ln"> 5</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">11111</span><span class="p">);</span>
+<span class="ln"> 6</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">111111</span><span class="p">);</span>
+<span class="ln"> 7</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">1111111</span><span class="p">);</span>
+<span class="ln"> 8</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">11111111</span><span class="p">);</span>
+<span class="ln"> 9</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">1111111</span><span class="p">);</span>
+<span class="ln">10</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">111111</span><span class="p">);</span>
+<span class="ln">11</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">11111</span><span class="p">);</span>
+<span class="ln">12</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">1111</span><span class="p">);</span>
+<span class="ln">13</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">111</span><span class="p">);</span>
+<span class="ln">14</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<span class="ln">15</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">new_sv_name</span><span class="p">,</span> <span class="n">random_long</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;AFTER MIGRATE SCRIPT&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span></code></pre></div>
+<strong>Migration script for database <code>mig</code> from version <code>3</code> to version <code>4</code> (<code>KittyNamingUtils.ASSETS_URI_START + &quot;kittysqliteorm/mig/version_migrations/3-3-4-4.sql</code>)</strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="ln"> 1</span><span class="c1">-- minus FK M2.migOneReference
+</span><span class="ln"> 2</span><span class="c1"></span><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">mig_two</span> <span class="k">RENAME</span> <span class="k">TO</span> <span class="n">mig_two_old_t</span><span class="p">;</span>
+<span class="ln"> 3</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_two</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">mig_one_reference</span> <span class="nb">INTEGER</span><span class="p">,</span> <span class="n">some_animal</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">some_animal_sound</span> <span class="nb">TEXT</span><span class="p">);</span>
+<span class="ln"> 4</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_two</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">mig_one_reference</span><span class="p">,</span> <span class="n">some_animal</span><span class="p">,</span> <span class="n">some_animal_sound</span><span class="p">)</span> <span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="n">mig_one_reference</span><span class="p">,</span> <span class="n">some_animal</span><span class="p">,</span> <span class="n">some_animal_sound</span> <span class="k">FROM</span> <span class="n">mig_two_old_t</span><span class="p">;</span>
+<span class="ln"> 5</span><span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_two_old_t</span><span class="p">;</span>
+<span class="ln"> 6</span><span class="c1">-- minus M1 table
+</span><span class="ln"> 7</span><span class="c1"></span><span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_one</span><span class="p">;</span>
+<span class="ln"> 8</span><span class="c1">-- plus M4 table
+</span><span class="ln"> 9</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_four</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">mig_three_reference</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">UPDATE</span> <span class="k">NO</span> <span class="n">ACTION</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">NO</span> <span class="n">ACTION</span><span class="p">,</span> <span class="n">mig_two_reference</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">REFERENCES</span> <span class="n">mig_two</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">UPDATE</span> <span class="k">NO</span> <span class="n">ACTION</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">NO</span> <span class="n">ACTION</span><span class="p">,</span> <span class="n">creation_date</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span>  <span class="k">CURRENT_DATE</span> <span class="p">);</span>
+<span class="ln">10</span><span class="c1">-- rename M3.some_value to M3.new_sv_name and add M3.random_long
+</span><span class="ln">11</span><span class="c1"></span><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">mig_three</span> <span class="k">RENAME</span> <span class="k">TO</span> <span class="n">mig_three_old_t</span><span class="p">;</span>
+<span class="ln">12</span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">new_sv_name</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">&#39;Something random&#39;</span><span class="p">,</span> <span class="n">random_long</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">22</span><span class="p">);</span>
+<span class="ln">13</span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">new_sv_name</span><span class="p">)</span> <span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="n">some_value</span> <span class="k">FROM</span> <span class="n">mig_three_old_t</span><span class="p">;</span>
+<span class="ln">14</span><span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_three_old_t</span><span class="p">;</span>
+<span class="ln">15</span><span class="c1">-- add index on M3.random_long
+</span><span class="ln">16</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">m3_rnd_long</span> <span class="k">ON</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">random_long</span><span class="p">);</span></code></pre></div>
+</details></p>
+
+<p><a href="#table-of-contents">Back to table of contents ^</a></p>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

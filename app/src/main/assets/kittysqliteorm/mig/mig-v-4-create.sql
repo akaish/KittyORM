@@ -1,0 +1,6 @@
+--CREATE TABLE IF NOT EXISTS mig_five_test_complex_pk (ipk INTEGER UNIQUE, ipk_str TEXT UNIQUE, some_str TEXT DEFAULT 'Default string', CONSTRAINT ff_complex_pk PRIMARY KEY (ipk, ipk_str));
+CREATE TABLE IF NOT EXISTS mig_four (id INTEGER NOT NULL PRIMARY KEY ASC, mig_three_reference INTEGER NOT NULL REFERENCES mig_three (id) ON UPDATE NO ACTION ON DELETE NO ACTION, mig_two_reference INTEGER NOT NULL REFERENCES mig_two (id) ON UPDATE NO ACTION ON DELETE NO ACTION, creation_date INTEGER NOT NULL DEFAULT  CURRENT_DATE );
+CREATE TABLE IF NOT EXISTS mig_three (id INTEGER NOT NULL PRIMARY KEY ASC, new_sv_name TEXT NOT NULL DEFAULT 'Something random', random_long INTEGER DEFAULT 22);
+CREATE INDEX IF NOT EXISTS m3_rnd_long ON mig_three (random_long);
+CREATE TABLE IF NOT EXISTS mig_two (id INTEGER NOT NULL PRIMARY KEY ASC, mig_one_reference INTEGER, some_animal TEXT, some_animal_sound TEXT);
+--CREATE TRIGGER ftest_ipk AFTER INSERT ON mig_five_test_complex_pk FOR EACH ROW WHEN NEW.ipk IS NULL BEGIN UPDATE mig_five_test_complex_pk SET ipk = NEW.rowid WHERE rowid = NEW.rowid; END;

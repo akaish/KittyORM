@@ -1,0 +1,14 @@
+--CREATE TABLE IF NOT EXISTS mig_three (id INTEGER NOT NULL PRIMARY KEY ASC, new_sv_name TEXT NOT NULL DEFAULT 'Something random', random_long INTEGER DEFAULT 22);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 1);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 2);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 3);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 4);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 5);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 6);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 7);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 8);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 9);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 10);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 11);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 12);
+INSERT INTO mig_three (new_sv_name, random_long) VALUES ('AFTER CREATE SCRIPT', 13);

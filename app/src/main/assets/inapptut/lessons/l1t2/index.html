@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson1 Tab2: Getting started with KittyORM &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           
+
+<h3 id="gradle-setup">Gradle setup</h3>
+
+<p>First step is to add KittyORM via Gradle to your project:
+[TODO code block gradle depencie]</p>
+
+<h3 id="kittyorm-configuration-and-implementation">KittyORM configuration and implementation</h3>
+
+<p>Create package for storing your POJO models, KittyORM database class, KittyORM helper class (if necessary) and KittyORM extended mappers (if necessary).</p>
+
+<p><strong>First step:</strong> extend <code>KittyDatabase</code> class, implement default constructor and annotate it with <code>@KITTY_DATABASE</code> annotation (and, if necessary, with <code>@KITTY_DATABASE_HELPER</code>).</p>
+
+<p><strong>Second step:</strong> create your first POJO model by extending <code>KittyModel</code> class, implement default constructor and annotate it with <code>@KITTY_TABLE</code> annotation. Each model field of KittyModel POJO implementation that corresponds database table column also has to be annotated with <code>@KITTY_COLUMN</code> annotation.</p>
+
+<p><strong>Third step (optional):</strong> create extended CRUD controller by extending <code>KittyMapper</code> class, implementing default constructor and adding business logic. To make what CRUD controller you want to use with given POJO model you can just use default naming rules (<code>SomeModel.class</code>, <code>Somemodel.class</code> and even <code>Some.class</code> POJO would use <code>SomeMapper.class</code> extended controller if found) or (better choice) annotate model POJO with <code>@EXTENDED_CRUD</code> linked to actual extended CRUD controller class implementation.</p>
+
+<p><strong>Fourth step (optional):</strong> create extended database helper by extending <code>KittyDatabaseHelper</code> class and make sure that your KittyDatabase class implementation would return new instance of your extended database helper via <code>KittyDatabase.newDatabaseHelper()</code> method.</p>
+
+<p>In this lesson we create simple database that contains from only one table and would interact with it using default CRUD controller. This demo contains many database domains, so database domain was set in <code>@KITTY_DATABASE</code>. Also it is better to set this value if your application uses a lot of libraries so KittyORM would seek POJO and CRUD classes related to KittyORM only in specified location(s).</p>
+
+<h3 id="working-with-entities">Working with entities</h3>
+
+<p>This example shows basic KittyORM usage when you just want to store some information in your database. Just very simple database to go. Database would be created at first call of <code>getMapper(Class&lt;M&gt; recordClass)</code> method of  <code>SimpleDatabase.class</code> instance, it would be named <strong>simple_database</strong> and would contain only one table called <strong>simple_example</strong>. This database would have <strong>version 1</strong> by default.</p>
+
+<p><code>SimpleDatabase.class</code>:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kn">package</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb</span><span class="o">;</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
+<span class="ln"> 4</span>
+<span class="ln"> 5</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.KittyDatabase</span><span class="o">;</span>
+<span class="ln"> 6</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.KITTY_DATABASE</span><span class="o">;</span>
+<span class="ln"> 7</span>
+<span class="ln"> 8</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln"> 9</span>        <span class="n">domainPackageNames</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;net.akaish.kittyormdemo.sqlite.introductiondb&#34;</span><span class="o">}</span>
+<span class="ln">10</span><span class="o">)</span>
+<span class="ln">11</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleDatabase</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln">12</span>
+<span class="ln">13</span>    <span class="kd">public</span> <span class="nf">SimpleDatabase</span><span class="o">(</span><span class="n">Context</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">14</span>        <span class="kd">super</span><span class="o">(</span><span class="n">ctx</span><span class="o">);</span>
+<span class="ln">15</span>    <span class="o">}</span>
+<span class="ln">16</span><span class="o">}</span></code></pre></div></p>
+
+<p><code>SimpleExampleModel.class</code>:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kn">package</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb</span><span class="o">;</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.KittyModel</span><span class="o">;</span>
+<span class="ln"> 4</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.column.KITTY_COLUMN</span><span class="o">;</span>
+<span class="ln"> 5</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.table.KITTY_TABLE</span><span class="o">;</span>
+<span class="ln"> 6</span>
+<span class="ln"> 7</span><span class="nd">@KITTY_TABLE</span>
+<span class="ln"> 8</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleExampleModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 9</span>    <span class="kd">public</span> <span class="nf">SimpleExampleModel</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">10</span>        <span class="kd">super</span><span class="o">();</span>
+<span class="ln">11</span>    <span class="o">}</span>
+<span class="ln">12</span>
+<span class="ln">13</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">14</span>            <span class="n">isIPK</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln">15</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span>
+<span class="ln">16</span>    <span class="o">)</span>
+<span class="ln">17</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+<span class="ln">18</span>
+<span class="ln">19</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">20</span>    <span class="kd">public</span> <span class="kt">int</span> <span class="n">randomInteger</span><span class="o">;</span>
+<span class="ln">21</span>
+<span class="ln">22</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span><span class="o">)</span>
+<span class="ln">23</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">firstName</span><span class="o">;</span>
+<span class="ln">24</span><span class="o">}</span></code></pre></div></p>
+
+<p>By default, all names in KittyORM if they weren’t specified explicitly in annotations would be generated from class names and field names. For database name it would be used <code>KittyUtils.fieldNameToLowerCaseUnderScore(String fieldName)</code> method where <code>fieldName</code> is database implementation class name. For table names would be used <code>KittyUtils.fieldNameToLowerCaseUnderScore(String fieldName)</code> where <code>fieldName</code> is POJO class name without Model\model ending (if ending exists) and for column names would be used <code>KittyUtils.fieldNameToLowerCaseUnderScore(String fieldName)</code>.</p>
+
+<p><details>
+  <summary>Click to view <code>KittyUtils.fieldNameToLowerCaseUnderScore(String fieldName)</code></summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="cm">/**
+</span><span class="ln"> 2</span><span class="cm"> * Converts input string (designed for camel case variable names)
+</span><span class="ln"> 3</span><span class="cm"> * into lower case underscored string
+</span><span class="ln"> 4</span><span class="cm"> * @param fieldName
+</span><span class="ln"> 5</span><span class="cm"> * @return
+</span><span class="ln"> 6</span><span class="cm"> */</span>
+<span class="ln"> 7</span><span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">fieldNameToLowerCaseUnderScore</span><span class="o">(</span><span class="n">String</span> <span class="n">fieldName</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 8</span>	<span class="k">return</span> <span class="n">fieldName</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">&#34;[^a-zA-Z0-9]&#34;</span><span class="o">,</span><span class="s">&#34;&#34;</span><span class="o">)</span>
+<span class="ln"> 9</span>			<span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">&#34;(?=[A-Z])&#34;</span><span class="o">,</span><span class="s">&#34;_&#34;</span><span class="o">)</span>
+<span class="ln">10</span>			<span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">&#34;^_&#34;</span><span class="o">,</span><span class="s">&#34;&#34;</span><span class="o">)</span>
+<span class="ln">11</span>			<span class="o">.</span><span class="na">toLowerCase</span><span class="o">();</span>
+<span class="ln">12</span><span class="o">}</span></code></pre></div>
+</details></p>
+
+<blockquote>
+<p>Do not use primitives for <code>PrimaryKeys</code>, because uninitialized primitive field returns 0 not <code>NULL</code> via reflection calls and KittyORM wouldn’t know what to do with such POJO.</p>
+</blockquote>
+
+<h3 id="crud-usage">CRUD Usage</h3>
+
+<p>We are ready to go, just get <code>KittyMapper</code> from instance of <code>SimpleDatabase</code> with <code>getMapper(SimpleExampleModel.class)</code> and perform any basic RW operations.</p>
+
+<blockquote>
+<p>Do not forget to call <code>KittyMapper.close()</code> method on your <code>KittyMapper</code> instance after you did all database operations you wanted.</p>
+</blockquote>
+
+<ul>
+<li>Inserting new record associated with new model into database table:</li>
+</ul>
+
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="n">SimpleExampleModel</span> <span class="n">alex</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="n">alex</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">545141</span><span class="o">;</span>
+<span class="ln"> 4</span><span class="n">alex</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="s">&#34;Alex&#34;</span><span class="o">;</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span><span class="n">SimpleExampleModel</span> <span class="n">marina</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln"> 7</span>
+<span class="ln"> 8</span><span class="n">marina</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">228</span><span class="o">;</span>
+<span class="ln"> 9</span><span class="n">marina</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="s">&#34;Marina&#34;</span><span class="o">;</span>
+<span class="ln">10</span>
+<span class="ln">11</span><span class="c1">// save model with save method
+</span><span class="ln">12</span><span class="c1"></span><span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">alex</span><span class="o">);</span>
+<span class="ln">13</span><span class="c1">// or use insert method if you want to get rowid
+</span><span class="ln">14</span><span class="c1"></span><span class="kt">long</span> <span class="n">marinaRowid</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">marina</span><span class="o">);</span></code></pre></div>
+
+<ul>
+<li>Finding record in table and returning its content as POJO model:</li>
+</ul>
+
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="c1">// find with row id
+</span><span class="ln"> 2</span><span class="c1"></span><span class="n">SimpleExampleModel</span> <span class="n">model1</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByRowID</span><span class="o">(</span><span class="n">0l</span><span class="o">);</span>
+<span class="ln"> 3</span>
+<span class="ln"> 4</span><span class="c1">// find with INTEGER PRIMARY KEY
+</span><span class="ln"> 5</span><span class="c1"></span><span class="n">SimpleExampleModel</span> <span class="n">model2</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByIPK</span><span class="o">(</span><span class="n">0l</span><span class="o">);</span>
+<span class="ln"> 6</span>
+<span class="ln"> 7</span><span class="c1">// find with KittyPrimaryKey
+</span><span class="ln"> 8</span><span class="c1"></span><span class="n">KittyPrimaryKeyBuilder</span> <span class="n">pkBuilder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KittyPrimaryKeyBuilder</span><span class="o">();</span>
+<span class="ln"> 9</span><span class="n">pkBuilder</span><span class="o">.</span><span class="na">addKeyColumnValue</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">,</span> <span class="s">&#34;0&#34;</span><span class="o">);</span>
+<span class="ln">10</span><span class="n">SimpleExampleModel</span> <span class="n">model3</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByPK</span><span class="o">(</span><span class="n">pkBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+<span class="ln">11</span>
+<span class="ln">12</span><span class="c1">// find with condition
+</span><span class="ln">13</span><span class="c1"></span><span class="n">SQLiteConditionBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
+<span class="ln">14</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln">15</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln">16</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln">17</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">marinas</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+<span class="ln">18</span>
+<span class="ln">19</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">randModels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">20</span><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<span class="ln">21</span>    <span class="n">randModels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">RandomSimpleExampleModelUtil</span><span class="o">.</span><span class="na">randomSEModel</span><span class="o">());</span>
+<span class="ln">22</span><span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">randModels</span><span class="o">);</span></code></pre></div>
+
+<ul>
+<li>Inserting 10 generated records into database table:</li>
+</ul>
+
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">randModels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">2</span><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<span class="ln">3</span>    <span class="n">randModels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">RandomSimpleExampleModelUtil</span><span class="o">.</span><span class="na">randomSEModel</span><span class="o">());</span>
+<span class="ln">4</span><span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">randModels</span><span class="o">);</span></code></pre></div>
+
+<ul>
+<li>Deleting some models:</li>
+</ul>
+
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="c1">// deleting entity
+</span><span class="ln">2</span><span class="c1"></span><span class="n">mapper</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">alex</span><span class="o">);</span>
+<span class="ln">3</span>
+<span class="ln">4</span><span class="c1">// deleting from database with condition
+</span><span class="ln">5</span><span class="c1"></span><span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
+<span class="ln">6</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln">7</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln">8</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Alex&#34;</span><span class="o">);</span>
+<span class="ln">9</span><span class="n">mapper</span><span class="o">.</span><span class="na">deleteByWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span></code></pre></div>
+
+<ul>
+<li>Updating some models:</li>
+</ul>
+
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="c1">// updating current model
+</span><span class="ln"> 2</span><span class="c1">// if model has RowId or IPK or PrimaryKey values set (3 is slowest) just
+</span><span class="ln"> 3</span><span class="c1"></span><span class="n">marina</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">1337</span><span class="o">;</span>
+<span class="ln"> 4</span><span class="n">mapper</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">marina</span><span class="o">);</span>
+<span class="ln"> 5</span>
+<span class="ln"> 6</span><span class="c1">// or just
+</span><span class="ln"> 7</span><span class="c1"></span><span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">marina</span><span class="o">)</span>
+<span class="ln"> 8</span>
+<span class="ln"> 9</span><span class="c1">// another option is updating with query-like method
+</span><span class="ln">10</span><span class="c1"></span><span class="n">SimpleExampleModel</span> <span class="n">update</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln">11</span><span class="n">update</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">121212</span><span class="o">;</span>
+<span class="ln">12</span><span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
+<span class="ln">13</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln">14</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln">15</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln">16</span><span class="n">mapper</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">update</span><span class="o">,</span> <span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]{</span><span class="s">&#34;randomInteger&#34;</span><span class="o">},</span> <span class="n">CVUtils</span><span class="o">.</span><span class="na">INCLUDE_ONLY_SELECTED_FIELDS</span><span class="o">);</span></code></pre></div>
+
+<ul>
+<li>Bulk operations in transaction mode:</li>
+</ul>
+
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="n">randModels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">2</span><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<span class="ln">3</span>    <span class="n">randModels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">RandomSimpleExampleModelUtil</span><span class="o">.</span><span class="na">randomSEModel</span><span class="o">());</span>
+<span class="ln">4</span><span class="n">mapper</span><span class="o">.</span><span class="na">saveInTransaction</span><span class="o">(</span><span class="n">randModels</span><span class="o">);</span></code></pre></div>
+
+<blockquote>
+<p>Do not forget to call <code>KittyMapper.close()</code> method on your <code>KittyMapper</code> instance after you did all database operations you wanted.</p>
+</blockquote>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

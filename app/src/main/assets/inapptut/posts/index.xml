@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on KittyORM Demo</title>
+    <link>file:///android_asset/inapptut/posts/</link>
+    <description>Recent content in Posts on KittyORM Demo</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Aug 2018 04:37:22 +0300</lastBuildDate>
+    
+	<atom:link href="file:///android_asset/inapptut/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Creating and insertion new model with KittyORM</title>
+      <link>file:///android_asset/inapptut/posts/ll2t1-lesson/</link>
+      <pubDate>Thu, 16 Aug 2018 04:37:22 +0300</pubDate>
+      
+      <guid>file:///android_asset/inapptut/posts/ll2t1-lesson/</guid>
+      <description>As mentioned before, KittyORM implements Data Mapper pattern and all interations with database executed throw base or extended imlementation of KittyMapper.class. So example:
+public void showFABMenu() { this.isFABOpen = true; if(fabMenus == null) return; if(fabMenus.size() &amp;lt; 2) return; fabCoordinatorParentView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkTransparent)); fabCoordinatorParentView.setClickable(true); fabMenus.getFirst().animate().rotation(180); Iterator&amp;lt;LinearLayout&amp;gt; fabLayoutsIterator = fabMenuItemsLayouts.iterator(); int step = 0; long animationDelay = 200l; while (fabLayoutsIterator.hasNext()) { LinearLayout fabLayout = fabLayoutsIterator.next(); fabLayout.animate().translationY(-getResources().getDimension(FAB_MENU_ANIMATION_DIMENSIONS_STEPS[step])).setListener( new FabAnimationOpenListener(fabLayout, true) ).setStartDelay(animationDelay).setDuration(200l); animationDelay+=200l; step++; } } And some spoiler text</description>
+    </item>
+    
+  </channel>
+</rss>

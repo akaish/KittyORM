@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson1 source code &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           
+
+<h3 id="database-model-supporting-classes">Database, model, supporting classes</h3>
+
+<p><details>
+  <summary>Click to view <code>SimpleDatabase.class</code></summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kn">package</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb</span><span class="o">;</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
+<span class="ln"> 4</span>
+<span class="ln"> 5</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.KittyDatabase</span><span class="o">;</span>
+<span class="ln"> 6</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.KITTY_DATABASE</span><span class="o">;</span>
+<span class="ln"> 7</span>
+<span class="ln"> 8</span><span class="cm">/**
+</span><span class="ln"> 9</span><span class="cm"> * Created by akaish on 09.08.18.
+</span><span class="ln">10</span><span class="cm"> */</span>
+<span class="ln">11</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln">12</span>        <span class="n">isLoggingOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln">13</span>        <span class="n">isProductionOn</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span>
+<span class="ln">14</span>        <span class="n">domainPackageNames</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;net.akaish.kittyormdemo.sqlite.introductiondb&#34;</span><span class="o">}</span>
+<span class="ln">15</span><span class="o">)</span>
+<span class="ln">16</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleDatabase</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln">17</span>    <span class="cm">/**
+</span><span class="ln">18</span><span class="cm">     * KittyORM main database class that represents bootstrap and holder for all related with database
+</span><span class="ln">19</span><span class="cm">     * components.
+</span><span class="ln">20</span><span class="cm">     * &lt;br&gt; See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.
+</span><span class="ln">21</span><span class="cm">     *
+</span><span class="ln">22</span><span class="cm">     * @param ctx
+</span><span class="ln">23</span><span class="cm">     */</span>
+<span class="ln">24</span>    <span class="kd">public</span> <span class="nf">SimpleDatabase</span><span class="o">(</span><span class="n">Context</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">25</span>        <span class="kd">super</span><span class="o">(</span><span class="n">ctx</span><span class="o">);</span>
+<span class="ln">26</span>    <span class="o">}</span>
+<span class="ln">27</span><span class="o">}</span></code></pre></div>
+</details></p>
+
+<p><details>
+  <summary>Click to view <code>SimpleExampleModel.class</code></summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kn">package</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb</span><span class="o">;</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.KittyModel</span><span class="o">;</span>
+<span class="ln"> 4</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.column.KITTY_COLUMN</span><span class="o">;</span>
+<span class="ln"> 5</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.table.KITTY_TABLE</span><span class="o">;</span>
+<span class="ln"> 6</span>
+<span class="ln"> 7</span><span class="nd">@KITTY_TABLE</span>
+<span class="ln"> 8</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleExampleModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
+<span class="ln"> 9</span>    <span class="kd">public</span> <span class="nf">SimpleExampleModel</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">10</span>        <span class="kd">super</span><span class="o">();</span>
+<span class="ln">11</span>    <span class="o">}</span>
+<span class="ln">12</span>
+<span class="ln">13</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span>
+<span class="ln">14</span>            <span class="n">isIPK</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln">15</span>            <span class="n">columnOrder</span> <span class="o">=</span> <span class="n">0</span>
+<span class="ln">16</span>    <span class="o">)</span>
+<span class="ln">17</span>    <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+<span class="ln">18</span>
+<span class="ln">19</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">1</span><span class="o">)</span>
+<span class="ln">20</span>    <span class="kd">public</span> <span class="kt">int</span> <span class="n">randomInteger</span><span class="o">;</span>
+<span class="ln">21</span>
+<span class="ln">22</span>    <span class="nd">@KITTY_COLUMN</span><span class="o">(</span><span class="n">columnOrder</span> <span class="o">=</span> <span class="n">2</span><span class="o">)</span>
+<span class="ln">23</span>    <span class="kd">public</span> <span class="n">String</span> <span class="n">firstName</span><span class="o">;</span>
+<span class="ln">24</span>
+<span class="ln">25</span>    <span class="nd">@Override</span>
+<span class="ln">26</span>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">27</span>        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">64</span><span class="o">);</span>
+<span class="ln">28</span>        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;[ rowid = &#34;</span><span class="o">)</span>
+<span class="ln">29</span>                    <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">getRowID</span><span class="o">())</span>
+<span class="ln">30</span>                    <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; id = &#34;</span><span class="o">)</span>
+<span class="ln">31</span>                    <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">id</span><span class="o">)</span>
+<span class="ln">32</span>                    <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; randomInteger = &#34;</span><span class="o">)</span>
+<span class="ln">33</span>                    <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">randomInteger</span><span class="o">)</span>
+<span class="ln">34</span>                    <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ; firstName = &#34;</span><span class="o">)</span>
+<span class="ln">35</span>                    <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">firstName</span><span class="o">)</span>
+<span class="ln">36</span>                    <span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ]&#34;</span><span class="o">)</span>
+<span class="ln">37</span>                    <span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+<span class="ln">38</span>    <span class="o">}</span>
+<span class="ln">39</span><span class="o">}</span></code></pre></div>
+</details></p>
+
+<p><details>
+  <summary>Click to view <code>RandomSimpleExampleModelUtil.class</code></summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kn">package</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb.util</span><span class="o">;</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="kn">import</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb.SimpleExampleModel</span><span class="o">;</span>
+<span class="ln"> 4</span>
+<span class="ln"> 5</span><span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
+<span class="ln"> 6</span>
+<span class="ln"> 7</span><span class="cm">/**
+</span><span class="ln"> 8</span><span class="cm"> * Created by akaish on 21.08.18.
+</span><span class="ln"> 9</span><span class="cm"> */</span>
+<span class="ln">10</span>
+<span class="ln">11</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RandomSimpleExampleModelUtil</span> <span class="o">{</span>
+<span class="ln">12</span>
+<span class="ln">13</span>    <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">NAMES</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]</span> <span class="o">{</span><span class="s">&#34;Adam&#34;</span><span class="o">,</span> <span class="s">&#34;Ada&#34;</span><span class="o">,</span> <span class="s">&#34;Joseph&#34;</span><span class="o">,</span> <span class="s">&#34;Michel&#34;</span><span class="o">,</span> <span class="s">&#34;Mickie&#34;</span><span class="o">,</span> <span class="s">&#34;Boris&#34;</span><span class="o">,</span> <span class="s">&#34;Denis&#34;</span><span class="o">,</span> <span class="s">&#34;Denise&#34;</span><span class="o">,</span> <span class="s">&#34;Alexander&#34;</span><span class="o">,</span> <span class="s">&#34;Irina&#34;</span><span class="o">};</span>
+<span class="ln">14</span>
+<span class="ln">15</span>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">SimpleExampleModel</span> <span class="nf">randomSEModel</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">16</span>        <span class="n">SimpleExampleModel</span> <span class="n">m</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln">17</span>        <span class="n">Random</span> <span class="n">rnd</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+<span class="ln">18</span>        <span class="n">m</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">rnd</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">1000</span><span class="o">);</span>
+<span class="ln">19</span>        <span class="n">m</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="n">NAMES</span><span class="o">[</span><span class="n">rnd</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="n">10</span><span class="o">)];</span>
+<span class="ln">20</span>        <span class="k">return</span> <span class="n">m</span><span class="o">;</span>
+<span class="ln">21</span>    <span class="o">}</span>
+<span class="ln">22</span><span class="o">}</span></code></pre></div>
+</details></p>
+
+<h3 id="run-crud-operations-code">&ldquo;RUN CRUD OPERATIONS&rdquo; code</h3>
+
+<p><details>
+  <summary>Click to view <code>GettingStartedTutorialCode.allInOne()</code></summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">  1</span><span class="c1">// Creating new instance of SimpleDatabase
+</span><span class="ln">  2</span><span class="c1"></span><span class="n">SimpleDatabase</span> <span class="n">simpleDatabase</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDatabase</span><span class="o">(</span><span class="n">ctx</span><span class="o">);</span>
+<span class="ln">  3</span>
+<span class="ln">  4</span><span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">simpleDatabase</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">SimpleExampleModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">  5</span>
+<span class="ln">  6</span><span class="c1">// Counting records in db table and deleting them if table not empty
+</span><span class="ln">  7</span><span class="c1"></span><span class="k">if</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln">  8</span>    <span class="n">mapper</span><span class="o">.</span><span class="na">deleteAll</span><span class="o">();</span>
+<span class="ln">  9</span>
+<span class="ln"> 10</span><span class="c1">// Insert new model example
+</span><span class="ln"> 11</span><span class="c1">// Creating and setting three new models
+</span><span class="ln"> 12</span><span class="c1"></span><span class="n">SimpleExampleModel</span> <span class="n">alex</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln"> 13</span>
+<span class="ln"> 14</span><span class="n">alex</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">545141</span><span class="o">;</span>
+<span class="ln"> 15</span><span class="n">alex</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="s">&#34;Alex&#34;</span><span class="o">;</span>
+<span class="ln"> 16</span>
+<span class="ln"> 17</span><span class="n">SimpleExampleModel</span> <span class="n">marina</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln"> 18</span>
+<span class="ln"> 19</span><span class="n">marina</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">228</span><span class="o">;</span>
+<span class="ln"> 20</span><span class="n">marina</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="s">&#34;Marina&#34;</span><span class="o">;</span>
+<span class="ln"> 21</span>
+<span class="ln"> 22</span><span class="n">SimpleExampleModel</span> <span class="n">marina2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln"> 23</span>
+<span class="ln"> 24</span><span class="n">marina2</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">445555</span><span class="o">;</span>
+<span class="ln"> 25</span><span class="n">marina2</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="s">&#34;Marina&#34;</span><span class="o">;</span>
+<span class="ln"> 26</span>
+<span class="ln"> 27</span><span class="c1">// Saving those models
+</span><span class="ln"> 28</span><span class="c1">// Saving model with mapper.save(M model)
+</span><span class="ln"> 29</span><span class="c1"></span><span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">alex</span><span class="o">);</span>
+<span class="ln"> 30</span><span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">marina2</span><span class="o">);</span>
+<span class="ln"> 31</span>
+<span class="ln"> 32</span><span class="c1">// Saving model with mapper.insert(M model)
+</span><span class="ln"> 33</span><span class="c1">// Better to use insert(M model) for new DB records cause it is little bit faster
+</span><span class="ln"> 34</span><span class="c1"></span><span class="kt">long</span> <span class="n">marinaRowid</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">marina</span><span class="o">);</span>
+<span class="ln"> 35</span>
+<span class="ln"> 36</span>
+<span class="ln"> 37</span><span class="c1">// Finding existing records in DB and mapping them to entities
+</span><span class="ln"> 38</span><span class="c1"></span>
+<span class="ln"> 39</span><span class="c1">// find with condition
+</span><span class="ln"> 40</span><span class="c1"></span><span class="n">SQLiteConditionBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
+<span class="ln"> 41</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln"> 42</span>    <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln"> 43</span>    <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln"> 44</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">marinas</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+<span class="ln"> 45</span>
+<span class="ln"> 46</span><span class="c1">// find with RowID
+</span><span class="ln"> 47</span><span class="c1"></span><span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableRowid</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByRowID</span><span class="o">(</span><span class="n">marinaRowid</span><span class="o">);</span>
+<span class="ln"> 48</span>
+<span class="ln"> 49</span><span class="c1">// find with IPK
+</span><span class="ln"> 50</span><span class="c1"></span><span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableIPK</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByIPK</span><span class="o">(</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">);</span>
+<span class="ln"> 51</span>
+<span class="ln"> 52</span><span class="n">findOperationId</span><span class="o">++;</span>
+<span class="ln"> 53</span><span class="c1">// find with KittyPrimaryKey
+</span><span class="ln"> 54</span><span class="c1"></span><span class="n">KittyPrimaryKey</span> <span class="n">pk</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KittyPrimaryKeyBuilder</span><span class="o">()</span>
+<span class="ln"> 55</span>    <span class="o">.</span><span class="na">addKeyColumnValue</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">,</span> <span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">toString</span><span class="o">())</span>
+<span class="ln"> 56</span>    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="ln"> 57</span><span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableKPK</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByPK</span><span class="o">(</span><span class="n">pk</span><span class="o">);</span>
+<span class="ln"> 58</span>
+<span class="ln"> 59</span><span class="c1">// Generating and inserting list of 10 random models
+</span><span class="ln"> 60</span><span class="c1"></span><span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">randomModels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln"> 61</span><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<span class="ln"> 62</span>    <span class="n">randomModels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">RandomSimpleExampleModelUtil</span><span class="o">.</span><span class="na">randomSEModel</span><span class="o">());</span>
+<span class="ln"> 63</span>    <span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">randomModels</span><span class="o">);</span>
+<span class="ln"> 64</span>
+<span class="ln"> 65</span><span class="c1">// Deleting some models
+</span><span class="ln"> 66</span><span class="c1">// Deleting by entity, make sure that entity has RowID\IPK\PK set
+</span><span class="ln"> 67</span><span class="c1"></span><span class="n">SQLiteCondition</span> <span class="n">alexCondition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
+<span class="ln"> 68</span>    <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln"> 69</span>    <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln"> 70</span>    <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Alex&#34;</span><span class="o">)</span>
+<span class="ln"> 71</span>    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="ln"> 72</span><span class="n">SimpleExampleModel</span> <span class="n">alexToDelete</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findFirst</span><span class="o">(</span><span class="n">alexCondition</span><span class="o">);</span>
+<span class="ln"> 73</span><span class="n">mapper</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">alexToDelete</span><span class="o">);</span>
+<span class="ln"> 74</span>
+<span class="ln"> 75</span><span class="c1">// Deleting with condition
+</span><span class="ln"> 76</span><span class="c1"></span><span class="n">SQLiteCondition</span> <span class="n">marina445555Condition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
+<span class="ln"> 77</span>    <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;random_integer&#34;</span><span class="o">)</span>
+<span class="ln"> 78</span>    <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln"> 79</span>    <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">marina2</span><span class="o">.</span><span class="na">randomInteger</span><span class="o">)</span>
+<span class="ln"> 80</span>    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="ln"> 81</span><span class="n">mapper</span><span class="o">.</span><span class="na">deleteByWhere</span><span class="o">(</span><span class="n">marina445555Condition</span><span class="o">);</span>
+<span class="ln"> 82</span>
+<span class="ln"> 83</span><span class="c1">// Updating models
+</span><span class="ln"> 84</span><span class="c1">// updating current model
+</span><span class="ln"> 85</span><span class="c1">// if model has RowId or IPK or PrimaryKey values set (3-rd is slowest) just
+</span><span class="ln"> 86</span><span class="c1"></span><span class="n">SimpleExampleModel</span> <span class="n">newMarina</span> <span class="o">=</span> <span class="n">marinaFromTableIPK</span><span class="o">.</span><span class="na">clone</span><span class="o">(</span><span class="n">SimpleExampleModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln"> 87</span><span class="n">newMarina</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">1337</span><span class="o">;</span>
+<span class="ln"> 88</span><span class="k">if</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">newMarina</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 89</span>    <span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableIPK2</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByIPK</span><span class="o">(</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">);</span>
+<span class="ln"> 90</span><span class="o">}</span>
+<span class="ln"> 91</span>
+<span class="ln"> 92</span><span class="c1">// another option is updating with generating query
+</span><span class="ln"> 93</span><span class="c1"></span><span class="n">SimpleExampleModel</span> <span class="n">updateMarina</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln"> 94</span><span class="n">updateMarina</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">121212</span><span class="o">;</span>
+<span class="ln"> 95</span><span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
+<span class="ln"> 96</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln"> 97</span>    <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln"> 98</span>    <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln"> 99</span><span class="k">if</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">updateMarina</span><span class="o">,</span> <span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]{</span><span class="s">&#34;randomInteger&#34;</span><span class="o">},</span> <span class="n">CVUtils</span><span class="o">.</span><span class="na">INCLUDE_ONLY_SELECTED_FIELDS</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">100</span>    <span class="c1">// find with IPK
+</span><span class="ln">101</span><span class="c1"></span>    <span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableIPK2</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByIPK</span><span class="o">(</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">);</span>
+<span class="ln">102</span><span class="o">}</span>
+<span class="ln">103</span>
+<span class="ln">104</span><span class="c1">// bulk operations in TX mode
+</span><span class="ln">105</span><span class="c1"></span><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">randModels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">106</span><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<span class="ln">107</span>    <span class="n">randModels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">RandomSimpleExampleModelUtil</span><span class="o">.</span><span class="na">randomSEModel</span><span class="o">());</span>
+<span class="ln">108</span><span class="n">mapper</span><span class="o">.</span><span class="na">saveInTransaction</span><span class="o">(</span><span class="n">randModels</span><span class="o">);</span>
+<span class="ln">109</span>
+<span class="ln">110</span><span class="c1">// closing mapper
+</span><span class="ln">111</span><span class="c1"></span><span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span></code></pre></div>
+</details></p>
+
+<h3 id="lesson-s-activity-fragment">Lesson&rsquo;s activity fragment</h3>
+
+<p><details>
+  <summary>Click to view <code>SimpleDatabase.class</code></summary>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">  1</span><span class="kn">package</span> <span class="nn">net.akaish.kittyormdemo.lessons.one</span><span class="o">;</span>
+<span class="ln">  2</span>
+<span class="ln">  3</span><span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
+<span class="ln">  4</span><span class="kn">import</span> <span class="nn">android.view.LayoutInflater</span><span class="o">;</span>
+<span class="ln">  5</span><span class="kn">import</span> <span class="nn">android.view.MotionEvent</span><span class="o">;</span>
+<span class="ln">  6</span><span class="kn">import</span> <span class="nn">android.view.View</span><span class="o">;</span>
+<span class="ln">  7</span><span class="kn">import</span> <span class="nn">android.view.ViewGroup</span><span class="o">;</span>
+<span class="ln">  8</span><span class="kn">import</span> <span class="nn">android.widget.Button</span><span class="o">;</span>
+<span class="ln">  9</span><span class="kn">import</span> <span class="nn">android.widget.ListView</span><span class="o">;</span>
+<span class="ln"> 10</span><span class="kn">import</span> <span class="nn">android.widget.TextView</span><span class="o">;</span>
+<span class="ln"> 11</span>
+<span class="ln"> 12</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.CVUtils</span><span class="o">;</span>
+<span class="ln"> 13</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.KittyMapper</span><span class="o">;</span>
+<span class="ln"> 14</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.pkey.KittyPrimaryKey</span><span class="o">;</span>
+<span class="ln"> 15</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.pkey.KittyPrimaryKeyBuilder</span><span class="o">;</span>
+<span class="ln"> 16</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.query.condtitions.SQLiteCondition</span><span class="o">;</span>
+<span class="ln"> 17</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.query.condtitions.SQLiteConditionBuilder</span><span class="o">;</span>
+<span class="ln"> 18</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.query.condtitions.SQLiteOperator</span><span class="o">;</span>
+<span class="ln"> 19</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.util.KittyLog</span><span class="o">;</span>
+<span class="ln"> 20</span><span class="kn">import</span> <span class="nn">net.akaish.kittyormdemo.LessonDetailActivity</span><span class="o">;</span>
+<span class="ln"> 21</span><span class="kn">import</span> <span class="nn">net.akaish.kittyormdemo.R</span><span class="o">;</span>
+<span class="ln"> 22</span><span class="kn">import</span> <span class="nn">net.akaish.kittyormdemo.lessons.BasicArrayAdapter</span><span class="o">;</span>
+<span class="ln"> 23</span><span class="kn">import</span> <span class="nn">net.akaish.kittyormdemo.lessons.LessonBaseFragment</span><span class="o">;</span>
+<span class="ln"> 24</span><span class="kn">import</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb.SimpleDatabase</span><span class="o">;</span>
+<span class="ln"> 25</span><span class="kn">import</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb.SimpleExampleModel</span><span class="o">;</span>
+<span class="ln"> 26</span><span class="kn">import</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb.util.RandomSimpleExampleModelUtil</span><span class="o">;</span>
+<span class="ln"> 27</span>
+<span class="ln"> 28</span><span class="kn">import</span> <span class="nn">java.util.Iterator</span><span class="o">;</span>
+<span class="ln"> 29</span><span class="kn">import</span> <span class="nn">java.util.LinkedList</span><span class="o">;</span>
+<span class="ln"> 30</span><span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="ln"> 31</span>
+<span class="ln"> 32</span><span class="kn">import static</span> <span class="nn">java.text.MessageFormat.format</span><span class="o">;</span>
+<span class="ln"> 33</span>
+<span class="ln"> 34</span><span class="cm">/**
+</span><span class="ln"> 35</span><span class="cm"> * Created by akaish on 21.08.18.
+</span><span class="ln"> 36</span><span class="cm"> */</span>
+<span class="ln"> 37</span>
+<span class="ln"> 38</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Lesson1Tab2GettingStarted</span> <span class="kd">extends</span> <span class="n">LessonBaseFragment</span> <span class="o">{</span>
+<span class="ln"> 39</span>
+<span class="ln"> 40</span>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">tutorialPageName</span> <span class="o">=</span> <span class="s">&#34;l1t2&#34;</span><span class="o">;</span>
+<span class="ln"> 41</span>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">tutorialSchemaLocation</span> <span class="o">=</span> <span class="s">&#34;l1_schema&#34;</span><span class="o">;</span>
+<span class="ln"> 42</span>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">tutorialSourceCodeLocation</span> <span class="o">=</span> <span class="s">&#34;l1_code&#34;</span><span class="o">;</span>
+<span class="ln"> 43</span>
+<span class="ln"> 44</span>    <span class="kd">private</span> <span class="n">ListView</span> <span class="n">actionsLW</span><span class="o">;</span>
+<span class="ln"> 45</span>    <span class="kd">private</span> <span class="n">Button</span> <span class="n">goButton</span><span class="o">;</span>
+<span class="ln"> 46</span>
+<span class="ln"> 47</span>    <span class="kd">private</span> <span class="n">ListView</span> <span class="n">expandedLW</span><span class="o">;</span>
+<span class="ln"> 48</span>    <span class="kd">private</span> <span class="n">TextView</span> <span class="n">expandedText</span><span class="o">;</span>
+<span class="ln"> 49</span>    <span class="kd">private</span> <span class="n">String</span> <span class="n">expandedTextPattern</span><span class="o">;</span>
+<span class="ln"> 50</span>
+<span class="ln"> 51</span>    <span class="kd">public</span> <span class="nf">Lesson1Tab2GettingStarted</span><span class="o">()</span> <span class="o">{}</span>
+<span class="ln"> 52</span>
+<span class="ln"> 53</span>    <span class="nd">@Override</span>
+<span class="ln"> 54</span>    <span class="kd">public</span> <span class="n">View</span> <span class="nf">onCreateView</span><span class="o">(</span><span class="n">LayoutInflater</span> <span class="n">inflater</span><span class="o">,</span> <span class="n">ViewGroup</span> <span class="n">container</span><span class="o">,</span> <span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 55</span>        <span class="n">View</span> <span class="n">rootView</span> <span class="o">=</span> <span class="n">inflater</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">lesson1_tab2_getting_started</span><span class="o">,</span> <span class="n">container</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+<span class="ln"> 56</span>        <span class="n">actionsLW</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l1_t2_actions</span><span class="o">);</span>
+<span class="ln"> 57</span>        <span class="n">goButton</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l1_t2_go_button</span><span class="o">);</span>
+<span class="ln"> 58</span>        <span class="n">goButton</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 59</span>            <span class="nd">@Override</span>
+<span class="ln"> 60</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 61</span>                <span class="n">go</span><span class="o">();</span>
+<span class="ln"> 62</span>            <span class="o">}</span>
+<span class="ln"> 63</span>        <span class="o">});</span>
+<span class="ln"> 64</span>        <span class="n">expandedLW</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">_l1_t2_expanded_panel_list</span><span class="o">);</span>
+<span class="ln"> 65</span>        <span class="n">expandedText</span> <span class="o">=</span> <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">_l1_t2_expanded_panel_text</span><span class="o">);</span>
+<span class="ln"> 66</span>        <span class="n">expandedTextPattern</span> <span class="o">=</span> <span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_expanded_text_pattern</span><span class="o">);</span>
+<span class="ln"> 67</span>        <span class="n">rootView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">l1_t2_clear_button</span><span class="o">).</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 68</span>            <span class="nd">@Override</span>
+<span class="ln"> 69</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 70</span>                <span class="n">clear</span><span class="o">();</span>
+<span class="ln"> 71</span>            <span class="o">}</span>
+<span class="ln"> 72</span>        <span class="o">});</span>
+<span class="ln"> 73</span>        <span class="k">return</span> <span class="n">rootView</span><span class="o">;</span>
+<span class="ln"> 74</span>    <span class="o">}</span>
+<span class="ln"> 75</span>
+<span class="ln"> 76</span>    <span class="nd">@Override</span>
+<span class="ln"> 77</span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onResume</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 78</span>        <span class="kd">super</span><span class="o">.</span><span class="na">onResume</span><span class="o">();</span>
+<span class="ln"> 79</span>        <span class="n">updateExpandPanelList</span><span class="o">();</span>
+<span class="ln"> 80</span>    <span class="o">}</span>
+<span class="ln"> 81</span>
+<span class="ln"> 82</span>    <span class="kt">void</span> <span class="nf">clear</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 83</span>        <span class="n">SimpleDatabase</span> <span class="n">simpleDatabase</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDatabase</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln"> 84</span>        <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">simpleDatabase</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">SimpleExampleModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln"> 85</span>        <span class="k">if</span><span class="o">(</span><span class="n">actionsLW</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 86</span>            <span class="n">actionsLW</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">BasicArrayAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;()));</span>
+<span class="ln"> 87</span>            <span class="n">actionsLW</span><span class="o">.</span><span class="na">setOnTouchListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnTouchListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln"> 88</span>
+<span class="ln"> 89</span>                <span class="c1">// Setting on Touch Listener for handling the touch inside ScrollView
+</span><span class="ln"> 90</span><span class="c1"></span>                <span class="nd">@Override</span>
+<span class="ln"> 91</span>                <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTouch</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">,</span> <span class="n">MotionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln"> 92</span>                    <span class="c1">// Disallow the touch request for parent scroll on touch of child view
+</span><span class="ln"> 93</span><span class="c1"></span>                    <span class="n">v</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">requestDisallowInterceptTouchEvent</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln"> 94</span>                    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="ln"> 95</span>                <span class="o">}</span>
+<span class="ln"> 96</span>            <span class="o">});</span>
+<span class="ln"> 97</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_count</span><span class="o">),</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()));</span>
+<span class="ln"> 98</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_clear</span><span class="o">),</span> <span class="n">mapper</span><span class="o">.</span><span class="na">deleteAll</span><span class="o">()));</span>
+<span class="ln"> 99</span>            <span class="n">updateExpandPanelList</span><span class="o">();</span>
+<span class="ln">100</span>        <span class="o">}</span>
+<span class="ln">101</span>        <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">102</span>    <span class="o">}</span>
+<span class="ln">103</span>
+<span class="ln">104</span>    <span class="kt">void</span> <span class="nf">go</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">105</span>        <span class="k">if</span><span class="o">(</span><span class="n">actionsLW</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">106</span>            <span class="n">actionsLW</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">BasicArrayAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;()));</span>
+<span class="ln">107</span>            <span class="n">actionsLW</span><span class="o">.</span><span class="na">setOnTouchListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnTouchListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">108</span>
+<span class="ln">109</span>                <span class="c1">// Setting on Touch Listener for handling the touch inside ScrollView
+</span><span class="ln">110</span><span class="c1"></span>                <span class="nd">@Override</span>
+<span class="ln">111</span>                <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTouch</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">,</span> <span class="n">MotionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">112</span>                    <span class="c1">// Disallow the touch request for parent scroll on touch of child view
+</span><span class="ln">113</span><span class="c1"></span>                    <span class="n">v</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">requestDisallowInterceptTouchEvent</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln">114</span>                    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="ln">115</span>                <span class="o">}</span>
+<span class="ln">116</span>            <span class="o">});</span>
+<span class="ln">117</span>
+<span class="ln">118</span>            <span class="c1">// Creating new instance of SimpleDatabase
+</span><span class="ln">119</span><span class="c1"></span>            <span class="n">SimpleDatabase</span> <span class="n">simpleDatabase</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDatabase</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln">120</span>
+<span class="ln">121</span>            <span class="c1">// Printing generated by KittyORM schema create and drop scripts
+</span><span class="ln">122</span><span class="c1"></span>            <span class="n">simpleDatabase</span><span class="o">.</span><span class="na">printPregeneratedCreateSchemaToLog</span><span class="o">(</span><span class="s">&#34;KITTY_ORM_DEMO_L1T2&#34;</span><span class="o">);</span>
+<span class="ln">123</span>            <span class="n">simpleDatabase</span><span class="o">.</span><span class="na">printPregeneratedDropSchemaToLog</span><span class="o">(</span><span class="s">&#34;KITTY_ORM_DEMO_L1T2&#34;</span><span class="o">);</span>
+<span class="ln">124</span>
+<span class="ln">125</span>            <span class="c1">// Printing registry to log (e.g. collection of KittyModels-&gt;KittyMappers that would be used)
+</span><span class="ln">126</span><span class="c1"></span>            <span class="n">simpleDatabase</span><span class="o">.</span><span class="na">printRegistryToLog</span><span class="o">(</span><span class="n">KittyLog</span><span class="o">.</span><span class="na">LOG_LEVEL</span><span class="o">.</span><span class="na">E</span><span class="o">);</span>
+<span class="ln">127</span>            <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">simpleDatabase</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">SimpleExampleModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">128</span>
+<span class="ln">129</span>            <span class="c1">// Counting records in db table and deleting them if table not empty
+</span><span class="ln">130</span><span class="c1"></span>            <span class="k">if</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span>
+<span class="ln">131</span>                <span class="n">mapper</span><span class="o">.</span><span class="na">deleteAll</span><span class="o">();</span>
+<span class="ln">132</span>
+<span class="ln">133</span>            <span class="c1">// Insert new model example
+</span><span class="ln">134</span><span class="c1"></span>            <span class="c1">// Creating and setting three new models
+</span><span class="ln">135</span><span class="c1"></span>            <span class="n">SimpleExampleModel</span> <span class="n">alex</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln">136</span>
+<span class="ln">137</span>            <span class="n">alex</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">545141</span><span class="o">;</span>
+<span class="ln">138</span>            <span class="n">alex</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="s">&#34;Alex&#34;</span><span class="o">;</span>
+<span class="ln">139</span>
+<span class="ln">140</span>            <span class="n">SimpleExampleModel</span> <span class="n">marina</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln">141</span>
+<span class="ln">142</span>            <span class="n">marina</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">228</span><span class="o">;</span>
+<span class="ln">143</span>            <span class="n">marina</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="s">&#34;Marina&#34;</span><span class="o">;</span>
+<span class="ln">144</span>
+<span class="ln">145</span>            <span class="n">SimpleExampleModel</span> <span class="n">marina2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln">146</span>
+<span class="ln">147</span>            <span class="n">marina2</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">445555</span><span class="o">;</span>
+<span class="ln">148</span>            <span class="n">marina2</span><span class="o">.</span><span class="na">firstName</span> <span class="o">=</span> <span class="s">&#34;Marina&#34;</span><span class="o">;</span>
+<span class="ln">149</span>
+<span class="ln">150</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_inserting</span><span class="o">),</span> <span class="n">alex</span><span class="o">));</span>
+<span class="ln">151</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_inserting</span><span class="o">),</span> <span class="n">marina</span><span class="o">));</span>
+<span class="ln">152</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_inserting</span><span class="o">),</span> <span class="n">marina2</span><span class="o">));</span>
+<span class="ln">153</span>
+<span class="ln">154</span>            <span class="c1">// Saving those models
+</span><span class="ln">155</span><span class="c1"></span>            <span class="c1">// Saving model with mapper.save(M model)
+</span><span class="ln">156</span><span class="c1"></span>            <span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">alex</span><span class="o">);</span>
+<span class="ln">157</span>            <span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">marina2</span><span class="o">);</span>
+<span class="ln">158</span>
+<span class="ln">159</span>            <span class="c1">// Saving model with mapper.insert(M model)
+</span><span class="ln">160</span><span class="c1"></span>            <span class="c1">// Better to use insert(M model) for new DB records cause it is little bit faster
+</span><span class="ln">161</span><span class="c1"></span>            <span class="kt">long</span> <span class="n">marinaRowid</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">marina</span><span class="o">);</span>
+<span class="ln">162</span>
+<span class="ln">163</span>
+<span class="ln">164</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_inserted</span><span class="o">),</span> <span class="n">alex</span><span class="o">));</span>
+<span class="ln">165</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_inserted</span><span class="o">),</span> <span class="n">marina</span><span class="o">));</span>
+<span class="ln">166</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_inserted</span><span class="o">),</span> <span class="n">marina2</span><span class="o">));</span>
+<span class="ln">167</span>
+<span class="ln">168</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_count</span><span class="o">),</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()));</span>
+<span class="ln">169</span>
+<span class="ln">170</span>
+<span class="ln">171</span>            <span class="c1">// Finding existing records in DB and mapping them to entities
+</span><span class="ln">172</span><span class="c1"></span>
+<span class="ln">173</span>            <span class="kt">int</span> <span class="n">findOperationId</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+<span class="ln">174</span>            <span class="c1">// find with condition
+</span><span class="ln">175</span><span class="c1"></span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieving</span><span class="o">),</span> <span class="s">&#34;mapper.findWhere&#34;</span><span class="o">,</span> <span class="s">&#34;WHERE first_name = Marina&#34;</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">176</span>            <span class="n">SQLiteConditionBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
+<span class="ln">177</span>            <span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln">178</span>                    <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln">179</span>                    <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln">180</span>            <span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">marinas</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+<span class="ln">181</span>            <span class="k">if</span><span class="o">(</span><span class="n">marinas</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">182</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved</span><span class="o">),</span>  <span class="n">marinas</span><span class="o">.</span><span class="na">size</span><span class="o">(),</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">183</span>            <span class="o">}</span>
+<span class="ln">184</span>            <span class="kt">int</span> <span class="n">marinasCounter</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
+<span class="ln">185</span>            <span class="k">for</span><span class="o">(</span><span class="n">SimpleExampleModel</span> <span class="n">m</span> <span class="o">:</span> <span class="n">marinas</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">186</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved_model_show</span><span class="o">),</span>  <span class="n">findOperationId</span><span class="o">,</span> <span class="n">marinasCounter</span><span class="o">,</span> <span class="n">m</span><span class="o">));</span>
+<span class="ln">187</span>                <span class="n">marinasCounter</span><span class="o">++;</span>
+<span class="ln">188</span>            <span class="o">}</span>
+<span class="ln">189</span>
+<span class="ln">190</span>            <span class="n">findOperationId</span><span class="o">++;</span>
+<span class="ln">191</span>            <span class="c1">// find with RowID
+</span><span class="ln">192</span><span class="c1"></span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieving</span><span class="o">),</span> <span class="s">&#34;mapper.findByRowID&#34;</span><span class="o">,</span> <span class="s">&#34;RowID = &#34;</span><span class="o">+</span><span class="n">marinaRowid</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">193</span>            <span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableRowid</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByRowID</span><span class="o">(</span><span class="n">marinaRowid</span><span class="o">);</span>
+<span class="ln">194</span>            <span class="k">if</span><span class="o">(</span><span class="n">marinaFromTableRowid</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">195</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved</span><span class="o">),</span>  <span class="n">1</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">196</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved_model_show</span><span class="o">),</span>  <span class="n">findOperationId</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">marinaFromTableRowid</span><span class="o">));</span>
+<span class="ln">197</span>            <span class="o">}</span>
+<span class="ln">198</span>
+<span class="ln">199</span>            <span class="n">findOperationId</span><span class="o">++;</span>
+<span class="ln">200</span>            <span class="c1">// find with IPK
+</span><span class="ln">201</span><span class="c1"></span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieving</span><span class="o">),</span> <span class="s">&#34;mapper.findByIPK&#34;</span><span class="o">,</span> <span class="s">&#34;IPK = &#34;</span><span class="o">+</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">202</span>            <span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableIPK</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByIPK</span><span class="o">(</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">);</span>
+<span class="ln">203</span>            <span class="k">if</span><span class="o">(</span><span class="n">marinaFromTableIPK</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">204</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved</span><span class="o">),</span>  <span class="n">1</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">205</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved_model_show</span><span class="o">),</span>  <span class="n">findOperationId</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">marinaFromTableIPK</span><span class="o">));</span>
+<span class="ln">206</span>            <span class="o">}</span>
+<span class="ln">207</span>
+<span class="ln">208</span>            <span class="n">findOperationId</span><span class="o">++;</span>
+<span class="ln">209</span>            <span class="c1">// find with KittyPrimaryKey
+</span><span class="ln">210</span><span class="c1"></span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieving</span><span class="o">),</span> <span class="s">&#34;mapper.findByPK&#34;</span><span class="o">,</span> <span class="s">&#34;KittyPrimaryKey [ id = &#34;</span><span class="o">+</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">)));</span>
+<span class="ln">211</span>            <span class="n">KittyPrimaryKey</span> <span class="n">pk</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KittyPrimaryKeyBuilder</span><span class="o">()</span>
+<span class="ln">212</span>                                            <span class="o">.</span><span class="na">addKeyColumnValue</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">,</span> <span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">toString</span><span class="o">())</span>
+<span class="ln">213</span>                                            <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="ln">214</span>            <span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableKPK</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByPK</span><span class="o">(</span><span class="n">pk</span><span class="o">);</span>
+<span class="ln">215</span>            <span class="k">if</span><span class="o">(</span><span class="n">marinaFromTableKPK</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">216</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved</span><span class="o">),</span>  <span class="n">1</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">217</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved_model_show</span><span class="o">),</span>  <span class="n">findOperationId</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">marinaFromTableKPK</span><span class="o">));</span>
+<span class="ln">218</span>            <span class="o">}</span>
+<span class="ln">219</span>
+<span class="ln">220</span>            <span class="c1">// Generating and inserting list of 10 random models
+</span><span class="ln">221</span><span class="c1"></span>            <span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">randomModels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">222</span>            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<span class="ln">223</span>                <span class="n">randomModels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">RandomSimpleExampleModelUtil</span><span class="o">.</span><span class="na">randomSEModel</span><span class="o">());</span>
+<span class="ln">224</span>            <span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">randomModels</span><span class="o">);</span>
+<span class="ln">225</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_random_save</span><span class="o">));</span>
+<span class="ln">226</span>
+<span class="ln">227</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_count</span><span class="o">),</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()));</span>
+<span class="ln">228</span>
+<span class="ln">229</span>            <span class="c1">// Deleting some models
+</span><span class="ln">230</span><span class="c1"></span>            <span class="c1">// Deleting by entity, make sure that entity has RowID\IPK\PK set
+</span><span class="ln">231</span><span class="c1"></span>            <span class="n">SQLiteCondition</span> <span class="n">alexCondition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
+<span class="ln">232</span>                                                        <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln">233</span>                                                        <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln">234</span>                                                        <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Alex&#34;</span><span class="o">)</span>
+<span class="ln">235</span>                                                        <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="ln">236</span>            <span class="n">SimpleExampleModel</span> <span class="n">alexToDelete</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findFirst</span><span class="o">(</span><span class="n">alexCondition</span><span class="o">);</span>
+<span class="ln">237</span>            <span class="k">if</span><span class="o">(</span><span class="n">alexToDelete</span><span class="o">!=</span><span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">238</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_one_alex_to_delete_found</span><span class="o">));</span>
+<span class="ln">239</span>                <span class="k">if</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">alexToDelete</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">240</span>                    <span class="n">addActionListItem</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_one_alex_deleted</span><span class="o">));</span>
+<span class="ln">241</span>                    <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_count</span><span class="o">),</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()));</span>
+<span class="ln">242</span>                <span class="o">}</span>
+<span class="ln">243</span>            <span class="o">}</span>
+<span class="ln">244</span>
+<span class="ln">245</span>            <span class="c1">// Deleting with condition
+</span><span class="ln">246</span><span class="c1"></span>            <span class="n">SQLiteCondition</span> <span class="n">marina445555Condition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
+<span class="ln">247</span>                                                            <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;random_integer&#34;</span><span class="o">)</span>
+<span class="ln">248</span>                                                            <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln">249</span>                                                            <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">marina2</span><span class="o">.</span><span class="na">randomInteger</span><span class="o">)</span>
+<span class="ln">250</span>                                                            <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="ln">251</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_2_one_marina_deleting</span><span class="o">));</span>
+<span class="ln">252</span>            <span class="k">if</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">deleteByWhere</span><span class="o">(</span><span class="n">marina445555Condition</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">253</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_2_one_marina_deleted</span><span class="o">));</span>
+<span class="ln">254</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_count</span><span class="o">),</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()));</span>
+<span class="ln">255</span>            <span class="o">}</span>
+<span class="ln">256</span>
+<span class="ln">257</span>            <span class="c1">// Updating models
+</span><span class="ln">258</span><span class="c1"></span>            <span class="c1">// updating current model
+</span><span class="ln">259</span><span class="c1"></span>            <span class="c1">// if model has RowId or IPK or PrimaryKey values set (3-rd is slowest) just
+</span><span class="ln">260</span><span class="c1"></span>            <span class="n">SimpleExampleModel</span> <span class="n">oldMarina</span> <span class="o">=</span> <span class="n">marinaFromTableIPK</span><span class="o">.</span><span class="na">clone</span><span class="o">(</span><span class="n">SimpleExampleModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">261</span>            <span class="n">SimpleExampleModel</span> <span class="n">newMarina</span> <span class="o">=</span> <span class="n">marinaFromTableIPK</span><span class="o">.</span><span class="na">clone</span><span class="o">(</span><span class="n">SimpleExampleModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">262</span>            <span class="n">newMarina</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">1337</span><span class="o">;</span>
+<span class="ln">263</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_updating_entity</span><span class="o">),</span> <span class="n">oldMarina</span><span class="o">,</span> <span class="n">newMarina</span><span class="o">));</span>
+<span class="ln">264</span>            <span class="k">if</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">newMarina</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">265</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_updated</span><span class="o">),</span> <span class="n">oldMarina</span><span class="o">,</span> <span class="n">newMarina</span><span class="o">));</span>
+<span class="ln">266</span>                <span class="n">findOperationId</span><span class="o">++;</span>
+<span class="ln">267</span>                <span class="c1">// find with IPK
+</span><span class="ln">268</span><span class="c1"></span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieving</span><span class="o">),</span> <span class="s">&#34;mapper.findByIPK&#34;</span><span class="o">,</span> <span class="s">&#34;IPK = &#34;</span><span class="o">+</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">269</span>                <span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableIPK2</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByIPK</span><span class="o">(</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">);</span>
+<span class="ln">270</span>                <span class="k">if</span><span class="o">(</span><span class="n">marinaFromTableIPK</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">271</span>                    <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved</span><span class="o">),</span>  <span class="n">1</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">272</span>                    <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved_model_show</span><span class="o">),</span>  <span class="n">findOperationId</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">marinaFromTableIPK2</span><span class="o">));</span>
+<span class="ln">273</span>                    <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_count</span><span class="o">),</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()));</span>
+<span class="ln">274</span>                <span class="o">}</span>
+<span class="ln">275</span>            <span class="o">}</span>
+<span class="ln">276</span>
+<span class="ln">277</span>            <span class="c1">// another option is updating with generating query
+</span><span class="ln">278</span><span class="c1"></span>            <span class="n">SimpleExampleModel</span> <span class="n">updateMarina</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
+<span class="ln">279</span>            <span class="n">updateMarina</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">121212</span><span class="o">;</span>
+<span class="ln">280</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_updating_query_like</span><span class="o">),</span> <span class="n">updateMarina</span><span class="o">));</span>
+<span class="ln">281</span>            <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
+<span class="ln">282</span>            <span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln">283</span>                    <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln">284</span>                    <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln">285</span>            <span class="k">if</span><span class="o">(</span><span class="n">mapper</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">updateMarina</span><span class="o">,</span> <span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]{</span><span class="s">&#34;randomInteger&#34;</span><span class="o">},</span> <span class="n">CVUtils</span><span class="o">.</span><span class="na">INCLUDE_ONLY_SELECTED_FIELDS</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">286</span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_updating_query_like_updated</span><span class="o">),</span> <span class="n">updateMarina</span><span class="o">));</span>
+<span class="ln">287</span>                <span class="n">findOperationId</span><span class="o">++;</span>
+<span class="ln">288</span>                <span class="c1">// find with IPK
+</span><span class="ln">289</span><span class="c1"></span>                <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getContext</span><span class="o">().</span><span class="na">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieving</span><span class="o">),</span> <span class="s">&#34;mapper.findByIPK&#34;</span><span class="o">,</span> <span class="s">&#34;IPK = &#34;</span><span class="o">+</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">290</span>                <span class="n">SimpleExampleModel</span> <span class="n">marinaFromTableIPK2</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByIPK</span><span class="o">(</span><span class="n">marinaFromTableRowid</span><span class="o">.</span><span class="na">id</span><span class="o">);</span>
+<span class="ln">291</span>                <span class="k">if</span><span class="o">(</span><span class="n">marinaFromTableIPK</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">292</span>                    <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved</span><span class="o">),</span>  <span class="n">1</span><span class="o">,</span> <span class="n">findOperationId</span><span class="o">));</span>
+<span class="ln">293</span>                    <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_retrieved_model_show</span><span class="o">),</span>  <span class="n">findOperationId</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">marinaFromTableIPK2</span><span class="o">));</span>
+<span class="ln">294</span>                    <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_count</span><span class="o">),</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()));</span>
+<span class="ln">295</span>                <span class="o">}</span>
+<span class="ln">296</span>            <span class="o">}</span>
+<span class="ln">297</span>
+<span class="ln">298</span>            <span class="c1">// bulk operations in TX mode
+</span><span class="ln">299</span><span class="c1"></span>            <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">randModels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">300</span>            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<span class="ln">301</span>                <span class="n">randModels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">RandomSimpleExampleModelUtil</span><span class="o">.</span><span class="na">randomSEModel</span><span class="o">());</span>
+<span class="ln">302</span>            <span class="n">mapper</span><span class="o">.</span><span class="na">saveInTransaction</span><span class="o">(</span><span class="n">randModels</span><span class="o">);</span>
+<span class="ln">303</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_random_save</span><span class="o">));</span>
+<span class="ln">304</span>
+<span class="ln">305</span>            <span class="n">addActionListItem</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_count</span><span class="o">),</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()));</span>
+<span class="ln">306</span>
+<span class="ln">307</span>            <span class="c1">// closing mapper
+</span><span class="ln">308</span><span class="c1"></span>            <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">309</span>
+<span class="ln">310</span>            <span class="n">updateExpandPanelList</span><span class="o">();</span>
+<span class="ln">311</span>        <span class="o">}</span>
+<span class="ln">312</span>    <span class="o">}</span>
+<span class="ln">313</span>
+<span class="ln">314</span>    <span class="kt">void</span> <span class="nf">updateExpandPanelList</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">315</span>        <span class="k">if</span><span class="o">(</span><span class="n">expandedText</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">expandedLW</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">expandedTextPattern</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">316</span>            <span class="n">SimpleDatabase</span> <span class="n">sdb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDatabase</span><span class="o">(</span><span class="n">getContext</span><span class="o">());</span>
+<span class="ln">317</span>            <span class="n">KittyMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="n">sdb</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">SimpleExampleModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<span class="ln">318</span>            <span class="n">expandedText</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">format</span><span class="o">(</span><span class="n">expandedTextPattern</span><span class="o">,</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countAll</span><span class="o">()));</span>
+<span class="ln">319</span>            <span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">models</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span>
+<span class="ln">320</span>            <span class="k">if</span><span class="o">(</span><span class="n">models</span><span class="o">!=</span><span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">321</span>                <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">modelsToString</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">322</span>                <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">modelIterator</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+<span class="ln">323</span>                <span class="k">while</span> <span class="o">(</span><span class="n">modelIterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+<span class="ln">324</span>                    <span class="n">modelsToString</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">modelIterator</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+<span class="ln">325</span>                <span class="o">}</span>
+<span class="ln">326</span>                <span class="n">expandedLW</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">BasicArrayAdapter</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="n">modelsToString</span><span class="o">));</span>
+<span class="ln">327</span>                <span class="n">expandedLW</span><span class="o">.</span><span class="na">setOnTouchListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnTouchListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">328</span>
+<span class="ln">329</span>                    <span class="c1">// Setting on Touch Listener for handling the touch inside ScrollView
+</span><span class="ln">330</span><span class="c1"></span>                    <span class="nd">@Override</span>
+<span class="ln">331</span>                    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTouch</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">,</span> <span class="n">MotionEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">332</span>                        <span class="c1">// Disallow the touch request for parent scroll on touch of child view
+</span><span class="ln">333</span><span class="c1"></span>                        <span class="n">v</span><span class="o">.</span><span class="na">getParent</span><span class="o">().</span><span class="na">requestDisallowInterceptTouchEvent</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+<span class="ln">334</span>                        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="ln">335</span>                    <span class="o">}</span>
+<span class="ln">336</span>                <span class="o">});</span>
+<span class="ln">337</span>            <span class="o">}</span>
+<span class="ln">338</span>            <span class="n">mapper</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+<span class="ln">339</span>        <span class="o">}</span>
+<span class="ln">340</span>    <span class="o">}</span>
+<span class="ln">341</span>
+<span class="ln">342</span>    <span class="kt">void</span> <span class="nf">addActionListItem</span><span class="o">(</span><span class="n">String</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">343</span>        <span class="k">if</span><span class="o">(</span><span class="n">actionsLW</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">344</span>            <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span><span class="n">actionsLW</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">addItemLast</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
+<span class="ln">345</span>            <span class="o">((</span><span class="n">BasicArrayAdapter</span><span class="o">)</span> <span class="n">actionsLW</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">()).</span><span class="na">notifyDataSetChanged</span><span class="o">();</span>
+<span class="ln">346</span>        <span class="o">}</span>
+<span class="ln">347</span>    <span class="o">}</span>
+<span class="ln">348</span>
+<span class="ln">349</span>    <span class="c1">// Fab menu section
+</span><span class="ln">350</span><span class="c1"></span>
+<span class="ln">351</span>    <span class="nd">@Override</span>
+<span class="ln">352</span>    <span class="kd">public</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="nf">helpFabMenuAction</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">353</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">354</span>
+<span class="ln">355</span>            <span class="cm">/**
+</span><span class="ln">356</span><span class="cm">             * Called when a view has been clicked.
+</span><span class="ln">357</span><span class="cm">             *
+</span><span class="ln">358</span><span class="cm">             * @param v The view that was clicked.
+</span><span class="ln">359</span><span class="cm">             */</span>
+<span class="ln">360</span>            <span class="nd">@Override</span>
+<span class="ln">361</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">362</span>                <span class="o">((</span><span class="n">LessonDetailActivity</span><span class="o">)</span> <span class="n">getParentFragment</span><span class="o">().</span><span class="na">getActivity</span><span class="o">()).</span><span class="na">showWebViewDialog</span><span class="o">(</span><span class="n">tutorialPageName</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+<span class="ln">363</span>            <span class="o">}</span>
+<span class="ln">364</span>        <span class="o">};</span>
+<span class="ln">365</span>    <span class="o">}</span>
+<span class="ln">366</span>
+<span class="ln">367</span>    <span class="nd">@Override</span>
+<span class="ln">368</span>    <span class="kd">public</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="nf">sourceFabMenuAction</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">369</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">370</span>
+<span class="ln">371</span>            <span class="cm">/**
+</span><span class="ln">372</span><span class="cm">             * Called when a view has been clicked.
+</span><span class="ln">373</span><span class="cm">             *
+</span><span class="ln">374</span><span class="cm">             * @param v The view that was clicked.
+</span><span class="ln">375</span><span class="cm">             */</span>
+<span class="ln">376</span>            <span class="nd">@Override</span>
+<span class="ln">377</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">378</span>                <span class="o">((</span><span class="n">LessonDetailActivity</span><span class="o">)</span> <span class="n">getParentFragment</span><span class="o">().</span><span class="na">getActivity</span><span class="o">()).</span><span class="na">showWebViewDialog</span><span class="o">(</span><span class="n">tutorialSourceCodeLocation</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+<span class="ln">379</span>            <span class="o">}</span>
+<span class="ln">380</span>        <span class="o">};</span>
+<span class="ln">381</span>    <span class="o">}</span>
+<span class="ln">382</span>
+<span class="ln">383</span>    <span class="nd">@Override</span>
+<span class="ln">384</span>    <span class="kd">public</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="nf">schemaFabMenuAction</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">385</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">386</span>
+<span class="ln">387</span>            <span class="cm">/**
+</span><span class="ln">388</span><span class="cm">             * Called when a view has been clicked.
+</span><span class="ln">389</span><span class="cm">             *
+</span><span class="ln">390</span><span class="cm">             * @param v The view that was clicked.
+</span><span class="ln">391</span><span class="cm">             */</span>
+<span class="ln">392</span>            <span class="nd">@Override</span>
+<span class="ln">393</span>            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">394</span>                <span class="o">((</span><span class="n">LessonDetailActivity</span><span class="o">)</span> <span class="n">getParentFragment</span><span class="o">().</span><span class="na">getActivity</span><span class="o">()).</span><span class="na">showWebViewDialog</span><span class="o">(</span><span class="n">tutorialSchemaLocation</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+<span class="ln">395</span>            <span class="o">}</span>
+<span class="ln">396</span>        <span class="o">};</span>
+<span class="ln">397</span>    <span class="o">}</span>
+<span class="ln">398</span>
+<span class="ln">399</span>    <span class="nd">@Override</span>
+<span class="ln">400</span>    <span class="kd">protected</span> <span class="kt">int</span> <span class="nf">snackbarMessageResource</span><span class="o">()</span> <span class="o">{</span>
+<span class="ln">401</span>        <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">_l1_t2_snackbar_message</span><span class="o">;</span>
+<span class="ln">402</span>    <span class="o">}</span>
+<span class="ln">403</span><span class="o">}</span></code></pre></div>
+</details></p>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

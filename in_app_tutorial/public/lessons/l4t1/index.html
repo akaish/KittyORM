@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson4 Tab1: Speed up your KittyORM &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           
+
+<h2 id="how-to-make-your-kittyorm-faster">How to make your KittyORM faster?</h2>
+
+<p>KittyORM build with Java7 for Android and main idea is to implement developer-friendly tool that would save your time and money on implementing business logic that needs SQLite database for storing data. KittyORM provides a lot of features that can save your time on developing and supporting your data model, but it uses reflection to avoid messing around with raw SQL code and some tools as generating data model from domain package. And it is not performance free. This tutorial page is kind of FAQ or cookbook of how to tune up your KittyORM implementation to achieve maximum performance. Main idea of this tutorial - use only those features you really need. And now goes list of tips.</p>
+
+<h3 id="tip-1-avoid-using-generating-data-model-from-packages">Tip №1: Avoid using generating data model from packages</h3>
+
+<p>KittyORM supports generating data model from classes that implements <code>KittyModel.class</code> and <code>KittyMapper.class</code>. It&rsquo;s really handy feature, but slow. While generating list of classes in application namespace <code>KittyDexUtils.class</code> has to scan all classes that exist, check naming rules, get their instances with <code>Class.forName(className, false, context.getClassLoader());</code> and check if classes are assignable from base model or mapper class, check if their package is domain package, check if those classes suits <code>KittyDexClassFilter.class</code> instance. It is very performance expensive operation, because typically there are hundreds or even thousands of classes that are available in application namespace.<br />
+Use this feature only for development or testing purposes and on production it is better to define your data model with usage of <code>KITTY_DATABASE_REGISTRY</code> and <code>KITTY_REGISTRY_PAIR</code> annotations or by initializing static KittyORM registry collection and returning it in <code>KittyDatabase</code> implementation via overloaded <code>KittyDatabase.getStaticRegistryRegistry()</code> method.</p>
+
+<h3 id="tip-2-avoid-multiply-initialization-of-kittydatabase">Tip №2: Avoid multiply initialization of <code>KittyDatabase</code></h3>
+
+<p>Each new instance of <code>KittyDatabase</code> would execute a lot of operations on generating data model, registry, create and drop schema SQLite code etc. So, better approach would be place one initialized on demand instance of your KittyORM database into <a href="https://developer.android.com/reference/android/app/Application">Application class</a> and work only with this one instance.</p>
+
+<h3 id="tip-3-optimize-your-data-model-and-statements">Tip №3: Optimize your data model and statements</h3>
+
+<p>That&rsquo;s simple. You have a lot of <code>SELECT</code> queries on table with condition on some field? Index it. Build more efficient conditions for your statements. For example, you can follow <a href="https://www.sqlite.org/optoverview.html">this article</a> for instructions related with optimizing your queries.<br />
+You want to insert a lot of entities? Use insert in transaction feature for <code>DELETE</code>, <code>UPDATE</code> and <code>INSERT</code> statements. For example, for insertions use <code>KittyMapper.insertInTransaction(List&lt;M&gt; models)</code>. This would cause execution your queries at one time instead of forcing SQLite run each of your statement separately, so in some cases using this tip would cause up to 20x faster execution of insertions.</p>
+
+<h3 id="tip-4-do-not-use-without-rowid-flag-for-your-tables">Tip №4: Do not use <code>WITHOUT ROWID</code> flag for your tables</h3>
+
+<p>KittyORM uses <code>rowid</code> field for indication if this model is new or existing. If model corresponds to table that was created with <code>WITHOUT ROWID</code> flag than KittyORM would have to run much more operations related with fetching synthetic or natural primary key value(s) in order to differ models.</p>
+
+<h3 id="tip-5-use-predefined-drop-create-and-migration-scripts-at-production">Tip №5: Use predefined drop, create and migration scripts at production</h3>
+
+<p>While developing your data model step by step KittyORM would provide you good tool for generating scripts for creating schema, dropping schema and upgrading schema from version to version with usage of <code>KittySimpleMigrationScriptGenerator Migrator</code>. However, you can slightly decrease initialization times of your <code>KittyDatabase</code> implementation at production by using static scripts initialized in your <code>KittyDatabase</code> implementation instance or by using those scripts stored at assets or file system. Just develop your data model, save generated by KittyORM schema scripts and use them instead of generating those scripts each time when you initialize new instance of your <code>KittyDatabase</code> implementation.</p>
+
+<h3 id="tip-6-turn-off-logging-at-production">Tip №6: Turn off logging at production</h3>
+
+<p>OK, you&rsquo;re ready for production. Do not forget to turn off logging by setting <code>isLoggingOn()</code>, <code>isProductionOn()</code> and <code>isKittyDexUtilLoggingEnabled()</code> flags of <code>KITTY_DATABASE</code> annotation to false, true and false respectively. You may leave <code>isLoggingOn()</code> flag on, however it is good idea to turn on <code>isProductionOn()</code> flag because all of your queries would be logged to log stream that slows execution of statements and is a potential security vulnerability.</p>
+
+<h3 id="tip-7-run-expensive-operations-not-in-ui-thread">Tip №7: Run expensive operations not in UI thread</h3>
+
+<p>And last tip: run your database related operations in another thread, especially if there is chance that they can be expensive. Good practice is to run all database related operations in <a href="https://developer.android.com/reference/android/os/AsyncTask">AsyncTask</a> or use any other option to avoid execution of database code in UI thread. Why? Because SQLite is not as fast as light and KittyORM is another layer of code that needs resources for execution too. So using <a href="https://developer.android.com/reference/android/os/AsyncTask">AsyncTask</a> would be good idea to avoid UI lags and even ANR for long operations.</p>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

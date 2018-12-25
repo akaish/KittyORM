@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Denis Bogomolov (akaish)
+  ~
+  ~ This work is licensed under a
+  ~ Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~ This file is a part of KittyORM project (KittyORM Demo), more information at
+  ~ https://akaish.github.io/KittyORMPages/license/
+  -->
+<resources>
+    <color name="colorPrimary">#F4AA6A</color>
+    <color name="colorPrimaryDark">@color/colorDarkGray</color>
+    <color name="colorPrimaryDarkTransparent">#77000000</color>
+    <color name="colorTransparent">#00000000</color>
+    <color name="colorAccent">@color/colorAccentBlueGreen</color>
+
+
+    <color name="colorDarkGray">#555555</color>
+    <color name="colorDarkDarkGray">#656565</color>
+    <color name="colorLightGray">#e6e6e6</color>
+    <color name="colorLightGrayTwo">#d7d7d7</color>
+    <color name="colorGrayLightest">#e8e8e8</color>
+
+    <color name="colorAccentRed">#c41a16</color>
+    <color name="colorAccentPurple">#a90d91</color>
+    <color name="colorAccentBlueGreen">#00A4AE</color>
+
+    <color name="colorOrangeV1">#c45816</color>
+    <color name="colorBrown">#522c08</color>
+    <color name="colorTigerOrange">#F4AA6A</color>
+</resources>

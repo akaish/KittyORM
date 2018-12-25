@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS mig_four;
+DROP TABLE IF EXISTS mig_three;
+DROP TABLE IF EXISTS mig_two;

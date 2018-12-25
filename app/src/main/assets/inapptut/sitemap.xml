@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	
+	<sitemap>
+	   	<loc>file:///android_asset/inapptut/en/sitemap.xml</loc>
+		
+	   	<lastmod>2018-11-15T06:50:21+03:00</lastmod>
+		
+	</sitemap>
+	
+	<sitemap>
+	   	<loc>file:///android_asset/inapptut/ru/sitemap.xml</loc>
+		
+	</sitemap>
+	
+</sitemapindex>

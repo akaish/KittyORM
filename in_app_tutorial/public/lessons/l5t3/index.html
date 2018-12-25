@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="//gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.47.1" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Lesson5 Tab 3: SimpleMigrationScriptGenerator Migrator &middot; KittyORM Demo</title>
+
+  
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="file:///android_asset/inapptut/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+
+  
+</head>
+
+  <body class=" ">
+    <div class="content container">
+    
+<section id="main">
+  <div>
+        <article id="content">
+           
+
+<h3 id="simplemigrationscriptgenerator-migrator-overview">SimpleMigrationScriptGenerator Migrator overview</h3>
+
+<p>SimpleMigrationScriptGenerator Migrator is a simple migration utility that tries to generate migration script based on differences between current and new schema and save as many data as possible. It is implemented by <code>KittySimpleMigrator.class</code> that uses <code>net.akaish.kitty.orm.util.KittySimpleMigrationScriptGenerator</code> for generating migration script. <code>KittySimpleMigrationScriptGenerator</code> is capable only to delete and create new indexes and table as well as adding or deleting columns in existing tables, so use it only when you&rsquo;re sure that there are no constraints defined that can be violated with script created by this utility class. <code>KittySimpleMigrationScriptGenerator</code> gets list of existing tables, table columns and indexes of current database and compares it to new schema tables, table columns and indexes list, then generates statements to drop redundant tables, indexes and table columns, statements to alter existing tables and statements to create new tables and indexes. Due to SQLite <code>ALTER</code> restrictions, a lot of operations, for example, operation of deleting redundant column in existing table would be not <code>ALTER</code> statement but list of statements: renaming old table, creating new version of table from new schema, inserting values from old table to new one.</p>
+
+<p>To use SimpleMigrationScriptGenerator Migrator you should set <code>onUpgradeBehavior</code> property value of <code>@KITTY_DATABASE_HELPER</code> to <code>KITTY_DATABASE_HELPER.UpgradeBehavior.USE_SIMPLE_MIGRATIONS</code>:
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_DATABASE</span><span class="o">(</span>
+<span class="ln"> 2</span>        <span class="n">isLoggingOn</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span>
+<span class="ln"> 3</span>        <span class="n">isProductionOn</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span>
+<span class="ln"> 4</span>        <span class="n">isKittyDexUtilLoggingEnabled</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span>
+<span class="ln"> 5</span>        <span class="n">logTag</span> <span class="o">=</span> <span class="n">MigrationDBv3</span><span class="o">.</span><span class="na">LTAG</span><span class="o">,</span>
+<span class="ln"> 6</span>        <span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#34;mig&#34;</span><span class="o">,</span>
+<span class="ln"> 7</span>        <span class="n">databaseVersion</span> <span class="o">=</span> <span class="n">3</span><span class="o">,</span>
+<span class="ln"> 8</span>        <span class="n">domainPackageNames</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;net.akaish.kittyormdemo.sqlite.migrations.migv3&#34;</span><span class="o">}</span>
+<span class="ln"> 9</span><span class="o">)</span>
+<span class="ln">10</span><span class="nd">@KITTY_DATABASE_REGISTRY</span><span class="o">(</span>
+<span class="ln">11</span>        <span class="n">domainModels</span> <span class="o">=</span> <span class="o">{</span>
+<span class="ln">12</span>                <span class="n">net</span><span class="o">.</span><span class="na">akaish</span><span class="o">.</span><span class="na">kittyormdemo</span><span class="o">.</span><span class="na">sqlite</span><span class="o">.</span><span class="na">migrations</span><span class="o">.</span><span class="na">migv3</span><span class="o">.</span><span class="na">MigOneModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+<span class="ln">13</span>                <span class="n">net</span><span class="o">.</span><span class="na">akaish</span><span class="o">.</span><span class="na">kittyormdemo</span><span class="o">.</span><span class="na">sqlite</span><span class="o">.</span><span class="na">migrations</span><span class="o">.</span><span class="na">migv3</span><span class="o">.</span><span class="na">MigTwoModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+<span class="ln">14</span>                <span class="n">net</span><span class="o">.</span><span class="na">akaish</span><span class="o">.</span><span class="na">kittyormdemo</span><span class="o">.</span><span class="na">sqlite</span><span class="o">.</span><span class="na">migrations</span><span class="o">.</span><span class="na">migv3</span><span class="o">.</span><span class="na">MigThreeModel</span><span class="o">.</span><span class="na">class</span>
+<span class="ln">15</span>        <span class="o">}</span>
+<span class="ln">16</span><span class="o">)</span>
+<span class="ln">17</span><span class="nd">@KITTY_DATABASE_HELPER</span><span class="o">(</span>
+<span class="ln">18</span>        <span class="n">onUpgradeBehavior</span> <span class="o">=</span> <span class="n">KITTY_DATABASE_HELPER</span><span class="o">.</span><span class="na">UpgradeBehavior</span><span class="o">.</span><span class="na">USE_SIMPLE_MIGRATIONS</span>
+<span class="ln">19</span><span class="o">)</span>
+<span class="ln">20</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MigrationDBv3</span> <span class="kd">extends</span> <span class="n">KittyDatabase</span> <span class="o">{</span>
+<span class="ln">21</span>    <span class="o">...</span>
+<span class="ln">22</span><span class="o">}</span></code></pre></div></p>
+
+<p><details>
+  <summary>Click here to view mig v.3 schema: </summary>
+<strong>Mig v.3</strong></p>
+
+<p><strong>MigOneModel (mig_one)</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Java type</th>
+<th>Name</th>
+<th>SQLite name</th>
+<th>Constraints</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Long</code></td>
+<td>id</td>
+<td>id</td>
+<td>PRIMARY KEY</td>
+</tr>
+
+<tr>
+<td><code>String</code></td>
+<td>creationDate</td>
+<td>creation_date</td>
+<td>NOT_NULL DEFAULT(CURRENT_DATE)</td>
+</tr>
+
+<tr>
+<td><code>Integer</code></td>
+<td>defaultInteger</td>
+<td>default_integer</td>
+<td>DEFAULT(228)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Index on <code>default_integer</code>.</p>
+
+<p><strong>MigTwoModel (mig_two)</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Java type</th>
+<th>Name</th>
+<th>SQLite name</th>
+<th>Constraints</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Long</code></td>
+<td>id</td>
+<td>id</td>
+<td>PRIMARY KEY</td>
+</tr>
+
+<tr>
+<td><code>Long</code></td>
+<td>migOneReference</td>
+<td>mig_one_reference</td>
+<td>FOREIGN KEY reference on mig_one.id</td>
+</tr>
+
+<tr>
+<td><code>Animals</code></td>
+<td>someAnimal</td>
+<td>some_animal</td>
+<td>-</td>
+</tr>
+
+<tr>
+<td><code>AnimalSounds</code></td>
+<td>someAnimalSound</td>
+<td>some_animal_sound</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>MigThreeModel (mig_three)</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>Java type</th>
+<th>Name</th>
+<th>SQLite name</th>
+<th>Constraints</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Long</code></td>
+<td>id</td>
+<td>id</td>
+<td>PRIMARY KEY</td>
+</tr>
+
+<tr>
+<td><code>String</code></td>
+<td>someValue</td>
+<td>some_value</td>
+<td>DEFAULT(&ldquo;Something random&rdquo;)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>v.2 -&gt; v.3 diffs</strong></p>
+
+<ol>
+<li>- column mig_one.current_timestamp</li>
+<li>+ column mig_two.someAnimalSound</li>
+<li>+ table mig_three</li>
+<li>- index on mig_two (some_animal)</li>
+</ol>
+
+<p></details></p>
+
+<p><details>
+  <summary>Click here to view mig v.3 schema SQLite creation and version migration scripts: </summary>
+<strong>Create schema script generated by KittyORM for database <code>mig</code> version <code>3</code></strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">some_value</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">&#39;Something random&#39;</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">creation_date</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span>  <span class="k">CURRENT_DATE</span> <span class="p">,</span> <span class="n">default_integer</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">228</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">m1_di_index</span> <span class="k">ON</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">default_integer</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_two</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">mig_one_reference</span> <span class="nb">INTEGER</span> <span class="k">REFERENCES</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">UPDATE</span> <span class="k">CASCADE</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span> <span class="n">some_animal</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">some_animal_sound</span> <span class="nb">TEXT</span><span class="p">);</span></code></pre></div>
+<strong>Drop schema script generated by KittyORM for database <code>mig</code> version <code>3</code></strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_one</span><span class="p">;</span>
+
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_two</span><span class="p">;</span>
+
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_three</span><span class="p">;</span></code></pre></div>
+<strong>Migration script generated by KittyORM for database <code>mig</code> from version <code>2</code> to version <code>3</code> (SimpleMigrationScriptGenerator migrator)</strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">mig_one</span> <span class="k">RENAME</span> <span class="k">TO</span> <span class="n">mig_one_t_old</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">creation_date</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span>  <span class="k">CURRENT_DATE</span> <span class="p">,</span> <span class="n">default_integer</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">228</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">,</span> <span class="n">default_integer</span><span class="p">)</span> <span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">,</span> <span class="n">default_integer</span> <span class="k">FROM</span> <span class="n">mig_one_t_old</span><span class="p">;</span>
+
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_one_t_old</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">m1_di_index</span> <span class="k">ON</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">default_integer</span><span class="p">);</span>
+
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">mig_two</span> <span class="k">ADD</span> <span class="k">COLUMN</span> <span class="n">some_animal_sound</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">some_value</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">&#39;Something random&#39;</span><span class="p">);</span>
+
+<span class="k">DROP</span> <span class="k">INDEX</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig</span><span class="p">.</span><span class="n">m2_sa_index</span><span class="p">;</span></code></pre></div>
+<strong>Migration script generated by KittyORM for database <code>mig</code> from version <code>1</code> to version <code>3</code> (SimpleMigrationScriptGenerator migrator)</strong>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">mig_one</span> <span class="k">RENAME</span> <span class="k">TO</span> <span class="n">mig_one_t_old</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">creation_date</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span>  <span class="k">CURRENT_DATE</span> <span class="p">,</span> <span class="n">default_integer</span> <span class="nb">INTEGER</span> <span class="k">DEFAULT</span> <span class="mi">228</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">)</span> <span class="k">SELECT</span> <span class="n">id</span><span class="p">,</span> <span class="n">creation_date</span> <span class="k">FROM</span> <span class="n">mig_one_t_old</span><span class="p">;</span>
+
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="n">mig_one_t_old</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">m1_di_index</span> <span class="k">ON</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">default_integer</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_two</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">mig_one_reference</span> <span class="nb">INTEGER</span> <span class="k">REFERENCES</span> <span class="n">mig_one</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">ON</span> <span class="k">UPDATE</span> <span class="k">CASCADE</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span><span class="p">,</span> <span class="n">some_animal</span> <span class="nb">TEXT</span><span class="p">,</span> <span class="n">some_animal_sound</span> <span class="nb">TEXT</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">mig_three</span> <span class="p">(</span><span class="n">id</span> <span class="nb">INTEGER</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">ASC</span><span class="p">,</span> <span class="n">some_value</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">&#39;Something random&#39;</span><span class="p">);</span></code></pre></div>
+</details></p>
+
+<p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
+
+        </article>
+  </div>
+</section>
+
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Denis Bogomolov (akaish)
+  ~
+  ~ This work is licensed under a
+  ~ Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://creativecommons.org/licenses/by-nc-nd/4.0/
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~ This file is a part of KittyORM project (KittyORM Demo), more information at
+  ~ https://akaish.github.io/KittyORMPages/license/
+  -->
+<resources>
+
+    <dimen name="app_bar_height">100dp</dimen>
+    <dimen name="item_width">200dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
+    <dimen name="sliding_bar_lesson_expand_me_height">32dp</dimen>
+    <dimen name="sliding_bar_hide">1dp</dimen>
+
+    <dimen name="lesson_elements_margin">5dp</dimen>
+
+    <!-- Dimensions set for fab animated menu, only 6 steps defined due to material guidelines -->
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="usual_fab_margin">28dp</dimen>
+    <dimen name="fab_margin_outer">21dp</dimen>
+    <dimen name="fab_padding">12dp</dimen>
+
+    <dimen name="fab_12">12dp</dimen>
+
+    <dimen name="fab_21">21dp</dimen>
+    <dimen name="fab_23">23dp</dimen>
+    <dimen name="fab_46">45dp</dimen>
+    <dimen name="fab_56">55dp</dimen>
+
+    <dimen name="fab_step_60">60dp</dimen>
+    <dimen name="fab_step_110">110dp</dimen>
+    <dimen name="fab_step_160">160dp</dimen>
+    <dimen name="fab_step_210">210dp</dimen>
+    <dimen name="fab_step_260">260dp</dimen>
+    <dimen name="fab_step_310">310dp</dimen>
+
+</resources>
