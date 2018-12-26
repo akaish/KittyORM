@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: 'maven-push.gradle'
 
 android {
     compileSdkVersion 27
@@ -33,3 +34,16 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+task deleteJar(type: Delete) {
+    delete 'libs/jars/kittyorm-0-1-0.jar'
+}
+
+task createJar(type: Copy) {
+    from('build/intermediates/bundles/release/')
+    into('libs/jars/')
+    include('classes.jar')
+    rename('classes.jar', 'kittyorm-0-1-0.jar')
+}
+
+createJar.dependsOn(deleteJar, build)
