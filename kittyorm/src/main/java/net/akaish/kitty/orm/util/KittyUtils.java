@@ -224,7 +224,7 @@ public class KittyUtils {
 	}
 
 	/**
-	 * Reads provided file into LinkedList<String>
+	 * Reads provided file into LinkedList filled with Strings, one line per String
 	 * @param file
 	 * @return
 	 * @throws IOException
@@ -249,7 +249,7 @@ public class KittyUtils {
 	}
 
 	/**
-	 * Reads data from provided assets path returns it content as a LinkedList<String>
+	 * Reads data from provided assets path returns it content as a LinkedList filled with Strings
 	 * @param ctx
 	 * @param relativeFilePath
 	 * @return

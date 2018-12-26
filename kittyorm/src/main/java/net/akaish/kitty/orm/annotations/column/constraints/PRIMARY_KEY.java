@@ -55,12 +55,12 @@ import java.lang.annotation.Target;
  * would be just overkill.
  * <br><b>So, use for synthetic primary key something like "x INTEGER NOT NULL PRIMARY KEY"</b>
  * <br> You can achieve this in two different ways:
- * <li>1) In {@link KITTY_COLUMN} set {@link KITTY_COLUMN#isIPK()} to true and {@link KITTY_COLUMN#columnAffinity()} to
- * {@link TypeAffinities#INTEGER} or</li>
- * <li>2) Set in {@link KITTY_COLUMN} @link KITTY_COLUMN#columnAffinity()} to {@link TypeAffinities#INTEGER} and
+ * <br>1) In {@link KITTY_COLUMN} set {@link KITTY_COLUMN#isIPK()} to true and {@link KITTY_COLUMN#columnAffinity()} to
+ * {@link TypeAffinities#INTEGER} or
+ * <br>2) Set in {@link KITTY_COLUMN} @link KITTY_COLUMN#columnAffinity()} to {@link TypeAffinities#INTEGER} and
  * annotate model's field with {@link PRIMARY_KEY} without setting {@link PRIMARY_KEY#autoincrement()} and
  * {@link PRIMARY_KEY#orderAscDesc()} to value {@link AscDesc#DESCENDING}. Also do not forget to annotate field with
- * {@link NOT_NULL} (SQLite supports NULL values for IPK but they not supported by KittyORM).</li>
+ * {@link NOT_NULL} (SQLite supports NULL values for IPK but they not supported by KittyORM).
  * Created by akaish on 30.04.2018.
  * @author akaish (Denis Bogomolov)
  */

@@ -45,7 +45,7 @@ import java.util.List;
  * <br> in current version creates them. For example old schema contained tables "goods" "clients" and "contacts" but in new version you decided to get rid
  * <br> of "contacts" table. Your current schema would have only two tables, "goods" and "clients". So they would be dropped with IF EXISTS flag and then created.
  * <br> However "contacts" table and all associated data would stay cause this migrator doesn't now anything about it (it works only with current schema).
- * <br> If you want pass already existing migration script sequence you should pass an instance of LinkedList<KittySQLiteQuery> as [1] of migrationsParameters.
+ * <br> If you want pass already existing migration script sequence you should pass an instance of LinkedList filled with instances of {@link KittySQLiteQuery} as [1] of migrationsParameters.
  * <br> In last case you can manually drop ALL schema and than apply creation script generated with {@link CreateDropHelper#generateCreationScript(KittyDatabaseConfiguration)}.
  * Created by akaish on 14.06.2018.
  * @author akaish (Denis Bogomolov)
@@ -61,7 +61,7 @@ public class KittyDevDropCreateMigrator extends KittyORMVersionMigrator {
     /**
      * Create Drop development migrator. To use it you should pass an instance of KittyDatabaseConfiguration as
      * [0] of migrationsParameters. If you want pass already existing migration script sequence you should pass
-     * an instance of LinkedList<KittySQLiteQuery> as [1] of migrationsParameters.
+     * an instance of LinkedList filled with {@link KittySQLiteQuery} instances as [1] of migrationsParameters.
      * @param oldVersion
      * @param currentVersion
      * @param ctx

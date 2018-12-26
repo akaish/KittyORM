@@ -414,7 +414,7 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 
 	/**
 	 * Called when the database needs to be upgraded. In this implementation it does following things:
-	 * <br> 1) Checking that oldVersion <= newVersion, if false that method would return.
+	 * <br> 1) Checking that oldVersion less or equal newVersion, if false that method would return.
 	 * <br> 2) Based on helper configuration defined in {@link KITTY_DATABASE_HELPER}
 	 * starts upgrading routine. If something failed than {@link KittyRuntimeException} would be thrown.
 	 * <br> So, according to {@link KittyDBHelperConfiguration#onUpgradeBehavior} it would

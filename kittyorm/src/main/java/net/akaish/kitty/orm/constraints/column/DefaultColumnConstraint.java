@@ -51,18 +51,18 @@ public class DefaultColumnConstraint {
     /**
      * <br> Configurator would parse this annotation in following order:
      *
-     * <li>Fetching {@link DEFAULT#expression()}, if not set (default value) than
-     * next step, otherwise creating DEFAULT constraint with this expression.</li>
+     * <br>Fetching {@link DEFAULT#expression()}, if not set (default value) than
+     * next step, otherwise creating DEFAULT constraint with this expression.
      *
-     * <li>Fetching {@link DEFAULT#literalValue()}, if not set (default value)
-     * than next step, otherwise creating DEFAULT constraint with this value.</li>
+     * <br>Fetching {@link DEFAULT#literalValue()}, if not set (default value)
+     * than next step, otherwise creating DEFAULT constraint with this value.
      *
-     * <li>Fetching {@link DEFAULT#predefinedLiteralValue()}, if not set
+     * <br>Fetching {@link DEFAULT#predefinedLiteralValue()}, if not set
      * (default value) than next step, otherwise using one of predefined literals such as TRUE or
-     * CURRENT_DATE defined in {@link LiteralValues}.</li>
+     * CURRENT_DATE defined in {@link LiteralValues}.
      *
-     * <li>Fetching {@link DEFAULT#signedInteger()}, if not set than would be
-     * created DEFAULT constraint with value 0 (DEFAULT 0)</li>
+     * <br>Fetching {@link DEFAULT#signedInteger()}, if not set than would be
+     * created DEFAULT constraint with value 0 (DEFAULT 0)
      *
      * @param defaultAnnotation annotation to process
      */

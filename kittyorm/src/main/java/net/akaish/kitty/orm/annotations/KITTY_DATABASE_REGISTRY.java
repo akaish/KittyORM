@@ -49,7 +49,7 @@ public @interface KITTY_DATABASE_REGISTRY {
     Class[] domainModels() default {};
 
     /**
-     * List (array) of domain pairs (model -> mapper), all pairs in this list would be checked and added
+     * List (array) of domain pairs (model to mapper), all pairs in this list would be checked and added
      * to KittyORM registry for annotated database. Any {@link KITTY_EXTENDED_CRUD} annotations would be ignored,
      * to set extended CRUD controller you have to define {@link KITTY_REGISTRY_PAIR#mapper()}.
      * <br> Has higher priority than {@link #domainModels()}

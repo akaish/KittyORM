@@ -39,11 +39,11 @@ import static net.akaish.kitty.orm.util.KittyConstants.ZERO_LENGTH_STRING;
 /**
  * Annotation for column constraint DEFAULT.
  * <br> Configurator would parse this annotation in following order:
- * <li>Fetching {@link #expression()}, if not set (default value) than next step, otherwise creating DEFAULT constraint with this expression.</li>
- * <li>Fetching {@link #literalValue()}, if not set (default value) than next step, otherwise creating DEFAULT constraint with this value.</li>
- * <li>Fetching {@link #predefinedLiteralValue()}, if not set (default value) than next step, otherwise using one of predefined literals such as TRUE or CURRENT_DATE defined in
- * {@link LiteralValues}.</li>
- * <li>Fetching {@link #signedInteger()}, if not set than would be created DEFAULT constraint with value 0 (DEFAULT 0)</li>
+ * <br>Fetching {@link #expression()}, if not set (default value) than next step, otherwise creating DEFAULT constraint with this expression.
+ * <br>Fetching {@link #literalValue()}, if not set (default value) than next step, otherwise creating DEFAULT constraint with this value.
+ * <br>Fetching {@link #predefinedLiteralValue()}, if not set (default value) than next step, otherwise using one of predefined literals such as TRUE or CURRENT_DATE defined in
+ * {@link LiteralValues}.
+ * <br>Fetching {@link #signedInteger()}, if not set than would be created DEFAULT constraint with value 0 (DEFAULT 0)
  * Created by akaish on 30.04.2018.
  * @author akaish (Denis Bogomolov)
  */

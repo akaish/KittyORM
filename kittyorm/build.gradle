@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
-apply from: 'maven-push.gradle'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group
 
 android {
     compileSdkVersion 27
@@ -47,3 +50,75 @@ task createJar(type: Copy) {
 }
 
 createJar.dependsOn(deleteJar, build)
+
+// Signing
+apply plugin: 'signing'
+signing {
+    sign configurations.archives
+}
+
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "source"
+}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadoc/")
+    failOnError false
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from tasks.javadoc.destinationDir
+}
+//Creating sources with comments
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+artifacts {
+    archives javadocJar
+    archives androidSourcesJar
+}
+
+
+group = "net.akaish.kitty.orm"
+archivesBaseName = "kitty-orm"
+version = "0.1.0"
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            pom.project {
+                name "KittyORM"
+                packaging 'jar'
+                description 'KittyORM - Data Mapper ORM for Android\\SQLite'
+                artifactId "kitty-orm"
+                url 'https://github.com/akaish/KittyORM'
+                scm {
+                    connection 'scm:git:git://github.com/akaish/KittyORM.git'
+                    developerConnection 'scm:git:ssh://github.com/akaish/KittyORM.git'
+                    url 'https://github.com/akaish/KittyORM/tree/master'
+                }
+                licenses {
+                    license {
+                        name 'Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License'
+                        url 'https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode'
+                        distribution 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'akaish'
+                        name 'Denis Bogomolov'
+                        email 'akaish@mail.ru'
+                    }
+                }
+            }
+        }
+    }
+}

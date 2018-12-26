@@ -69,7 +69,7 @@ import java.util.Set;
 import static net.akaish.kitty.orm.util.KittyNamingUtils.generateTableNameFromRecordName;
 
 /**
- * Utility class for generating {@link KittyTableConfiguration} from <T extends KittyModel> Class<T> Model
+ * Utility class for generating {@link KittyTableConfiguration} from Class extends KittyModel Model
  * annotated with {@link KITTY_TABLE}
  * <br> Created by akaish on 11.02.18.
  * TODO more logging info in future
@@ -80,7 +80,7 @@ public class KittyAnnoTableConfigurationUtil {
 	private static final String EXC_MSG_MORE_THAN_ONE_PK = "For modelClass {0} (database {1}) specified more than one PK!";
 
 	/**
-	 * Returns instance of {@link KittyTableConfiguration} from <T extends KittyModel> Class<T> Record
+	 * Returns instance of {@link KittyTableConfiguration} from Class extends KittyModel Model
 	 * annotated with {@link KITTY_TABLE}
 	 * <br> Returns Null if provided class not annotated with KITTY_TABLE annotation
 	 * <br> May throw {@link KittyRuntimeException} if more than one PK declaration found or no columns defined in modelClass

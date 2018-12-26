@@ -248,20 +248,20 @@ public class KittyMapper implements Cloneable {
 	 * <br> While in transaction, only insert, update, save and create methods are available.
 	 * Calling read methods while in transaction would cause {@link KittyRuntimeException}.
 	 * @param mode mode to start with, following modes are available:
-	 *             <li>
+	 *             <br>
 	 *                 {@link TRANSACTION_MODES#EXCLUSIVE_MODE} - starting with this mode would start
 	 *             transaction in <b>exclusive</b> mode ({@link SQLiteDatabase#beginTransaction()})
-	 *             </li>
-	 *             <li>
+	 *
+	 *             <br>
 	 *                 {@link TRANSACTION_MODES#NON_EXCLUSIVE_MODE} - starting with this mode would start
 	 *             transaction in <b>immediate</b> mode, this mode requires <b>api 11</b> and higher
 	 *            ({@link SQLiteDatabase#beginTransactionNonExclusive()}). If current api level lower than
 	 *            api 11 than transaction would be started in {@link TRANSACTION_MODES#EXCLUSIVE_MODE}
-	 *             </li>
-	 *             <li>
+	 *
+	 *             <br>
 	 *                 {@link TRANSACTION_MODES#LOCKING_FALSE_MODE} - starting transaction with false
 	 *             locking option ({@link SQLiteDatabase#setLockingEnabled(boolean)}).
-	 *             </li>
+	 *
 	 * @throws KittyRuntimeException if trying to start transaction when transaction already started
 	 */
 	public final void startTransaction(TRANSACTION_MODES mode) {
@@ -367,7 +367,7 @@ public class KittyMapper implements Cloneable {
 	 * no records found in db with passed condition and parameters than null would be returned.
 	 * @param where condition, can be null
 	 * @param qParams additional query parameters (offset, limit, ordering etc), can be null
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 *
 	 * @return list of models or null if nothing found
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -387,7 +387,6 @@ public class KittyMapper implements Cloneable {
 	 * no records found in db with passed condition than null would be returned.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(where, null)
 	 * @param where condition, can be null
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
 	 * @return list of models or null if nothing found
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -401,7 +400,6 @@ public class KittyMapper implements Cloneable {
 	 * passed qParams.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(null, qParams)
 	 * @param qParams query params such as limit, offset etc, can be null
-	 * @param <M>  <M extends KittyModel> instance of non abstract child of KittyModel
 	 * @return list of all models fetched according to passed params or null if nothing found
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -413,7 +411,6 @@ public class KittyMapper implements Cloneable {
 	/**
 	 * Returns list of all models associated with records in backed database table.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(null, null)
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
 	 * @return list of all models associated with backed database table or null if nothing found
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -429,7 +426,6 @@ public class KittyMapper implements Cloneable {
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere("rowid = ?", null).get(0)
 	 * with check that resulting collection's size == 0 | 1
 	 * @param rowid RowID of database table's record to fetch
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
 	 * @return model filled from record in db's table or null if nothing found.
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -469,7 +465,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere({PKCondition}, null).get(0)
 	 * with check that resulting collection's size == 0 | 1
 	 * @param primaryKey primary key filled with values, also notice that there is no check for PK
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 * @return model filled from record in db's table or null if nothing found.
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -485,7 +481,6 @@ public class KittyMapper implements Cloneable {
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere({PKCondition}, null).get(0)
 	 * with check that resulting collection's size == 0 | 1
 	 * @param pkv primary key values map,  also notice that there is no check for PK values
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
 	 * @return model filled from record in db's table or null if nothing found.
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -516,7 +511,6 @@ public class KittyMapper implements Cloneable {
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere("{IPK} = ?", null).get(0)
 	 * with check that resulting collection's size == 0 | 1
 	 * @param ipk INTEGER PRIMARY KEY value of database table's record to fetch
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
 	 * @return model filled from record in db's table or null if nothing found.
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -551,7 +545,6 @@ public class KittyMapper implements Cloneable {
 	 * Returns first record in KittyModel wrapper in database table that suits provided condition.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(conditions, {LIMIT = 1, ORDER BY rowid ASCENDING}
 	 * @param where SQLiteCondition for select
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
 	 * @return model filled from first record in db's table that suits provided condition or null if nothing found.
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -568,7 +561,6 @@ public class KittyMapper implements Cloneable {
 	/**
 	 * Returns first record in KittyModel wrapper in database table that suits provided condition.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(null, {LIMIT = 1, ORDER BY rowid ASCENDING}
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
 	 * @return model filled from first record in db's table or null if nothing found.
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -581,7 +573,7 @@ public class KittyMapper implements Cloneable {
 	 * Returns last record in KittyModel wrapper in database table that suits provided condition.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(conditions, {LIMIT = 1, ORDER BY rowid DESCENDING}
 	 * @param where SQLiteCondition for select
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 * @return model filled from last record in db's table that suits provided condition or null if nothing found.
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -598,7 +590,7 @@ public class KittyMapper implements Cloneable {
 	/**
 	 * Returns last record in KittyModel wrapper in database table that suits provided condition.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(null, {LIMIT = 1, ORDER BY rowid DESCENDING}
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 * @return model filled from last record in db's table or null if nothing found.
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
@@ -746,7 +738,7 @@ public class KittyMapper implements Cloneable {
 	 * Inserts into database provided model's values. No checks on auto generated values of PK fields performed.
 	 * May throw exceptions related to reflection access to fields wrapped in {@link KittyRuntimeException}.
 	 * @param model model to inserts
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 * @return RowID of inserted record, or -1 if error occurred
 	 */
 	public final <M extends KittyModel> long insert(M model) {
@@ -777,7 +769,7 @@ public class KittyMapper implements Cloneable {
 	 * Inserts models in provided list into database table.
 	 * <br> May throw exceptions related to reflection access to fields wrapped in {@link KittyRuntimeException}.
 	 * @param models list of models to insert
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void insert(List<M> models) {
 		if(models == null) return;
@@ -792,7 +784,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> Alias for {@link #insert(TRANSACTION_MODES, List)} insert(TRANSACTION_MODES.EXCLUSIVE_MODE, models)
 	 * <br> May throw exceptions related to reflection access to fields wrapped in {@link KittyRuntimeException}.
 	 * @param models list of models to insert
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void insertInTransaction(List<M> models) {
 		insert(TRANSACTION_MODES.EXCLUSIVE_MODE, models);
@@ -805,7 +797,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> If no transaction exists than new transaction would be created and finished in this method.
 	 * @param txMode transaction mode, see {@link #startTransaction(TRANSACTION_MODES)} for modes info
 	 * @param models list of models to insert
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void insert(TRANSACTION_MODES txMode, List<M> models) {
 		boolean internalVoidTX = false;
@@ -855,7 +847,7 @@ public class KittyMapper implements Cloneable {
 	 *
 	 * @param model model to update
 	 * @param condition condition for that model
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 * @param names array of fields names or column names to include\exclude
 	 * @param IEFlag flag that determines what to do with provided {@link KittyColumnConfiguration} instance, may be {@link CVUtils#IGNORE_INCLUSIONS_AND_EXCLUSIONS},
 	 *                      {@link CVUtils#INCLUDE_ALL_EXCEPT_SELECTED_COLUMN_NAMES}, {@link CVUtils#INCLUDE_ONLY_SELECTED_COLUMN_NAMES}, {@link CVUtils#INCLUDE_ALL_EXCEPT_SELECTED_FIELDS}
@@ -914,7 +906,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> If no PK condition exists than {@link KittyRuntimeException} would be thrown.
 	 * <br> Alias for {@link #update(KittyModel, SQLiteCondition)} update(model, null)
 	 * @param model model to update
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 * @return the number of affected rows
 	 */
 	public final <M extends KittyModel> long update(M model) {
@@ -926,7 +918,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> If no RowID found than would be attempt to get PK condition.
 	 * <br> If no PK condition exists than {@link KittyRuntimeException} would be thrown.
 	 * @param models list of models to update
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> long update(List<M> models) {
 		if(models == null) return -1;
@@ -947,7 +939,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> If no transaction exists than new transaction would be created and finished in this method.
 	 * @param txMode transaction mode, see {@link #startTransaction(TRANSACTION_MODES)} for modes info
 	 * @param models list of models to update
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void update(TRANSACTION_MODES txMode, List<M> models) {
 		boolean internalVoidTX = false;
@@ -969,10 +961,10 @@ public class KittyMapper implements Cloneable {
 	/**
 	 * Updates rows in database with models from provided list in internal method transaction started with
 	 * transaction mode {@link TRANSACTION_MODES#EXCLUSIVE_MODE}.
-	 * <br> Alias for {@link #update(TRANSACTION_MODES, List<M>)} (update(TRANSACTION_MODES.EXCLUSIVE_MODE, models)
+	 * <br> Alias for {@link #update(TRANSACTION_MODES, List)} (update(TRANSACTION_MODES.EXCLUSIVE_MODE, models)
 	 * <br> May throw exceptions related to reflection access to fields wrapped in {@link KittyRuntimeException}.
 	 * @param models list of models to update
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void updateInTransaction(List<M> models) {
 		update(TRANSACTION_MODES.EXCLUSIVE_MODE, models);
@@ -985,7 +977,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> If provided model has no RowID or auto generated PK values set than {@link #insert(KittyModel)}
 	 * would be called.
 	 * @param model model to save
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void save(M model) {
 		if(model == null) return;
@@ -1000,7 +992,7 @@ public class KittyMapper implements Cloneable {
 	 * Saves values from provided list of models into database. Foreach model in collection {@link #save(KittyModel)}
 	 * method would be called.
 	 * @param models list of models to save
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void save(List<M> models) {
 		if(models == null) return;
@@ -1017,7 +1009,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> If no transaction exists than new transaction would be created and finished in this method.
 	 * @param txMode transaction mode, see {@link #startTransaction(TRANSACTION_MODES)} for modes info
 	 * @param models list of models to save
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void save(TRANSACTION_MODES txMode, List<M> models) {
 		if(models == null) return;
@@ -1045,7 +1037,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> Alias for {@link #save(TRANSACTION_MODES, List)} (save(TRANSACTION_MODES.EXCLUSIVE_MODE, models)
 	 * <br> May throw exceptions related to reflection access to fields wrapped in {@link KittyRuntimeException}.
 	 * @param models list of models to save
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void saveInTransaction(List<M> models) {
 		save(TRANSACTION_MODES.EXCLUSIVE_MODE, models);
@@ -1084,7 +1076,7 @@ public class KittyMapper implements Cloneable {
 	 * Deletes row that represented by provided model. If model has no RowID or PK fields set
 	 * {@link KittyRuntimeException} would be thrown.
 	 * @param model model to delete
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 * @return rows affected
 	 */
 	public final <M extends KittyModel> long delete(M model) {
@@ -1102,7 +1094,7 @@ public class KittyMapper implements Cloneable {
 	 * Deletes all rows that represented by provided model's list. If any of model has no RowID
 	 * or PK fields set {@link KittyRuntimeException} would be thrown.
 	 * @param models list of models to delete
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void delete(List<M> models) {
 		for(M model : models) {
@@ -1120,7 +1112,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> If no transaction exists than new transaction would be created and finished in this method.
 	 * @param txMode transaction mode, see {@link #startTransaction(TRANSACTION_MODES)} for modes info
 	 * @param models list of models to delete
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void delete(TRANSACTION_MODES txMode, List<M> models) {
 		boolean internalVoidTX = false;
@@ -1147,7 +1139,7 @@ public class KittyMapper implements Cloneable {
 	 * <br> Alias for {@link #delete(TRANSACTION_MODES, List)} (delete(TRANSACTION_MODES.EXCLUSIVE_MODE, models)
 	 * <br> May throw exceptions related to reflection access to fields wrapped in {@link KittyRuntimeException}.
 	 * @param models list of models to delete
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 */
 	public final <M extends KittyModel> void deleteInTransaction(List<M> models) {
 		delete(TRANSACTION_MODES.EXCLUSIVE_MODE, models);
@@ -1204,7 +1196,7 @@ public class KittyMapper implements Cloneable {
 	 * Tries to fetch data from database table with provided query and wrap it into collection of models.
 	 * @param rowIdSupport RowID flag
 	 * @param query sql query
-	 * @param <M> <M extends KittyModel> instance of non abstract child of KittyModel
+	 * @param <M> instance of non abstract child of KittyModel
 	 * @return collection of models or null if nothing found
 	 */
 	public final <M extends KittyModel> List<M> findWithRawQuery(boolean rowIdSupport, KittySQLiteQuery query) {
@@ -1322,18 +1314,18 @@ public class KittyMapper implements Cloneable {
 
 	/**
 	 * Returns PK condition for provided model, there are following steps:
-	 * <br><li>If provided default condition not null, it would be returned.</li>
-	 * <br><li>If model's RowID set than condition would be "WHERE rowid = ?".</li>
-	 * <br><li>If model's getPrimaryKeyValues() not null than condition would be created from those
-	 * values.</li>
-	 * <br><li>If model's RowID and getPrimaryKeyValues() null than DataMapper would try to acquire
+	 * <br>If provided default condition not null, it would be returned.
+	 * <br>If model's RowID set than condition would be "WHERE rowid = ?".
+	 * <br>If model's getPrimaryKeyValues() not null than condition would be created from those
+	 * values.
+	 * <br>If model's RowID and getPrimaryKeyValues() null than DataMapper would try to acquire
 	 * PK fields and values via reflection
 	 * according to {@link KittyPrimaryKey} instance set in {@link KittyTableConfiguration} for provided
-	 * model.</li>
-	 * <br><li>If no default condition, rowid, and no PK than null would be returned.</li>
+	 * model.
+	 * <br>If no default condition, rowid, and no PK than null would be returned.
 	 * @param model KittyModel child instance
 	 * @param defaultCondition default condition, may be null, if not null than it would be returned
-	 * @param <M> <M extends KittyModel> not abstract child of {@link KittyModel}
+	 * @param <M> not abstract child of {@link KittyModel}
 	 * @return SQLiteCondition that can fully define provided model as model in database (or null
 	 * if it is impossible or provided SQLiteCondition passed as parameter if it is not null)
 	 * @throws KittyRuntimeException throws exceptions wrapped into {@link KittyRuntimeException}
@@ -1411,7 +1403,7 @@ public class KittyMapper implements Cloneable {
 	 * to create PK condition from provided model. SQLite permits using NULL as values for PK, however
 	 * SQL language not, so do I.
 	 * @param model model from what should be PK condition be generated
-	 * @param <M> <M extends KittyModel> not abstract child of {@link KittyModel}
+	 * @param <M> not abstract child of {@link KittyModel}
 	 * @return PK condition or null if it is impossible to create it
 	 */
 	protected final <M extends KittyModel> Map<String, String> getPrimaryKeyValuesForModel(M model) {
@@ -1457,7 +1449,7 @@ public class KittyMapper implements Cloneable {
 	/**
 	 * Creates condition "WHERE rowid = ?" with provided model.getRowID. If id is null than null would be returned.
 	 * @param model model
-	 * @param <M> <M extends KittyModel> instance of not abstract child of {@KittyModel}
+	 * @param <M> instance of not abstract child of {@link KittyModel}
 	 * @return SQLiteCondition "WHERE rowid = ?"
 	 */
 	protected final <M extends KittyModel> SQLiteCondition getRowIDCondition(M model) {
@@ -1505,7 +1497,7 @@ public class KittyMapper implements Cloneable {
 	}
 
 	/**
-	 * Logs model to log if logOn && !productionOn
+	 * Logs model to log if logOn and !productionOn
 	 * @param executor
 	 * @param model
 	 * @param <M>

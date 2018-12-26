@@ -34,7 +34,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 
 /**
- * Default KittyModel -> KittyMapper entry factory
+ * Default KittyModel to KittyMapper entry factory
  * Created by akaish on 04.03.18.
  * @author akaish (Denis Bogomolov)
  */
