@@ -20,11 +20,11 @@ KittyORM is an Object-Relational Mapping library designed for use with Android a
 
 ### Gradle setup
 First step is to add KittyORM via Gradle to your app `build.gradle`:
-{{< highlight gradle "linenos=inline, linenostart=1">}}
+```gradle
 dependencies {
     compile 'net.akaish.kitty.orm:kitty-orm:0.1.1'
 }
-{{< /highlight >}} 
+```
 
 ### KittyORM configuration and implementation
 Create package for storing your POJO models, KittyORM database class, KittyORM helper class (if necessary) and KittyORM extended mappers (if necessary).
