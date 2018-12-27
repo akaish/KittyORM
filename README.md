@@ -1,7 +1,6 @@
-Release in progress...
-
-Documentation and other info at https://akaish.github.io/KittyORMPages/
-Just few lines:
+[KittyORM Project pages](https://akaish.github.io/KittyORMPages/)  
+[KittyORM Demo and tutorial application](https://play.google.com/store/apps/details?id=net.akaish.kittyormdemo)  
+Current version: [0.1.1](http://repo1.maven.org/maven2/net/akaish/kitty/orm/kitty-orm/)
 
 ### What is KittyORM?
 
@@ -15,28 +14,29 @@ KittyORM is an Object-Relational Mapping library designed for use with Android a
 * flexible way to manage all things you may want to change or implement. Typical KittyORM database consists of database bootstrap class implementation that handles all actions to get all stuff working, database helper implementation and list of models and data mappers stored in map, all of those are friendly for customization;
 * quite good performance speed of executing business logic that achieved with on start generation of database configuration that helps to avoid a lot of reflection calls.
 
-Main idea of creating KittyORM is to offer a tool that would suit both people who want to use all power of SQLite and people who want just to work with simple database of few tables to store data without messing with raw SQL. 
+[Read more...](https://akaish.github.io/KittyORMPages/)
 
-### So, what KittyORM has right now?
+## Getting started with KittyORM
 
-* Full support of SQLite syntax to create a database schema implemented via KittyORM annotations. 
-* Supporting of mapping SQLite affinities to Java’s primitives, primitive wrappers and common objects such `Date`, `BigInteger` etc. Also, enumerations supported as well as user defined mapping (for example, `NONE` → `Bitmap` and back).
-* Basic CRUD controller that can handle all typical CRUD operations.
-* Support of extending default CRUD controller.
-* `QueryBuilder` that offers simple creation of some extended queries to be used standalone or as part of extended CRUD controller.
-* POJO models inheritance supported, that means that you can use abstract POJO class that would be inherited in child implementations. Also, KittyORM supports temporary tables and non-schema POJO models (those models can be used for querying database but wouldn’t be used at schema generation).
-* Multidomain support (e.g. you can use as many databases in your application as you want).
-* Not bad performance. You can tune your KittyORM database to avoid a big amount of reflection calls by setting your KittyORM database class by your own and placing it into Android Application class instance.
-* Support of database version management. KittyORM provides you three migration options: `DropCreate` Migrator, `FileScript` Migrator and `SimpleMigrationScriptGenerator` Migrator.
-* Ready for database encryption implementation.
-* Simple but really flexible API. Practically, most components of KittyORM can be customized to suit your needs.
-* Good documentation contains tutorial with code snippets, javadoc and demo application available at TODO [add link when application would be published]
+### Gradle setup
+First step is to add KittyORM via Gradle to your app `build.gradle`:
+{{< highlight gradle "linenos=inline, linenostart=1">}}
+dependencies {
+    compile 'net.akaish.kitty.orm:kitty-orm:0.1.1'
+}
+{{< /highlight >}} 
 
+### KittyORM configuration and implementation
+Create package for storing your POJO models, KittyORM database class, KittyORM helper class (if necessary) and KittyORM extended mappers (if necessary).
 
-### Things to do in future releases:
+**First step:** extend `KittyDatabase` class, implement default constructor and annotate it with `@KITTY_DATABASE` annotation (and, if necessary, with `@KITTY_DATABASE_HELPER`).
 
-* One-To-One and One-To-Many relation handling via implementing SQLite queries using `JOIN` operator.
-* KittyORM standalone static code generator application to provide generation of mappers and models based on KittyORM implementation that would not use reflection calls.
-* Partial standalone database encryption with AES.
+**Second step:** create your first POJO model by extending `KittyModel` class, implement default constructor and annotate it with `@KITTY_TABLE` annotation. Each model field of KittyModel POJO implementation that corresponds database table column also has to be annotated with `@KITTY_COLUMN` annotation.
 
-And some other features as well.
+**Third step (optional):** create extended CRUD controller by extending `KittyMapper` class, implementing default constructor and adding business logic. To make what CRUD controller you want to use with given POJO model you can just use default naming rules (`SomeModel.class`, `Somemodel.class` and even `Some.class` POJO would use `SomeMapper.class` extended controller if found) or (better choice) annotate model POJO with `@EXTENDED_CRUD` linked to actual extended CRUD controller class implementation.
+
+**Fourth step (optional):** create extended database helper by extending `KittyDatabaseHelper` class and make sure that your KittyDatabase class implementation would return new instance of your extended database helper via `KittyDatabase.newDatabaseHelper()` method.
+
+[Read more...](https://akaish.github.io/KittyORMPages/getting_started/)
+
+[KittyORM license](https://akaish.github.io/KittyORMPages/license/)

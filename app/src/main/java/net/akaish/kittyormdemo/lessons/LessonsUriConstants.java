@@ -103,10 +103,10 @@ public class LessonsUriConstants {
     public static final String L6_T3_WV = "l6t3";
     public static final String L6_T4_WV = "l6t4";
 
-    public static final String L6_TRY_URI = "https://akaish.github.io/KittyOrmPages/";
-    public static final String L6_SHARE = "https://akaish.github.io/KittyOrmPages/";
+    public static final String L6_TRY_URI = "https://akaish.github.io/KittyORMPages/";
+    public static final String L6_SHARE = "https://akaish.github.io/KittyORMPages/";
     public static final String L6_DEVELOP = "https://github.com/akaish/KittyORM";
-    public static final String L6_SPONSOR = "http://example.com";
+    public static final String L6_SPONSOR = "https://akaish.github.io/KittyORMPages/makekittygreater/l6t4/";
 
     // Lesson 7
     public static final String L7_T1_WV = "l7t1";
@@ -114,11 +114,11 @@ public class LessonsUriConstants {
 
     public static final String L7_MAIL = "kittyorm@gmail.com";
     public static final String L7_FOLLOW = "https://twitter.com/OrmKitty";
-    public static final String L7_VIEW_LEGAL_INFO_ONLINE = "http://example.com";
+    public static final String L7_VIEW_LEGAL_INFO_ONLINE = "https://akaish.github.io/KittyORMPages/license/";
 
     // Main menu
     public static final String MAIN_MENU_MAIL = "kittyorm@gmail.com";
     public static final String MAIN_MENU_FOLLOW = "https://twitter.com/OrmKitty";
-    public static final String MAIN_MENU_VIEW_LEGAL_INFO_ONLINE = "http://example.com";
+    public static final String MAIN_MENU_VIEW_LEGAL_INFO_ONLINE = "https://akaish.github.io/KittyORMPages/license/";
 
 }
