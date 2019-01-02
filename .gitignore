@@ -4,9 +4,14 @@
 /gradle.properties
 /.idea/workspace.xml
 /.idea/libraries
+/.idea
 .DS_Store
 /build.old1
 /change-cp.sh
 /build
 /captures
 .externalNativeBuild
+javadoc
+gradle
+kittyorm/libs/jars
+app/release
