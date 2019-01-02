@@ -2,6 +2,7 @@
 [KittyORM Demo and tutorial application](https://play.google.com/store/apps/details?id=net.akaish.kittyormdemo)  
 Current version: [0.1.1](http://repo1.maven.org/maven2/net/akaish/kitty/orm/kitty-orm/)
 
+
 ### What is KittyORM?
 
 KittyORM is an Object-Relational Mapping library designed for use with Android and SQLite. It implements Data Mapper pattern design and its main purpose is to simplify interaction with SQLite database in Android applications. Written in Java 7 it supports devices from API level 9 Android. 
