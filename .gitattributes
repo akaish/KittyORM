@@ -1,0 +1,3 @@
+# OK, in demo it is huge usage of html, but project is written in Java:
+*.md linguist-language=Java
+*.html linguist-language=Java
