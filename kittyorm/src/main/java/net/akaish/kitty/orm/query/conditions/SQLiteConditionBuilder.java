@@ -24,9 +24,11 @@
 
 package net.akaish.kitty.orm.query.conditions;
 
+import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.util.KittyReflectionUtils;
+import net.akaish.kitty.orm.util.KittyUtils;
 
 import static net.akaish.kitty.orm.util.KittyConstants.*;
 
@@ -258,5 +260,73 @@ public class SQLiteConditionBuilder {
 	 */
 	public SQLiteCondition build() {
 		return new SQLiteCondition(condition.toString(), getConditionValues());
+	}
+
+	private static final String WHERE = "where ";
+	private static final String MODEL_FIELD_START = "#?";
+	private static final String MODEL_FIELD_END = ";";
+	private static final String WHSP_STR = " ";
+
+	/**
+	 * Generates {@link SQLiteCondition} from SQLite string and provided params.
+	 * <br> Example:
+	 * <br> fromSQL("column_name_one = ? AND id = ?", null, columnNameOneValue, id)
+	 * <br> If you wish use model fieldName, you may use following syntax:
+	 * <br> fromSQL("#?columnNameOne; = ? AND id = ?", MyModelImplementation.class, columnNameOneValue, id)
+	 * <br> In this case passing not null modelClass parameter is required.
+	 * @param conditionStr SQLite condition string with ? placeholders for parameters
+	 * @param modelClass model class, required if you pass model field name instead column names using #?modelField; syntax
+	 * @param params parameters to be used with query
+	 * @return {@link SQLiteCondition} from SQLite string and provided params.
+	 */
+	public static final SQLiteCondition fromSQL(String conditionStr, Class<? extends KittyModel> modelClass, Object... params) {
+		// Getting str collection for parameters
+		LinkedList<String> conditionArgs = new LinkedList<String>();
+		if(params != null) {
+			for (int i = 0; i < params.length; i++) {
+				conditionArgs.addLast(KittyReflectionUtils.getStringRepresentationOfObject(params[i]));
+			}
+		}
+		String[] arguments = conditionArgs.toArray(new String[conditionArgs.size()]);
+		// OK, trim and check if string condition starts with WHERE ignore case
+		conditionStr = conditionStr.trim();
+		if(conditionStr.length() >= WHERE.length()) {
+			String firstChars = conditionStr.substring(0, WHERE.length() - 1);
+			if(firstChars.toLowerCase().startsWith(WHERE))
+				conditionStr.replace(firstChars, EMPTY_STRING);
+		}
+		// Second step, we do the following thing: check occurrences of model field names (starts with #? and ends with ;)
+		if(conditionStr.contains(MODEL_FIELD_START)) {
+			String[] parts = conditionStr.split(WHSP_STR);
+			StringBuilder rebuildCondition = new StringBuilder();
+			for(String part : parts) {
+				String trimmedPart = part.trim();
+				if(trimmedPart == null) continue;
+				if(trimmedPart.equals(WHSP_STR)) continue;
+				if(trimmedPart.equals(EMPTY_STRING)) continue;
+				if(rebuildCondition.length() > 0) rebuildCondition.append(WHITESPACE);
+				if(trimmedPart.startsWith(MODEL_FIELD_START)) {
+					if(modelClass == null)
+						throw new NullPointerException("modelClass param can't be null if you specify #?fieldName; in conditionStr");
+					String fieldName = trimmedPart.replaceAll(MODEL_FIELD_START, EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
+					try {
+						Field field = modelClass.getField(fieldName);
+						field.setAccessible(true);
+						if(!field.isAnnotationPresent(KITTY_COLUMN.class)) {
+							throw new KittyRuntimeException("There is no KITTY_COLUMN annotation present for field with name "
+									+fieldName+" at modelClass class "+modelClass.getCanonicalName());
+						}
+						rebuildCondition.append(field.getAnnotation(KITTY_COLUMN.class).columnName());
+					} catch(NoSuchFieldException e) {
+						// rethrowing exception
+						throw new KittyRuntimeException("There is no field with name "+fieldName+" at modelClass class "+modelClass.getCanonicalName(), e);
+					}
+				} else {
+					rebuildCondition.append(trimmedPart);
+				}
+			}
+			return new SQLiteCondition(rebuildCondition.toString(), arguments);
+		}
+		return new SQLiteCondition(conditionStr.toString(), arguments);
 	}
 }

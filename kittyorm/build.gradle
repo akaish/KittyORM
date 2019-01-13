@@ -39,7 +39,7 @@ dependencies {
 
 group = "net.akaish.kitty.orm"
 archivesBaseName = "kitty-orm"
-version = "0.1.1"
+version = "0.1.2"
 
 task deleteJar(type: Delete) {
     delete 'libs/jars/'+archivesBaseName+'.'+version+'.jar'
@@ -104,8 +104,8 @@ uploadArchives {
                 }
                 licenses {
                     license {
-                        name 'Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License'
-                        url 'https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode'
+                        name 'Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0'
                         distribution 'repo'
                     }
                 }

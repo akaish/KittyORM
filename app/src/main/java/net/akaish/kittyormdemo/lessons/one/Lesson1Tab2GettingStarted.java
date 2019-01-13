@@ -205,6 +205,10 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
                     .addSQLOperator(SQLiteOperator.EQUAL)
                     .addValue("Marina");
             List<SimpleExampleModel> marinas = mapper.findWhere(builder.build());
+            // Also you may define conditions in alternative way
+            marinas = mapper.findWhere(SQLiteConditionBuilder.fromSQL("first_name = ?", null, "Marina"));
+            // Or specify field name instead column name using following syntax
+            marinas = mapper.findWhere(SQLiteConditionBuilder.fromSQL("#?firstName; = ?", SimpleExampleModel.class, "Marina"));
             if(marinas != null) {
                 addActionListItem(format(getString(R.string._l1_t2_retrieved),  marinas.size(), findOperationId));
             }
