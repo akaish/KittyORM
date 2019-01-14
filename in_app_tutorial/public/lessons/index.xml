@@ -377,10 +377,10 @@ TEXT datatype affinity mapping
       <pubDate>Thu, 15 Nov 2018 06:50:21 +0300</pubDate>
       
       <guid>file:///android_asset/inapptut/lessons/l7t2/</guid>
-      <description>Legal information KittyORM project legal information KittyORM project consists of three main components, two of them are hosted at GitHub repository at https://github.com/akaish/KittyORM and licensed under Creative Commons license:
+      <description>Legal information KittyORM project legal information KittyORM project consists of three main components, two of them are hosted at GitHub repository at https://github.com/akaish/KittyORM and licensed under the Apache License, Version 2.0:
  KittyORM library - ORM library for SQLite\Android that implements data mapper pattern. Author: Denis Bogomolov (Bogomolov Denis Romanovich).
 Copyright © 2018 Denis Bogomolov. Some rights reserved.
-KittyORM is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. To view a copy of this license, visit http://creativecommons.</description>
+KittyORM is licensed under the Apache License, Version 2.0. To view a copy of this license, visit http://www.</description>
     </item>
     
     <item>
