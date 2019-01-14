@@ -24,9 +24,11 @@
 
 package net.akaish.kitty.orm;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +42,8 @@ import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
 import android.util.Log;
 
+import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
+import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.query.KittySQLiteQuery;
@@ -58,7 +62,12 @@ import net.akaish.kitty.orm.query.KittyQueryBuilder;
 
 import static java.text.MessageFormat.format;
 import static net.akaish.kitty.orm.CVUtils.modelToCV;
+import static net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder.MODEL_FIELD_END;
+import static net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder.MODEL_FIELD_START;
+import static net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder.WHERE;
+import static net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder.WHSP_STR;
 import static net.akaish.kitty.orm.util.KittyConstants.DEFAULT_LOG_TAG;
+import static net.akaish.kitty.orm.util.KittyConstants.EMPTY_STRING;
 import static net.akaish.kitty.orm.util.KittyConstants.EQUAL_SIGN;
 import static net.akaish.kitty.orm.util.KittyConstants.LEFT_BKT;
 import static net.akaish.kitty.orm.util.KittyConstants.RIGHT_BKT;
@@ -159,6 +168,7 @@ public class KittyMapper implements Cloneable {
 	protected String  logTag = DEFAULT_LOG_TAG;
 
 	protected final HashMap<KittyArrayKey, InsertValuesStatement> precompiledInserts = new HashMap<>();
+	protected final HashMap<String, KittyColumnConfiguration> columnConfigurations = new HashMap<>();
 
 	//protected SQLiteStatement insertStatement;
 
@@ -362,6 +372,48 @@ public class KittyMapper implements Cloneable {
 
 	// FIND (SELECT) QUERIES
 	/**
+	 * Returns list of models that suits provided condition string and query parameters. Select query. If
+	 * no records found in db with passed condition and parameters than null would be returned.
+	 *
+	 * @param qParams additional query parameters (offset, limit, ordering etc), can be null
+	 * @param condition sqlite condition string in format `column_name = ? AND #?fieldName = ?`
+	 * @param conditionValues parameters for condition str
+	 * @return
+	 *
+	 * @return list of models or null if nothing found
+	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
+	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
+	 */
+	public final <M extends KittyModel> List<M> findWhere(QueryParameters qParams, String condition, Object... conditionValues) {
+		if(condition == null)
+			return findAll(qParams);
+		return findWhere(
+				conditionFromSQLString(condition, conditionValues),
+				qParams
+		);
+	}
+
+	/**
+	 *
+	 * Returns list of models that suits provided condition string. Select query. If
+	 * no records found in db with passed condition and parameters than null would be returned.
+	 *
+	 * @param condition sqlite condition string in format `column_name = ? AND #?fieldName = ?`
+	 * @param conditionValues parameters for condition str
+	 *
+	 * @return list of models or null if nothing found
+	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
+	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
+	 */
+	public final <M extends KittyModel> List<M> findWhere(String condition, Object... conditionValues) {
+		if(condition == null)
+			return findAll();
+		return findWhere(
+				conditionFromSQLString(condition, conditionValues)
+		);
+	}
+
+	/**
 	 * Returns list of models that suits provided conditions and query parameters. Select query. If
 	 * no records found in db with passed condition and parameters than null would be returned.
 	 * @param where condition, can be null
@@ -409,13 +461,16 @@ public class KittyMapper implements Cloneable {
 
 	/**
 	 * Returns list of all models associated with records in backed database table.
-	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(null, null)
 	 * @return list of all models associated with backed database table or null if nothing found
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
 	public final <M extends KittyModel> List<M> findAll() {
-		return findWhere(null, null);
+		throwExcReadOPWhileInTransaction();
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT, tableConfig.tableName);
+		qb.setRowIDSupport(rowidOn);
+		KittySQLiteQuery query = qb.buildSQLQuery();
+		return findWithRawQuery(rowidOn, query);
 	}
 
 	/**
@@ -559,6 +614,19 @@ public class KittyMapper implements Cloneable {
 
 	/**
 	 * Returns first record in KittyModel wrapper in database table that suits provided condition.
+	 * <br> Alias for {@link #findWhere(QueryParameters, String, Object...)} (findWhere({LIMIT = 1, ORDER BY rowid ASCENDING}, conditionStr, conditionValues)
+	 * @param condition sqlite condition string in format `column_name = ? AND #?fieldName = ?`
+	 * @param conditionValues parameters for condition str
+	 * @return model filled from first record in db's table that suits provided condition or null if nothing found.
+	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
+	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
+	 */
+	public final <M extends KittyModel> M findFirst(String condition, Object... conditionValues) {
+		return findFirst(conditionFromSQLString(condition, conditionValues));
+	}
+
+	/**
+	 * Returns first record in KittyModel wrapper in database table that suits provided condition.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(null, {LIMIT = 1, ORDER BY rowid ASCENDING}
 	 * @return model filled from first record in db's table or null if nothing found.
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
@@ -584,6 +652,19 @@ public class KittyMapper implements Cloneable {
 		if(last == null) return null;
 		if(last.size() == 0) return null;
 		return last.get(0);
+	}
+
+	/**
+	 * Returns last record in KittyModel wrapper in database table that suits provided condition.
+	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere({LIMIT = 1, ORDER BY rowid DESCENDING}, conditionStr, conditionValues))
+	 * @param condition sqlite condition string in format `column_name = ? AND #?fieldName = ?`
+	 * @param conditionValues parameters for condition str
+	 * @return model filled from last record in db's table that suits provided condition or null if nothing found.
+	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
+	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
+	 */
+	public final <M extends KittyModel> M findLast(String condition, Object... conditionValues) {
+		return findLast(conditionFromSQLString(condition, conditionValues));
 	}
 
 	/**
@@ -627,6 +708,40 @@ public class KittyMapper implements Cloneable {
 
 	/**
 	 * Counts record's amount of those records that suits provided condition.
+	 * @param qParams query qParams, may be null
+	 * @param condition sqlite condition string in format `column_name = ? AND #?fieldName = ?`
+	 * @param conditionValues parameters for condition str
+	 * @return record's amount of those records that suits provided condition.
+	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
+	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
+	 */
+	public final long countWhere(QueryParameters qParams, String condition, Object... conditionValues) {
+		if(condition == null)
+			return countAll(qParams);
+		return countWhere(
+				conditionFromSQLString(condition, conditionValues),
+				qParams
+		);
+	}
+
+	/**
+	 * Counts record's amount of those records that suits provided condition.
+	 * @param condition sqlite condition string in format `column_name = ? AND #?fieldName = ?`
+	 * @param conditionValues parameters for condition str
+	 * @return record's amount of those records that suits provided condition.
+	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
+	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
+	 */
+	public final long countWhere(String condition, Object... conditionValues) {
+		if(condition == null)
+			return countAll();
+		return countWhere(
+				conditionFromSQLString(condition, conditionValues)
+		);
+	}
+
+	/**
+	 * Counts record's amount of those records that suits provided condition.
 	 * <br> Alias for {@link #countWhere(SQLiteCondition, QueryParameters)} (countWhere(condition, null)
 	 * @param where SQLite condition, may be null
 	 * @return record's amount of those records that suits provided condition.
@@ -657,10 +772,55 @@ public class KittyMapper implements Cloneable {
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
 	public final long countAll() {
-		return countWhere(null, null);
+		throwExcReadOPWhileInTransaction();
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_COUNT, tableConfig.tableName);
+		KittySQLiteQuery query = qb.buildSQLQuery();
+		logQuery(QE_COUNT, query);
+		Cursor cursor = database.rawQuery(query.getSql(), query.getConditionValues());
+		if (cursor == null)
+			return 0;
+		if(cursor.getCount() == 0) return 0;
+		cursor.moveToFirst();
+		long count = cursor.getLong(0);
+		cursor.close();
+		return count;
 	}
 
 	protected static final String QE_SUM = "KittyMapper#sum(String sumColumn, SQLiteCondition where, QueryParameters qParams)";
+
+	/**
+	 * Sum all values in table in specified column that suits provided condition and additional query qParams.
+	 * @param sumColumn
+	 * @param qParams
+	 * @param condition
+	 * @param conditionValues
+	 * @return
+	 */
+	public final long sum(String sumColumn, QueryParameters qParams, String condition, Object... conditionValues) {
+		if(condition == null)
+			return sumAll(sumColumn, qParams);
+		return sum(
+				sumColumn,
+				conditionFromSQLString(condition, conditionValues),
+				qParams
+		);
+	}
+
+	/**
+	 * Sum all values in table in specified column that suits provided condition and additional query qParams.
+	 * @param sumColumn
+	 * @param condition
+	 * @param conditionValues
+	 * @return
+	 */
+	public final long sum(String sumColumn, String condition, Object... conditionValues) {
+		if(condition == null)
+			return sumAll(sumColumn);
+		return sum(
+				sumColumn,
+				conditionFromSQLString(condition, conditionValues)
+		);
+	}
 
 	/**
 	 * Sum all values in table in specified column that suits provided condition and additional query qParams.
@@ -711,7 +871,19 @@ public class KittyMapper implements Cloneable {
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
 	public final long sumAll(String sumColumn, QueryParameters qParams) {
-		return sum(sumColumn, null, qParams);
+		throwExcReadOPWhileInTransaction();
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_SUM, tableConfig.tableName);
+		qb.setSumColumn(sumColumn)
+				.setQueryParameters(qParams);
+		KittySQLiteQuery query = qb.buildSQLQuery();
+		logQuery(QE_SUM, query);
+		Cursor cursor = database.rawQuery(query.getSql(), query.getConditionValues());
+		if (cursor == null)
+			return 0;
+		cursor.moveToFirst();
+		long sum = cursor.getLong(0);
+		cursor.close();
+		return sum;
 	}
 
 	/**
@@ -723,7 +895,18 @@ public class KittyMapper implements Cloneable {
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
 	public final long sumAll(String sumColumn) {
-		return sum(sumColumn, null, null);
+		throwExcReadOPWhileInTransaction();
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_SUM, tableConfig.tableName);
+		qb.setSumColumn(sumColumn);
+		KittySQLiteQuery query = qb.buildSQLQuery();
+		logQuery(QE_SUM, query);
+		Cursor cursor = database.rawQuery(query.getSql(), query.getConditionValues());
+		if (cursor == null)
+			return 0;
+		cursor.moveToFirst();
+		long sum = cursor.getLong(0);
+		cursor.close();
+		return sum;
 	}
 
 	// SAVE (INSERT AND UPDATE)
@@ -789,6 +972,8 @@ public class KittyMapper implements Cloneable {
 		insert(TRANSACTION_MODES.EXCLUSIVE_MODE, models);
 	}
 
+	protected static final String KE_INSERT_READ_ONLY = "SQLiteReadOnlyDatabaseException on KittyMapper.insert()";
+
 	/**
 	 * <br> Inserts models in provided list into database table in new transaction.
 	 * <br> If there is already existing transaction than this transaction would be used.
@@ -808,7 +993,7 @@ public class KittyMapper implements Cloneable {
 			insert(models);
 		} catch (SQLiteReadOnlyDatabaseException e) {
 			finishTransaction();
-			throw new KittyRuntimeException("insert exception", e); // TODO move to constants
+			throw new KittyRuntimeException(KE_INSERT_READ_ONLY, e);
 		}
 		if(internalVoidTX) {
 			finishTransaction();
@@ -873,6 +1058,28 @@ public class KittyMapper implements Cloneable {
 	}
 
 	/**
+	 * See {@link #update(KittyModel, SQLiteCondition, String[], int)} for more info
+	 * @param model
+	 * @param names
+	 * @param IEFlag
+	 * @param condition
+	 * @param conditionValues
+	 * @param <M>
+	 * @return
+	 */
+	public final <M extends KittyModel> long update(M model, String[] names, int IEFlag, String condition, Object... conditionValues) {
+		if(condition == null)
+			return update(model, null, names, IEFlag);
+		else
+			return update(
+					model,
+					conditionFromSQLString(condition, conditionValues),
+					names,
+					IEFlag
+			);
+	}
+
+	/**
 	 * Update records from database with values from provided model that suits provided condition.
 	 * <br> If you use your own condition make sure that you know what are you doing cause
 	 * in that case would be generated an update statement that can update all records in table
@@ -897,6 +1104,16 @@ public class KittyMapper implements Cloneable {
 		if(condition == null)
 			throw new KittyRuntimeException(format(AME_UTU_NO_INFO, model.getClass().getCanonicalName()));
 		return update(model, condition, null, CVUtils.IGNORE_INCLUSIONS_AND_EXCLUSIONS);
+	}
+
+	public final <M extends KittyModel> long update(M model, String condition, Object... conditionValues) {
+		if(condition == null)
+			return update(model);
+		else
+			return update(
+					model,
+					conditionFromSQLString(condition, conditionValues)
+			);
 	}
 
 	/**
@@ -928,6 +1145,8 @@ public class KittyMapper implements Cloneable {
 		return out;
 	}
 
+	protected final static String KE_UPDATE_READ_ONLY = "SQLiteReadOnlyDatabaseException on KittyMapper.update()";
+
 	/**
 	 * Updates values in database with values from models from provided list in new transaction..
 	 * <br> Foreach model:
@@ -950,7 +1169,7 @@ public class KittyMapper implements Cloneable {
 			update(models);
 		} catch (SQLiteReadOnlyDatabaseException e) {
 			finishTransaction();
-			// TODO rethrow e
+			throw new KittyRuntimeException(KE_UPDATE_READ_ONLY, e);
 		}
 		if(internalVoidTX) {
 			finishTransaction();
@@ -1000,6 +1219,8 @@ public class KittyMapper implements Cloneable {
 		}
 	}
 
+	protected final static String KE_SAVE_READ_ONLY = "SQLiteReadOnlyDatabaseException on KittyMapper.save()";
+
 	/**
 	 * Saves values from provided list of models into database. Foreach model in collection {@link #save(KittyModel)}
 	 * method would be called. Insert\\update operations would be run in internal method transaction.
@@ -1022,7 +1243,7 @@ public class KittyMapper implements Cloneable {
 			save(models);
 		} catch (SQLiteReadOnlyDatabaseException e) {
 			finishTransaction();
-			// TODO rethrow e
+			throw new KittyRuntimeException(KE_SAVE_READ_ONLY, e);
 		}
 		if(internalVoidTX) {
 			finishTransaction();
@@ -1061,7 +1282,19 @@ public class KittyMapper implements Cloneable {
 
 	/**
 	 * Deletes all rows in table associated with this data mapper that suit provided condition.
-	 * @param condition SQLite condition
+	 * @param condition not null
+	 * @param conditionValues
+	 * @return
+	 */
+	public final long deleteWhere(String condition, Object... conditionValues) {
+		return deleteWhere(
+			conditionFromSQLString(condition, conditionValues)
+		);
+	}
+
+	/**
+	 * Deletes all rows in table associated with this data mapper that suit provided condition.
+	 * @param condition SQLite condition, not null
 	 * @return rows affected
 	 */
 	public final long deleteWhere(SQLiteCondition condition) {
@@ -1102,6 +1335,8 @@ public class KittyMapper implements Cloneable {
 		}
 	}
 
+	protected final static String KE_DELETE_READ_ONLY = "SQLiteReadOnlyDatabaseException on KittyMapper.delete()";
+
 	/**
 	 * Deletes all rows that represented by provided model's list. If any of model has no RowID
 	 * or PK fields set {@link KittyRuntimeException} would be thrown.
@@ -1123,7 +1358,7 @@ public class KittyMapper implements Cloneable {
 			delete(models);
 		} catch (SQLiteReadOnlyDatabaseException e) {
 			finishTransaction();
-			// TODO rethrow exception
+			throw new KittyRuntimeException(KE_DELETE_READ_ONLY, e);
 		}
 		if(internalVoidTX) {
 			finishTransaction();
@@ -1585,5 +1820,80 @@ public class KittyMapper implements Cloneable {
 			}
 		}
 		return sb.toString();
+	}
+
+	static private String KITTY_EXCEPTION_TEXT_NO_ASS_CLN_FOR_FN = "No associated column name found for provided field name ({0}) at {1} with model {2}!";
+
+	/**
+	 * Generates instance of {@link SQLiteCondition} from SQLite string and set of parameters.
+	 * <br> Actually, it is {@link SQLiteConditionBuilder#fromSQL(String, Class, Object...)} but there is no
+	 * need to pass model class cause mapper already knows it
+	 * <br> So, better to refactor, cause a lot of same code
+	 * @param condition
+	 * @param params
+	 * @return
+	 */
+	protected final SQLiteCondition conditionFromSQLString(String condition, Object... params) {
+		// Getting str collection for parameters
+		LinkedList<String> conditionArgs = new LinkedList<String>();
+		if(params != null) {
+			for (int i = 0; i < params.length; i++) {
+				conditionArgs.addLast(KittyReflectionUtils.getStringRepresentationOfObject(params[i]));
+			}
+		}
+		String[] arguments = conditionArgs.toArray(new String[conditionArgs.size()]);
+		// OK, trim and check if string condition starts with WHERE ignore case
+		condition = condition.trim();
+		if(condition.length() >= WHERE.length()) {
+			String firstChars = condition.substring(0, WHERE.length() - 1);
+			if(firstChars.toLowerCase().startsWith(WHERE))
+				condition.replace(firstChars, EMPTY_STRING);
+		}
+		// Second step, we do the following thing: check occurrences of model field names (starts with #? and ends with ;)
+		if(condition.contains(MODEL_FIELD_START)) {
+			String[] parts = condition.split(WHSP_STR);
+			StringBuilder rebuildCondition = new StringBuilder();
+			for(String part : parts) {
+				String trimmedPart = part.trim();
+				if(trimmedPart == null) continue;
+				if(trimmedPart.equals(WHSP_STR)) continue;
+				if(trimmedPart.equals(EMPTY_STRING)) continue;
+				if(rebuildCondition.length() > 0) rebuildCondition.append(WHITESPACE);
+				if(trimmedPart.startsWith(MODEL_FIELD_START)) {
+					String fieldName = trimmedPart.replaceAll(MODEL_FIELD_START, EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
+					KittyColumnConfiguration cf = getColumnByFieldName(fieldName);
+					if(cf == null)
+						throw new KittyRuntimeException(
+								format(
+										KITTY_EXCEPTION_TEXT_NO_ASS_CLN_FOR_FN,
+										fieldName,
+										this.getClass().getCanonicalName(),
+										this.blankModelInstance.getClass().getCanonicalName()
+								)
+						);
+					rebuildCondition.append(cf.mainConfiguration.columnName);
+				} else {
+					rebuildCondition.append(trimmedPart);
+				}
+			}
+			return new SQLiteCondition(rebuildCondition.toString(), arguments);
+		}
+		return new SQLiteCondition(condition.toString(), arguments);
+	}
+
+	/**
+	 * Returns column name associated with model field name or null if nothing found
+	 * @param fieldName
+	 * @return
+	 */
+	public KittyColumnConfiguration getColumnByFieldName(String fieldName) {
+		if(columnConfigurations.size() == 0) {
+			Iterator<KittyColumnConfiguration> iterator = tableConfig.sortedColumns.iterator();
+			while(iterator.hasNext()) {
+				KittyColumnConfiguration cf = iterator.next();
+				columnConfigurations.put(cf.mainConfiguration.columnField.getName(), cf);
+			}
+		}
+		return columnConfigurations.get(fieldName);
 	}
 }

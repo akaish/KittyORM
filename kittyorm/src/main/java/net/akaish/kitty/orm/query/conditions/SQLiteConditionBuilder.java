@@ -102,6 +102,18 @@ public class SQLiteConditionBuilder {
 		condition.append(logic.toString());
 		return this;
 	}
+
+	/**
+	 * Adds some logic operators for SQL condition, described in {@link SQLiteOperator}
+	 * {@link SQLiteOperator} has only common used operators, so, for something rare for
+	 * common logic use {@link SQLiteConditionBuilder#addArbitrarySQLExpression(String)}
+	 * <br> Case insensitive, so "and" and "AND" and even "AnD" is OK
+	 * @param logic
+	 * @return
+	 */
+	public SQLiteConditionBuilder addSQLOperator(String logic) {
+		return addSQLOperator(SQLiteOperator.valueOf(logic.toUpperCase()));
+	}
 	
 	/**
 	 * Adds column name to condition (e.g. ), if you want to use Java variables described
@@ -262,10 +274,10 @@ public class SQLiteConditionBuilder {
 		return new SQLiteCondition(condition.toString(), getConditionValues());
 	}
 
-	private static final String WHERE = "where ";
-	private static final String MODEL_FIELD_START = "#?";
-	private static final String MODEL_FIELD_END = ";";
-	private static final String WHSP_STR = " ";
+	public static final String WHERE = "where ";
+	public static final String MODEL_FIELD_START = "#?";
+	public static final String MODEL_FIELD_END = ";";
+	public static final String WHSP_STR = " ";
 
 	/**
 	 * Generates {@link SQLiteCondition} from SQLite string and provided params.

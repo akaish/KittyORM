@@ -126,6 +126,8 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
         mapper.close();
     }
 
+    // TODO check new syntax on CB and mapper method somewhere here
+
     void go() {
         if(actionsLW != null) {
             actionsLW.setAdapter(new BasicArrayAdapter(getContext(), new LinkedList<String>()));

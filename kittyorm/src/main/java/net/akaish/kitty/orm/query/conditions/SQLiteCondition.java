@@ -31,7 +31,7 @@ public class SQLiteCondition {
 	final String condition;
 	final String[] values;
 	
-	SQLiteCondition(String condition, String[] values) {
+	public SQLiteCondition(String condition, String[] values) {
 		super();
 		this.condition = condition;
 		this.values = values;
