@@ -44,6 +44,8 @@ import static net.akaish.kitty.orm.util.KittyConstants.NULL;
 
 public class KittyReflectionUtils {
 
+	// TODO here should be uries and other new supported types as well refactor this piece
+
 	private static String AME_SROMF_NS = "Unable to get String represantion of {0}.{1} ! Type {2} not supported by ReflectionUtils#getStringRepresentationOfModelField!";
 
 	/**

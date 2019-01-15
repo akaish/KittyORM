@@ -56,6 +56,7 @@ import net.akaish.kitty.orm.util.KittyReflectionUtils;
 import net.akaish.kitty.orm.pkey.KittyPrimaryKey;
 import net.akaish.kitty.orm.query.QueryParameters;
 import net.akaish.kitty.orm.query.KittyQueryBuilder;
+import net.akaish.kitty.orm.util.KittyUtils;
 
 import static java.text.MessageFormat.format;
 import static net.akaish.kitty.orm.CVUtils.modelToCV;
@@ -405,6 +406,8 @@ public class KittyMapper implements Cloneable {
 	public final <M extends KittyModel> List<M> findWhere(String condition, Object... conditionValues) {
 		if(condition == null)
 			return findAll();
+		Log.e("###", conditionFromSQLString(condition, conditionValues).getCondition());
+		Log.e("###", KittyUtils.implode(conditionFromSQLString(condition, conditionValues).getValues(), " ; "));
 		return findWhere(
 				conditionFromSQLString(condition, conditionValues)
 		);
@@ -1831,11 +1834,14 @@ public class KittyMapper implements Cloneable {
 	 * @return
 	 */
 	protected final SQLiteCondition conditionFromSQLString(String condition, Object... params) {
+		Log.e("@@@", params[0].toString());
 		// Getting str collection for parameters
 		LinkedList<String> conditionArgs = new LinkedList<String>();
 		if(params != null) {
 			for (int i = 0; i < params.length; i++) {
 				conditionArgs.addLast(KittyReflectionUtils.getStringRepresentationOfObject(params[i]));
+				Log.e("@@@", ""+i+" : "+params[i].toString());
+				Log.e("@@@", ""+i+" : "+KittyReflectionUtils.getStringRepresentationOfObject(params[i]));
 			}
 		}
 		String[] arguments = conditionArgs.toArray(new String[conditionArgs.size()]);
@@ -1857,7 +1863,9 @@ public class KittyMapper implements Cloneable {
 				if(trimmedPart.equals(EMPTY_STRING)) continue;
 				if(rebuildCondition.length() > 0) rebuildCondition.append(WHITESPACE);
 				if(trimmedPart.startsWith(MODEL_FIELD_START)) {
-					String fieldName = trimmedPart.replaceAll(MODEL_FIELD_START, EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
+					Log.e("HA", trimmedPart);
+					//String fieldName = trimmedPart.replaceAll(MODEL_FIELD_START, EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
+					String fieldName = trimmedPart.replaceAll("#\\?", EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
 					KittyColumnConfiguration cf = getColumnByFieldName(fieldName);
 					if(cf == null)
 						throw new KittyRuntimeException(

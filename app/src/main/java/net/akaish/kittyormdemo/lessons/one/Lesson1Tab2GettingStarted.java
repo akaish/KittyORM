@@ -129,6 +129,8 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
 
     private static final String NST_LOGTAG = "NST_LOGTAG";
 
+    // TODO fix from string method, cause it is broken (not suitable for regular types)
+
     private void newSyntaxTest() {
         SimpleDatabase simpleDatabase = new SimpleDatabase(getContext());
         KittyMapper mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
@@ -140,7 +142,9 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
         Log.e(NST_LOGTAG, "2: adding at least two Pavels");
         SimpleExampleModel p1 = new SimpleExampleModel(); p1.randomInteger = 1; p1.firstName = "pavel";
         SimpleExampleModel p2 = new SimpleExampleModel(); p2.randomInteger = 2; p2.firstName = "pavel";
-        mapper.save(p1); mapper.save(p2);
+        Log.e(NST_LOGTAG, "#" + mapper.insert(p1));
+        Log.e(NST_LOGTAG, "#" + mapper.insert(p2));
+        mapper.save(p2);
         List<SimpleExampleModel> pavels = mapper.findWhere("#?firstName = ?", "pavel");
         Iterator<SimpleExampleModel> pavelsI = pavels.iterator();
         while (pavelsI.hasNext())
