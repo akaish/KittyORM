@@ -193,7 +193,7 @@ public class Lesson2Tab4Find extends Lesson2BaseFragment {
             return;
         }
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-        builder.addField("id").addSQLOperator(SQLiteOperator.EQUAL).addValue(idToFind);
+        builder.addColumn("id").addSQLOperator(SQLiteOperator.EQUAL).addValue(idToFind);
         setPaginationResults(builder.build());
     }
 
@@ -229,11 +229,11 @@ public class Lesson2Tab4Find extends Lesson2BaseFragment {
             return;
         }
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-        builder.addField("random_int")
+        builder.addColumn("random_int")
                 .addSQLOperator(SQLiteOperator.GREATER_OR_EQUAL)
                 .addValue(rangeStartInt)
                 .addSQLOperator(SQLiteOperator.AND)
-                .addField("random_int")
+                .addColumn("random_int")
                 .addSQLOperator(SQLiteOperator.LESS_OR_EQUAL)
                 .addValue(rangeEndInt);
         setPaginationResults(builder.build());
@@ -251,7 +251,7 @@ public class Lesson2Tab4Find extends Lesson2BaseFragment {
         }
         Animals animal = Animals.valueOf(animalStr);
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-        builder.addField(AbstractRandomModel.RND_ANIMAL_CNAME)
+        builder.addColumn(AbstractRandomModel.RND_ANIMAL_CNAME)
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addValue(animal.name());
         setPaginationResults(builder.build());

@@ -143,7 +143,7 @@ public abstract class Lesson2BaseFragment extends LessonBaseFragment implements 
         if(getLoadedModelId() == null)
             return false;
         SQLiteCondition condition = new SQLiteConditionBuilder()
-                                        .addField("id")
+                                        .addColumn("id")
                                         .addSQLOperator(SQLiteOperator.EQUAL)
                                         .addValue(getLoadedModelId())
                                         .build();

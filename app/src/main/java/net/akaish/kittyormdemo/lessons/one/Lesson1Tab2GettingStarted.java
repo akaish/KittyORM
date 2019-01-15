@@ -25,6 +25,7 @@
 package net.akaish.kittyormdemo.lessons.one;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -126,6 +127,33 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
         mapper.close();
     }
 
+    private static final String NST_LOGTAG = "NST_LOGTAG";
+
+    private void newSyntaxTest() {
+        SimpleDatabase simpleDatabase = new SimpleDatabase(getContext());
+        KittyMapper mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
+        Log.e(NST_LOGTAG, "1: adding ten rgen models");
+        LinkedList<SimpleExampleModel> randModels = new LinkedList<>();
+        for(int i = 0; i < 10; i++)
+            randModels.add(RandomSimpleExampleModelUtil.randomSEModel());
+        mapper.saveInTransaction(randModels);
+        Log.e(NST_LOGTAG, "2: adding at least two Pavels");
+        SimpleExampleModel p1 = new SimpleExampleModel(); p1.randomInteger = 1; p1.firstName = "pavel";
+        SimpleExampleModel p2 = new SimpleExampleModel(); p2.randomInteger = 2; p2.firstName = "pavel";
+        mapper.save(p1); mapper.save(p2);
+        List<SimpleExampleModel> pavels = mapper.findWhere("#?firstName = ?", "pavel");
+        Iterator<SimpleExampleModel> pavelsI = pavels.iterator();
+        while (pavelsI.hasNext())
+            Log.e(NST_LOGTAG, "3: " + pavelsI.next().toString());
+        Log.e(NST_LOGTAG, "4: adding at least one Denese");
+        SimpleExampleModel d1 = new SimpleExampleModel(); d1.randomInteger = 228; d1.firstName = "Denese";
+        mapper.save(d1);
+        SQLiteConditionBuilder sqb = new SQLiteConditionBuilder();
+        sqb.addColumn("first_name").addSQLOperator("=").addValue("Denese");
+
+
+    }
+
     // TODO check new syntax on CB and mapper method somewhere here
 
     void go() {
@@ -203,7 +231,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
             // find with condition
             addActionListItem(format(getContext().getString(R.string._l1_t2_retrieving), "mapper.findWhere", "WHERE first_name = Marina", findOperationId));
             SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-            builder.addField("first_name")
+            builder.addColumn("first_name")
                     .addSQLOperator(SQLiteOperator.EQUAL)
                     .addValue("Marina");
             List<SimpleExampleModel> marinas = mapper.findWhere(builder.build());
@@ -262,7 +290,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
             // Deleting some models
             // Deleting by entity, make sure that entity has RowID\IPK\PK set
             SQLiteCondition alexCondition = new SQLiteConditionBuilder()
-                                                        .addField("first_name")
+                                                        .addColumn("first_name")
                                                         .addSQLOperator(SQLiteOperator.EQUAL)
                                                         .addValue("Alex")
                                                         .build();
@@ -277,7 +305,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
 
             // Deleting with condition
             SQLiteCondition marina445555Condition = new SQLiteConditionBuilder()
-                                                            .addField("random_integer")
+                                                            .addColumn("random_integer")
                                                             .addSQLOperator(SQLiteOperator.EQUAL)
                                                             .addValue(marina2.randomInteger)
                                                             .build();
@@ -312,7 +340,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
             updateMarina.randomInteger = 121212;
             addActionListItem(format(getString(R.string._l1_t2_updating_query_like), updateMarina));
             builder = new SQLiteConditionBuilder();
-            builder.addField("first_name")
+            builder.addColumn("first_name")
                     .addSQLOperator(SQLiteOperator.EQUAL)
                     .addValue("Marina");
             if(mapper.update(updateMarina, builder.build(), new String[]{"randomInteger"}, CVUtils.INCLUDE_ONLY_SELECTED_FIELDS) > 0) {

@@ -58,7 +58,7 @@ public class RandomMapper extends KittyMapper {
 
     protected SQLiteCondition getAnimalCondition(Animals animal) {
         return new SQLiteConditionBuilder()
-                .addField(RND_ANIMAL_CNAME)
+                .addColumn(RND_ANIMAL_CNAME)
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addObjectValue(animal)
                 .build();
@@ -66,11 +66,11 @@ public class RandomMapper extends KittyMapper {
 
     public long deleteByRandomIntegerRange(int start, int end) {
         SQLiteCondition condition = new SQLiteConditionBuilder()
-                .addField("random_int")
+                .addColumn("random_int")
                 .addSQLOperator(GREATER_OR_EQUAL)
                 .addValue(start)
                 .addSQLOperator(AND)
-                .addField("random_int")
+                .addColumn("random_int")
                 .addSQLOperator(LESS_OR_EQUAL)
                 .addValue(end)
                 .build();
@@ -94,11 +94,11 @@ public class RandomMapper extends KittyMapper {
 
     public List<RandomModel> findByIdRange(long fromId, long toId, boolean inclusive, Long offset, Long limit) {
         SQLiteCondition condition = new SQLiteConditionBuilder()
-                .addField("id")
+                .addColumn("id")
                 .addSQLOperator(inclusive ? GREATER_OR_EQUAL : GREATER_THAN)
                 .addValue(fromId)
                 .addSQLOperator(AND)
-                .addField("id")
+                .addColumn("id")
                 .addSQLOperator(inclusive ? LESS_OR_EQUAL : LESS_THAN)
                 .addValue(toId)
                 .build();

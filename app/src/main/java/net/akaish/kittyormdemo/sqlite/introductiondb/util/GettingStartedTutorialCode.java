@@ -102,7 +102,7 @@ public class GettingStartedTutorialCode {
         int findOperationId = 0;
         // find with condition
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-        builder.addField("first_name")
+        builder.addColumn("first_name")
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addValue("Marina");
         List<SimpleExampleModel> marinas = mapper.findWhere(builder.build());
@@ -134,7 +134,7 @@ public class GettingStartedTutorialCode {
         // Deleting some models
         // Deleting by entity, make sure that entity has RowID\IPK\PK set
         SQLiteCondition alexCondition = new SQLiteConditionBuilder()
-                .addField("first_name")
+                .addColumn("first_name")
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addValue("Alex")
                 .build();
@@ -144,7 +144,7 @@ public class GettingStartedTutorialCode {
 
         // Deleting with condition
         SQLiteCondition marina445555Condition = new SQLiteConditionBuilder()
-                .addField("random_integer")
+                .addColumn("random_integer")
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addValue(marina2.randomInteger)
                 .build();
@@ -164,7 +164,7 @@ public class GettingStartedTutorialCode {
         SimpleExampleModel updateMarina = new SimpleExampleModel();
         updateMarina.randomInteger = 121212;
         builder = new SQLiteConditionBuilder();
-        builder.addField("first_name")
+        builder.addColumn("first_name")
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addValue("Marina");
         if(mapper.update(updateMarina, builder.build(), new String[]{"randomInteger"}, CVUtils.INCLUDE_ONLY_SELECTED_FIELDS) > 0) {
@@ -205,7 +205,7 @@ public class GettingStartedTutorialCode {
 
     public SimpleExampleModel findOneMarina() {
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-        builder.addField("first_name")
+        builder.addColumn("first_name")
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addValue("Marina");
         KittyMapper mapper = database.getMapper(SimpleExampleModel.class);
@@ -232,7 +232,7 @@ public class GettingStartedTutorialCode {
     public void deleteAlex() {
         KittyMapper mapper = database.getMapper(SimpleExampleModel.class);
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-        builder.addField("first_name")
+        builder.addColumn("first_name")
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addValue("Alex");
         mapper.deleteWhere(builder.build());

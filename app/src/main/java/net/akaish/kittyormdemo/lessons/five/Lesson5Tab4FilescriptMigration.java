@@ -414,7 +414,7 @@ public class Lesson5Tab4FilescriptMigration extends Lesson5BaseFragment {
             Log.e("CPK test 0", " count = "+mapper.countAll());
 
             SQLiteCondition sqLiteCondition = new SQLiteConditionBuilder()
-                                                .addField("ipk_str")
+                                                .addColumn("ipk_str")
                                                 .addSQLOperator(SQLiteOperator.EQUAL)
                                                 .addValue(m3.ipkUniqueString)
                                                 .build();
@@ -425,7 +425,7 @@ public class Lesson5Tab4FilescriptMigration extends Lesson5BaseFragment {
             mapper.save(m3FromDB);
 
             SQLiteCondition sqLiteCondition2 = new SQLiteConditionBuilder()
-                                                    .addField("some_str")
+                                                    .addColumn("some_str")
                                                     .addSQLOperator(SQLiteOperator.EQUAL)
                                                     .addValue("modified")
                                                     .build();

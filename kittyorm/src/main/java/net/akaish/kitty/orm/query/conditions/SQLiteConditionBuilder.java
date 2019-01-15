@@ -28,7 +28,6 @@ import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.util.KittyReflectionUtils;
-import net.akaish.kitty.orm.util.KittyUtils;
 
 import static net.akaish.kitty.orm.util.KittyConstants.*;
 
@@ -73,7 +72,7 @@ public class SQLiteConditionBuilder {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public SQLiteConditionBuilder addField(String fieldName, Class modelClass) {
+	public SQLiteConditionBuilder addColumn(String fieldName, Class modelClass) {
 		try {
 			Field field = modelClass.getField(fieldName);
 			field.setAccessible(true);
@@ -117,11 +116,11 @@ public class SQLiteConditionBuilder {
 	
 	/**
 	 * Adds column name to condition (e.g. ), if you want to use Java variables described
-	 * with {@link KITTY_COLUMN}, use {@link SQLiteConditionBuilder#addField(String, Class)} instead
+	 * with {@link KITTY_COLUMN}, use {@link SQLiteConditionBuilder#addColumn(String, Class)} instead
 	 * @param columnName
 	 * @return
 	 */
-	public SQLiteConditionBuilder addField(String columnName) {
+	public SQLiteConditionBuilder addColumn(String columnName) {
 		if(condition.length()!=0) condition.append(WHITESPACE);
 		condition.append(columnName);
 		return this;

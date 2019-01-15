@@ -24,7 +24,6 @@
 
 package net.akaish.kitty.orm;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,8 +41,6 @@ import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
 import android.util.Log;
 
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.query.KittySQLiteQuery;
@@ -1586,7 +1583,7 @@ public class KittyMapper implements Cloneable {
 				}
 			} else {
 				SQLiteConditionBuilder cb = new SQLiteConditionBuilder();
-				cb.addField(ROWID)
+				cb.addColumn(ROWID)
 						.addSQLOperator(SQLiteOperator.EQUAL)
 						.addValue(model.getRowID());
 				return cb.build();
@@ -1621,7 +1618,7 @@ public class KittyMapper implements Cloneable {
 			if(kvk.getValue() == null)
 				return null;
 			counter++;
-			cb.addField(kvk.getKey())
+			cb.addColumn(kvk.getKey())
 					.addSQLOperator(SQLiteOperator.EQUAL)
 					.addValue(kvk.getValue());
 			if(counter<mapSize)
@@ -1671,7 +1668,7 @@ public class KittyMapper implements Cloneable {
 		if(tableConfig.kittyPrimaryKey != null) {
 			if(tableConfig.kittyPrimaryKey.isIPK()) {
 				SQLiteConditionBuilder cb = new SQLiteConditionBuilder();
-				cb.addField(tableConfig.kittyPrimaryKey.getPrimaryKeyColumnNames()[0])
+				cb.addColumn(tableConfig.kittyPrimaryKey.getPrimaryKeyColumnNames()[0])
 						.addSQLOperator(SQLiteOperator.EQUAL)
 						.addValue(id);
 				return cb.build();
@@ -1711,7 +1708,7 @@ public class KittyMapper implements Cloneable {
 	protected final SQLiteCondition getRowIDCondition(Long id) {
 		if(id == null) return null;
 		SQLiteConditionBuilder cb = new SQLiteConditionBuilder();
-		return cb.addField(ROWID).addSQLOperator(SQLiteOperator.EQUAL).addValue(id).build();
+		return cb.addColumn(ROWID).addSQLOperator(SQLiteOperator.EQUAL).addValue(id).build();
 	}
 
 	// HELPER METHODS (LOGGING)
