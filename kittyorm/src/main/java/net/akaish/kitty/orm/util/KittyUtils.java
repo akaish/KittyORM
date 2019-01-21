@@ -389,9 +389,7 @@ public class KittyUtils {
 	public static final int CODE_UNABLE_TO_COPY_ALREADY_EXISTS = 0;
 	public static final int CODE_UNABLE_TO_COPY = 1;
 	public static final int CODE_COPIED_SUCCESSFULLY = 2;
-
-	// TODO write it https://stackoverflow.com/questions/15574983/copy-directory-from-assets-to-local-directory
-	// TODO https://twodee.org/blog/4518
+	
 	public static final void copyDirectoryFromAssetsToFS(Context ctx, String assetsPath, File baseFile) {
 		if(assetsPath.startsWith(ASSETS_URI_START)) {
 			assetsPath = assetsPath.replace(ASSETS_URI_START, EMPTY_STRING);

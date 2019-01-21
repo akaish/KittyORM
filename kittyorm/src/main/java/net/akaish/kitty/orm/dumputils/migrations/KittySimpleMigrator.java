@@ -78,7 +78,6 @@ public class KittySimpleMigrator extends KittyORMVersionMigrator {
         super(oldVersion, currentVersion, ctx, schemaName, logTag, logOn, factoryParameters, migrationsParameters);
     }
 
-    // TODO pass as second parameter dbs
     @Override
     protected void setParameters(Object[] factoryParameters, Object[] migrationsParameters) {
         String IAMessage = MessageFormat.format(

@@ -245,7 +245,7 @@ public class SQLiteConditionBuilder {
 	public SQLiteConditionBuilder addObjectValue(Object value) {
 		if(condition.length()!=0) condition.append(WHITESPACE);
 		condition.append(QSIGN);
-		selectionArguments.add(KittyReflectionUtils.getStringRepresentationOfObject(value));
+		selectionArguments.add(KittyReflectionUtils.objectToString(value));
 		return this;
 	}
 	
@@ -295,7 +295,7 @@ public class SQLiteConditionBuilder {
 		LinkedList<String> conditionArgs = new LinkedList<String>();
 		if(params != null) {
 			for (int i = 0; i < params.length; i++) {
-				conditionArgs.addLast(KittyReflectionUtils.getStringRepresentationOfObject(params[i]));
+				conditionArgs.addLast(KittyReflectionUtils.objectToString(params[i]));
 			}
 		}
 		String[] arguments = conditionArgs.toArray(new String[conditionArgs.size()]);

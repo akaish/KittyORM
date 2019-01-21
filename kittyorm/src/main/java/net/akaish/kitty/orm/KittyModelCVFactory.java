@@ -154,6 +154,12 @@ public class KittyModelCVFactory {
                 } else if (byte[].class.equals(fieldType)) {
                     byte[] bytes = cursor.getBlob(columnIndex);
                     columnField.set(model, bytes);
+                } else if(Byte[].class.equals(fieldType)) {
+                    byte[] bytes = cursor.getBlob(columnIndex);
+                    Byte[] bytesObj = new Byte[bytes.length];
+                    for (int i = 0; i < bytes.length; i++)
+                        bytesObj[i] = bytes[i];
+                    columnField.set(model, bytes);
                     // double and Double
                 } else if (double.class.equals(fieldType) || Double.class.equals(fieldType)) {
                     double doubleV = cursor.getDouble(columnIndex);

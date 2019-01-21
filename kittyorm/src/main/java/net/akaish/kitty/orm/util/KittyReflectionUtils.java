@@ -24,17 +24,21 @@
 
 package net.akaish.kitty.orm.util;
 
+import android.net.Uri;
+
 import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
 
+import static java.text.MessageFormat.format;
 import static net.akaish.kitty.orm.util.KittyConstants.NULL;
 
 /**
@@ -44,9 +48,7 @@ import static net.akaish.kitty.orm.util.KittyConstants.NULL;
 
 public class KittyReflectionUtils {
 
-	// TODO here should be uries and other new supported types as well refactor this piece
-
-	private static String AME_SROMF_NS = "Unable to get String represantion of {0}.{1} ! Type {2} not supported by ReflectionUtils#getStringRepresentationOfModelField!";
+	private static String KITTY_RNTE_UNABLE_TO_GET_STR_REPRESENT = "Unable to get String representation of {0}.{1} ! Type {2} not supported by ReflectionUtils#getStringRepresentationOfModelField!";
 
 	/**
 	 * Returns string representation of provided field for provided kitty model object if possible.
@@ -129,13 +131,14 @@ public class KittyReflectionUtils {
 			if (tsp != null)
 				return Long.toString(tsp.getTime());
 		}
-			throw new KittyRuntimeException(MessageFormat.format(AME_SROMF_NS,
+			throw new KittyRuntimeException(format(KITTY_RNTE_UNABLE_TO_GET_STR_REPRESENT,
 					model.getClass().getCanonicalName(), field.getName(), fieldType.getCanonicalName()));
 	}
 
-	public static final String getStringRepresentationOfObject(Object object) {
-		if(object == null) return NULL;
-		if (BigDecimal.class.equals(object.getClass())) {
+	public static final String objectToString(Object object) {
+		if (object == null) return NULL;
+		if (String.class.equals(object.getClass())) {
+	    } else if (BigDecimal.class.equals(object.getClass())) {
 			return ((BigDecimal)object).toString();
 		} else if (BigInteger.class.equals(object.getClass())) {
 			return ((BigInteger)object).toString();
@@ -147,8 +150,57 @@ public class KittyReflectionUtils {
 			return Long.toString(((Date) object).getTime());
 		} else if (Timestamp.class.equals(object.getClass())) {
 			return Long.toString(((Timestamp) object).getTime());
+		} else if (File.class.equals(object.getClass())) {
+			return ((File) object).getAbsolutePath();
+		} else if (Uri.class.equals(object.getClass())) {
+			return object.toString();
+		} else if (Currency.class.equals(object.getClass())) {
+			return ((Currency) object).getCurrencyCode();
 		}
 		return NULL;
+	}
+
+	private static final String KITTY_RNTE_TO_STRING_NOT_DEFINED = "There is no default mapping to SQLite string defined for java type {0} (KittyORM, KittyReflectionUtils.getSQLiteStringRepresentation(Object object))!";
+
+	public static final String getSQLiteStringRepresentation(Object object) {
+		if(object == null) return NULL;
+		Class objClass = object.getClass();
+		if (boolean.class.equals(objClass) || Boolean.class.equals(objClass)) {
+			return Integer.toString((Boolean) object ? 1 : 0);
+		} else if (int.class.equals(objClass) || Integer.class.equals(objClass)) {
+			return Integer.toString((Integer)object);
+		} else if (byte.class.equals(objClass) || Byte.class.equals(objClass)) {
+			return Byte.toString((Byte) object);
+		} else if (double.class.equals(objClass) || Double.class.equals(objClass)) {
+			return Double.toString((Double)object);
+		} else if (long.class.equals(objClass) || Long.class.equals(objClass)) {
+			return Long.toString((Long)object);
+		} else if (short.class.equals(objClass) || Short.class.equals(objClass)) {
+			return Short.toString((Short)object);
+		} else if (float.class.equals(objClass) || Float.class.equals(objClass)) {
+			return Float.toString((Float)object);
+		} else if (String.class.equals(objClass)) {
+			return (String) object;
+		} else if (BigDecimal.class.equals(objClass)) {
+			return object.toString();
+		} else if (BigInteger.class.equals(objClass)) {
+			return object.toString();
+		} else if (objClass.isEnum()) {
+			return ((Enum) object).name();
+		} else if (Calendar.class.equals(objClass)) {
+			return Long.toString(((Calendar) object).getTimeInMillis());
+		} else if (Date.class.equals(objClass)) {
+			return Long.toString(((Date) object).getTime());
+		} else if (Timestamp.class.equals(objClass)) {
+			return Long.toString(((Timestamp) object).getTime());
+		} else if (File.class.equals(objClass)) {
+			return ((File) object).getAbsolutePath();
+		} else if (Uri.class.equals(objClass)) {
+			return object.toString();
+		} else if (Currency.class.equals(objClass)) {
+			return ((Currency) object).getCurrencyCode();
+		}
+		throw new KittyRuntimeException(format(KITTY_RNTE_TO_STRING_NOT_DEFINED, objClass.getCanonicalName()));
 	}
 
 	/**

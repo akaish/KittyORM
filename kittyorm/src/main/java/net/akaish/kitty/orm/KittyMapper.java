@@ -1839,9 +1839,9 @@ public class KittyMapper implements Cloneable {
 		LinkedList<String> conditionArgs = new LinkedList<String>();
 		if(params != null) {
 			for (int i = 0; i < params.length; i++) {
-				conditionArgs.addLast(KittyReflectionUtils.getStringRepresentationOfObject(params[i]));
+				conditionArgs.addLast(KittyReflectionUtils.objectToString(params[i]));
 				Log.e("@@@", ""+i+" : "+params[i].toString());
-				Log.e("@@@", ""+i+" : "+KittyReflectionUtils.getStringRepresentationOfObject(params[i]));
+				Log.e("@@@", ""+i+" : "+KittyReflectionUtils.objectToString(params[i]));
 			}
 		}
 		String[] arguments = conditionArgs.toArray(new String[conditionArgs.size()]);

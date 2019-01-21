@@ -257,8 +257,14 @@ public class CVUtils {
                         throw new KittyRuntimeException(MessageFormat.format(AME_CTM_BYTE_OF, model.getClass().getCanonicalName(), columnField.getName()));
                     columnField.set(model, (byte) byteV);
                     // byte array
-                } else if(byte[].class.equals(fieldType)) { // TODO mmm where Byte[]???? Check it
+                } else if(byte[].class.equals(fieldType)) {
                     byte[] bytes = cursor.getBlob(cursor.getColumnIndex(column.mainConfiguration.columnName));
+                    columnField.set(model, bytes);
+                } else if(Byte[].class.equals(fieldType)) {
+                    byte[] bytes = cursor.getBlob(cursor.getColumnIndex(column.mainConfiguration.columnName));
+                    Byte[] bytesObj = new Byte[bytes.length];
+                    for (int i = 0; i < bytes.length; i++)
+                        bytesObj[i] = bytes[i];
                     columnField.set(model, bytes);
                     // double and Double
                 } else if(double.class.equals(fieldType) || Double.class.equals(fieldType)) {
@@ -361,7 +367,7 @@ public class CVUtils {
      */
     static boolean isDefaultTypeRepresentedType(Class<?> fieldType) {
         return Boolean.class.equals(fieldType) || Integer.class.equals(fieldType) || Byte.class.equals(fieldType)
-                || byte[].class.equals(fieldType) || Double.class.equals(fieldType) || Short.class.equals(fieldType)
+                || byte[].class.equals(fieldType) || Byte[].class.equals(fieldType) || Double.class.equals(fieldType) || Short.class.equals(fieldType)
                 || Float.class.equals(fieldType);
     }
 
@@ -419,10 +425,20 @@ public class CVUtils {
         } else if (Byte.class.equals(fieldType)) {
             Byte byteV = (Byte) columnField.get(model);
             AVUtils.checkByteValue(byteV, column, model.getClass());
-            if(byteV == null) {
+            if (byteV == null) {
                 values.putNull(column.mainConfiguration.columnName);
             } else {
                 values.put(column.mainConfiguration.columnName, (int) byteV);
+            }
+        } else if (Byte[].class.equals(fieldType)) {
+            Byte[] bytes = (Byte[]) columnField.get(model);
+            if(bytes == null) {
+                values.putNull(column.mainConfiguration.columnName);
+            } else {
+                byte[] bytesToCV = new byte[bytes.length];
+                for(int i = 0; i < bytes.length; i++)
+                    bytesToCV[i] = bytes[i].byteValue();
+                values.put(column.mainConfiguration.columnName, bytesToCV);
             }
         } else if (byte[].class.equals(fieldType)) {
             byte[] bytes = (byte[]) columnField.get(model);
