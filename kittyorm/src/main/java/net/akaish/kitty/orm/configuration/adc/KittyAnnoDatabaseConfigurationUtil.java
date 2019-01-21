@@ -189,6 +189,7 @@ public class KittyAnnoDatabaseConfigurationUtil {
                         .setRecordsConfigurations(tableConfigurations)
                         .setRegistry(generatedRegistry)
                         .setIsKittyDexUtilLoggingEnabled(databaseAnno.isKittyDexUtilLoggingEnabled())
+                        .returnNullInsteadEmptyCollection(databaseAnno.returnNullInsteadEmptyCollection())
                         .createKittyDatabaseConfiguration();
             if(databaseAnno.isLoggingOn())
                 Log.i(databaseAnno.logTag(), format(LI_GENERATING_DB_CONF_FINISHED,  database.getCanonicalName(), databaseName, databaseAnno.databaseVersion(), configuration));

@@ -165,6 +165,8 @@ public class KittyMapper implements Cloneable {
 	protected boolean logOn = false;
 	protected String  logTag = DEFAULT_LOG_TAG;
 
+	protected boolean returnNullNotEmptyCollection = false;
+
 	protected final HashMap<KittyArrayKey, InsertValuesStatement> precompiledInserts = new HashMap<>();
 	protected final HashMap<String, KittyColumnConfiguration> columnConfigurations = new HashMap<>();
 
@@ -195,6 +197,18 @@ public class KittyMapper implements Cloneable {
 	public final <H extends KittyDatabaseHelper> KittyMapper setDatabaseHelper(H helper) {
 		databaseHelper = helper;
 		return this;
+	}
+
+	/**
+	 * Defines what would be returned by fetch methods in cases when nothing found in
+	 * database table. So, if passed true than if result set for select query contains no
+	 * rows than NULL would be returned. Otherwise (false passed as parameter) empty collection
+	 * would be returned in such cases.
+	 * <br> By default it is false
+	 * @param returnNullNotEmptyCollection
+	 */
+	public final void setReturnNullNotEmptyCollection(boolean returnNullNotEmptyCollection) {
+		this.returnNullNotEmptyCollection = returnNullNotEmptyCollection;
 	}
 
 	public final void setLogOn(boolean logOn) {
@@ -378,7 +392,7 @@ public class KittyMapper implements Cloneable {
 	 * @param conditionValues parameters for condition str
 	 * @return
 	 *
-	 * @return list of models or null if nothing found
+	 * @return list of models or null if nothing found and returnNullNotEmptyCollection is on
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
@@ -399,15 +413,13 @@ public class KittyMapper implements Cloneable {
 	 * @param condition sqlite condition string in format `column_name = ? AND #?fieldName = ?`
 	 * @param conditionValues parameters for condition str
 	 *
-	 * @return list of models or null if nothing found
+	 * @return list of models or null if nothing found and returnNullNotEmptyCollection is on
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
 	public final <M extends KittyModel> List<M> findWhere(String condition, Object... conditionValues) {
 		if(condition == null)
 			return findAll();
-		Log.e("###", conditionFromSQLString(condition, conditionValues).getCondition());
-		Log.e("###", KittyUtils.implode(conditionFromSQLString(condition, conditionValues).getValues(), " ; "));
 		return findWhere(
 				conditionFromSQLString(condition, conditionValues)
 		);
@@ -419,7 +431,7 @@ public class KittyMapper implements Cloneable {
 	 * @param where condition, can be null
 	 * @param qParams additional query parameters (offset, limit, ordering etc), can be null
 	 *
-	 * @return list of models or null if nothing found
+	 * @return list of models or null if nothing found and returnNullNotEmptyCollection is on
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
@@ -438,7 +450,7 @@ public class KittyMapper implements Cloneable {
 	 * no records found in db with passed condition than null would be returned.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(where, null)
 	 * @param where condition, can be null
-	 * @return list of models or null if nothing found
+	 * @return list of models or null if nothing found and returnNullNotEmptyCollection is on
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
@@ -451,7 +463,7 @@ public class KittyMapper implements Cloneable {
 	 * passed qParams.
 	 * <br> Alias for {@link #findWhere(SQLiteCondition, QueryParameters)} (findWhere(null, qParams)
 	 * @param qParams query params such as limit, offset etc, can be null
-	 * @return list of all models fetched according to passed params or null if nothing found
+	 * @return list of all models fetched according to passed params or null if nothing found and returnNullNotEmptyCollection is on
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
@@ -461,7 +473,7 @@ public class KittyMapper implements Cloneable {
 
 	/**
 	 * Returns list of all models associated with records in backed database table.
-	 * @return list of all models associated with backed database table or null if nothing found
+	 * @return list of all models associated with backed database table or null if nothing found and returnNullNotEmptyCollection is on
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
@@ -1431,14 +1443,17 @@ public class KittyMapper implements Cloneable {
 	 * @param rowIdSupport RowID flag
 	 * @param query sql query
 	 * @param <M> instance of non abstract child of KittyModel
-	 * @return collection of models or null if nothing found
+	 * @return collection of models or null if nothing found and returnNullNotEmptyCollection is on
 	 */
 	public final <M extends KittyModel> List<M> findWithRawQuery(boolean rowIdSupport, KittySQLiteQuery query) {
 		logQuery(QE_FIND_WITH_RAW_QUERY, query);
 		Cursor cursor = database.rawQuery(query.getSql(), query.getConditionValues());
 
 		if (cursor == null)
-			return null;
+			if(returnNullNotEmptyCollection)
+				return null;
+			else
+				return new ArrayList<M>();
 		else {
 			List<M> out = new ArrayList<>(cursor.getCount());
 
@@ -1458,7 +1473,12 @@ public class KittyMapper implements Cloneable {
 				} while (cursor.moveToNext());
 			}
 			cursor.close();
-			if(out.size() == 0) return null;
+			if(out.size() == 0) {
+				if(returnNullNotEmptyCollection)
+					return null;
+				else
+					return new ArrayList<M>();
+			}
 			return out;
 		}
 
@@ -1834,14 +1854,11 @@ public class KittyMapper implements Cloneable {
 	 * @return
 	 */
 	protected final SQLiteCondition conditionFromSQLString(String condition, Object... params) {
-		Log.e("@@@", params[0].toString());
 		// Getting str collection for parameters
 		LinkedList<String> conditionArgs = new LinkedList<String>();
 		if(params != null) {
 			for (int i = 0; i < params.length; i++) {
-				conditionArgs.addLast(KittyReflectionUtils.objectToString(params[i]));
-				Log.e("@@@", ""+i+" : "+params[i].toString());
-				Log.e("@@@", ""+i+" : "+KittyReflectionUtils.objectToString(params[i]));
+				conditionArgs.addLast(KittyReflectionUtils.getSQLiteStringRepresentation(params[i]));
 			}
 		}
 		String[] arguments = conditionArgs.toArray(new String[conditionArgs.size()]);
@@ -1863,7 +1880,6 @@ public class KittyMapper implements Cloneable {
 				if(trimmedPart.equals(EMPTY_STRING)) continue;
 				if(rebuildCondition.length() > 0) rebuildCondition.append(WHITESPACE);
 				if(trimmedPart.startsWith(MODEL_FIELD_START)) {
-					Log.e("HA", trimmedPart);
 					//String fieldName = trimmedPart.replaceAll(MODEL_FIELD_START, EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
 					String fieldName = trimmedPart.replaceAll("#\\?", EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
 					KittyColumnConfiguration cf = getColumnByFieldName(fieldName);

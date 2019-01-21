@@ -24,12 +24,15 @@
 
 package net.akaish.kitty.orm.query.conditions;
 
+import android.util.Log;
+
 import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.util.KittyReflectionUtils;
 
 import static net.akaish.kitty.orm.util.KittyConstants.*;
+import static net.akaish.kitty.orm.util.KittyUtils.fieldNameToLowerCaseUnderScore;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -72,7 +75,7 @@ public class SQLiteConditionBuilder {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public SQLiteConditionBuilder addColumn(String fieldName, Class modelClass) {
+	public SQLiteConditionBuilder addField(String fieldName, Class modelClass) {
 		try {
 			Field field = modelClass.getField(fieldName);
 			field.setAccessible(true);
@@ -81,7 +84,10 @@ public class SQLiteConditionBuilder {
 						+fieldName+" at modelClass class "+modelClass.getCanonicalName());
 			}
 			if(condition.length()!=0) condition.append(WHITESPACE);
-			condition.append(field.getAnnotation(KITTY_COLUMN.class).columnName());
+			String columnName = field.getAnnotation(KITTY_COLUMN.class).columnName();
+			if(columnName.equals(EMPTY_STRING))
+				columnName = fieldNameToLowerCaseUnderScore(fieldName);
+			condition.append(columnName);
 			return this;
 		} catch(NoSuchFieldException e) {
 			// rethrowing exception
@@ -111,12 +117,37 @@ public class SQLiteConditionBuilder {
 	 * @return
 	 */
 	public SQLiteConditionBuilder addSQLOperator(String logic) {
-		return addSQLOperator(SQLiteOperator.valueOf(logic.toUpperCase()));
+		return addSQLOperator(SQLiteOperator.fromString(logic.toUpperCase()));
+	}
+
+	/**
+	 * Adds some logic operators for SQL condition, described in {@link SQLiteOperator}
+	 * {@link SQLiteOperator} has only common used operators, so, for something rare for
+	 * common logic use {@link SQLiteConditionBuilder#addArbitrarySQLExpression(String)}
+	 * <br> Case insensitive, so "and" and "AND" and even "AnD" is OK
+	 * <br> Alias for {@link #addSQLOperator(String)}
+	 * @param logic
+	 * @return
+	 */
+	public SQLiteConditionBuilder addOperator(String logic) {
+		return addSQLOperator(SQLiteOperator.fromString(logic.toUpperCase()));
+	}
+
+	/**
+	 * Adds some logic operators for SQL condition, described in {@link SQLiteOperator}
+	 * {@link SQLiteOperator} has only common used operators, so, for something rare for
+	 * common logic use {@link SQLiteConditionBuilder#addArbitrarySQLExpression(String)}
+	 * <br> Alias for {@link #addSQLOperator(SQLiteOperator)}
+	 * @param logic
+	 * @return
+	 */
+	public SQLiteConditionBuilder addOperator(SQLiteOperator logic) {
+		return addSQLOperator(logic);
 	}
 	
 	/**
 	 * Adds column name to condition (e.g. ), if you want to use Java variables described
-	 * with {@link KITTY_COLUMN}, use {@link SQLiteConditionBuilder#addColumn(String, Class)} instead
+	 * with {@link KITTY_COLUMN}, use {@link SQLiteConditionBuilder#addField(String, Class)} instead
 	 * @param columnName
 	 * @return
 	 */
@@ -295,7 +326,7 @@ public class SQLiteConditionBuilder {
 		LinkedList<String> conditionArgs = new LinkedList<String>();
 		if(params != null) {
 			for (int i = 0; i < params.length; i++) {
-				conditionArgs.addLast(KittyReflectionUtils.objectToString(params[i]));
+				conditionArgs.addLast(KittyReflectionUtils.getSQLiteStringRepresentation(params[i]));
 			}
 		}
 		String[] arguments = conditionArgs.toArray(new String[conditionArgs.size()]);
@@ -319,7 +350,8 @@ public class SQLiteConditionBuilder {
 				if(trimmedPart.startsWith(MODEL_FIELD_START)) {
 					if(modelClass == null)
 						throw new NullPointerException("modelClass param can't be null if you specify #?fieldName; in conditionStr");
-					String fieldName = trimmedPart.replaceAll(MODEL_FIELD_START, EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
+					//String fieldName = trimmedPart.replaceAll(MODEL_FIELD_START, EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
+					String fieldName = trimmedPart.replaceAll("#\\?", EMPTY_STRING).replaceAll(MODEL_FIELD_END, EMPTY_STRING);
 					try {
 						Field field = modelClass.getField(fieldName);
 						field.setAccessible(true);
@@ -327,7 +359,11 @@ public class SQLiteConditionBuilder {
 							throw new KittyRuntimeException("There is no KITTY_COLUMN annotation present for field with name "
 									+fieldName+" at modelClass class "+modelClass.getCanonicalName());
 						}
-						rebuildCondition.append(field.getAnnotation(KITTY_COLUMN.class).columnName());
+						String columnName = field.getAnnotation(KITTY_COLUMN.class).columnName();
+						if(columnName.equals(EMPTY_STRING)) {
+							columnName = fieldNameToLowerCaseUnderScore(fieldName);
+						}
+						rebuildCondition.append(columnName);
 					} catch(NoSuchFieldException e) {
 						// rethrowing exception
 						throw new KittyRuntimeException("There is no field with name "+fieldName+" at modelClass class "+modelClass.getCanonicalName(), e);

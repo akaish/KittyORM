@@ -47,6 +47,7 @@ public class KittyDatabaseConfigurationBuilder<M extends KittyModel> {
     private String[] mmPackageNames;
     private Map<Class<M>, Class<KittyMapper>> registry;
     private boolean isKittyDexUtilLoggingEnabled;
+    private boolean returnNullInsteadEmptyCollection;
 
     public KittyDatabaseConfigurationBuilder setRecordsConfigurations(List<KittyTableConfiguration> recordsConfigurations) {
         this.recordsConfigurations = recordsConfigurations;
@@ -103,11 +104,16 @@ public class KittyDatabaseConfigurationBuilder<M extends KittyModel> {
         return this;
     }
 
+    public KittyDatabaseConfigurationBuilder returnNullInsteadEmptyCollection(boolean returnNullInsteadEmptyCollection) {
+        this.returnNullInsteadEmptyCollection = returnNullInsteadEmptyCollection;
+        return this;
+    }
+
     public KittyDatabaseConfiguration createKittyDatabaseConfiguration() {
         return new KittyDatabaseConfiguration(
                 recordsConfigurations, databaseName, databaseVersion, isLoggingOn, logTag,
                 isPragmaON, isProductionOn, isGenerateRegistryFromPackage, mmPackageNames,
-                registry, isKittyDexUtilLoggingEnabled
+                registry, isKittyDexUtilLoggingEnabled, returnNullInsteadEmptyCollection
         );
     }
 }

@@ -62,6 +62,40 @@ public enum SQLiteOperator {
         return sqltext.equals(sqlText);
     }
 
+    public static SQLiteOperator fromString(String sqltext) {
+		if(sqltext.equalsIgnoreCase("="))
+			return EQUAL;
+		if(sqltext.equalsIgnoreCase(">="))
+			return GREATER_OR_EQUAL;
+		if(sqltext.equalsIgnoreCase("=>"))
+			return GREATER_OR_EQUAL;
+		if(sqltext.equalsIgnoreCase("<="))
+			return LESS_OR_EQUAL;
+		if(sqltext.equalsIgnoreCase("=<"))
+			return LESS_OR_EQUAL;
+		if(sqltext.equalsIgnoreCase("!="))
+			return NOT_EQUAL;
+		if(sqltext.equalsIgnoreCase(">"))
+			return GREATER_THAN;
+		if(sqltext.equalsIgnoreCase("<"))
+			return LESS_THAN;
+		if(sqltext.equalsIgnoreCase("("))
+			return OPEN_SUBC;
+		if(sqltext.equalsIgnoreCase(")"))
+			return CLOSE_SUBC;
+		if(sqltext.equalsIgnoreCase("*"))
+			return MULTIPLY;
+		if(sqltext.equalsIgnoreCase("/"))
+			return DIVIDE;
+		if(sqltext.equalsIgnoreCase("+"))
+			return PLUS;
+		if(sqltext.equalsIgnoreCase("-"))
+			return MINUS;
+		if(sqltext.equalsIgnoreCase("%"))
+			return MODULO;
+		return valueOf(sqltext);
+	}
+
     @Override
     public String toString() {
        return this.sqltext;

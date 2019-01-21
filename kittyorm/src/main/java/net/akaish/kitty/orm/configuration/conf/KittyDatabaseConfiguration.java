@@ -91,6 +91,14 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
     public final boolean isGenerateRegistryFromPackage;
 
     /**
+     * Defines what KittyMapper would return on fetch methods (findWhere/findAll etc) when
+     * SELECT statement returns no rows. If this flag set to true, than NULL would be
+     * returned of nothing found. If this flag set to false, than empty collection would be returned
+     * if nothing found.
+     */
+    public final boolean returnNullInsteadEmptyCollection;
+
+    /**
      * Package names where model classes are located
      */
     public final String[] mmPackageNames;
@@ -99,7 +107,8 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
                                       int schemaVersion, boolean isLoggingOn, String logTag,
                                       boolean isPragmaON, boolean isProductionOn,
                                       boolean isGenerateRegistryFromPackage,
-                                      String[] mmPackageNames, Map<Class<M>, Class<KittyMapper>> registry, boolean isKittyDexUtilLoggingEnabled) {
+                                      String[] mmPackageNames, Map<Class<M>, Class<KittyMapper>> registry,
+                                      boolean isKittyDexUtilLoggingEnabled, boolean returnNullInsteadEmptyCollection) {
         this.tableConfigurations = tableConfigurations;
         this.schemaName = schemaName;
         this.schemaVersion = schemaVersion;
@@ -111,6 +120,7 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
         this.mmPackageNames = mmPackageNames;
         this.registry = registry;
         this.isKittyDexUtilLoggingEnabled = isKittyDexUtilLoggingEnabled;
+        this.returnNullInsteadEmptyCollection = returnNullInsteadEmptyCollection;
     }
 
     @Override
@@ -123,6 +133,7 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
                 .append(" ; isPragmaOn = ").append(isPragmaON)
                 .append(" ; isProductionOn = ").append(isProductionOn)
                 .append(" ; isGenerateRegistryFromPackage = ").append(isGenerateRegistryFromPackage)
+                .append(" ; returnNullInsteadEmptyCollection = ").append(returnNullInsteadEmptyCollection)
                 .append(" ; mmPackageNames = ").append(KittyUtils.implodeWithCommaInBKT(mmPackageNames))
                 .append(" ; isKittyDexUtilLoggingEnabled = ").append(isKittyDexUtilLoggingEnabled)
                 .append(" ; registry = ").append(registryString()).append(" ]");

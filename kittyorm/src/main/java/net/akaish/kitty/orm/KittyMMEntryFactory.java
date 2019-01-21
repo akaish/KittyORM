@@ -139,6 +139,7 @@ public class KittyMMEntryFactory {
             kittyMapper.setLogOn(dbConfiguration.isLoggingOn);
             kittyMapper.setLogTag(dbConfiguration.logTag);
             kittyMapper.setRowIDSupport(!tableConfiguration.isNoRowid);
+            kittyMapper.setReturnNullNotEmptyCollection(dbConfiguration.returnNullInsteadEmptyCollection);
             return kittyMapper;
         } catch (NoSuchMethodException e) {
             throw new KittyRuntimeException(MessageFormat.format(AME_MAPPER_INIT, kittyDataMapperClass.getCanonicalName()), e);

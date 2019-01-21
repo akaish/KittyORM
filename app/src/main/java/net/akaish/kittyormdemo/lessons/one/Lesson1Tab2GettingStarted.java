@@ -84,7 +84,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newSyntaxTest();
+                go();
             }
         });
         expandedLW = rootView.findViewById(R.id._l1_t2_expanded_panel_list);
@@ -129,8 +129,6 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
 
     private static final String NST_LOGTAG = "NST_LOGTAG";
 
-    // TODO fix from string method, cause it is broken (not suitable for regular types)
-
     private void newSyntaxTest() {
         SimpleDatabase simpleDatabase = new SimpleDatabase(getContext());
         KittyMapper mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
@@ -145,7 +143,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
         Log.e(NST_LOGTAG, "#" + mapper.insert(p1));
         Log.e(NST_LOGTAG, "#" + mapper.insert(p2));
         mapper.save(p2);
-        List<SimpleExampleModel> pavels = mapper.findWhere("#?firstName = ?", "pavel");
+        List<SimpleExampleModel> pavels = mapper.findWhere("#?firstName; = ?", "pavel");
         Iterator<SimpleExampleModel> pavelsI = pavels.iterator();
         while (pavelsI.hasNext())
             Log.e(NST_LOGTAG, "3: " + pavelsI.next().toString());
@@ -155,18 +153,16 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
         SQLiteConditionBuilder sqb = new SQLiteConditionBuilder();
         sqb.addColumn("first_name").addSQLOperator("=").addValue("Morty");
         List<SimpleExampleModel> mortys = mapper.findWhere(sqb.build());
-        Iterator<SimpleExampleModel> mI = pavels.iterator();
+        Iterator<SimpleExampleModel> mI = mortys.iterator();
         while (mI.hasNext())
             Log.e(NST_LOGTAG, "5: " + mI.next().toString());
-        Log.e(NST_LOGTAG, "6: " + mapper.countWhere("first_name", "pavel"));
+        Log.e(NST_LOGTAG, "6: " + mapper.countWhere("first_name = ?", "pavel"));
         Log.e(NST_LOGTAG, "7: " + mapper.countAll());
-        Log.e(NST_LOGTAG, "8: " + mapper.deleteWhere("first_name", "pavel"));
+        Log.e(NST_LOGTAG, "8: " + mapper.deleteWhere("first_name = ?", "pavel"));
         Log.e(NST_LOGTAG, "9: " + mapper.countAll());
         Log.e(NST_LOGTAG, "0: " + mapper.deleteAll());
         mapper.close();
     }
-
-    // TODO check new syntax on CB and mapper method somewhere here
 
     void go() {
         if(actionsLW != null) {

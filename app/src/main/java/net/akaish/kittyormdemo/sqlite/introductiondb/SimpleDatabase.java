@@ -37,6 +37,7 @@ import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
         isLoggingOn = true,
         isProductionOn = false,
         domainPackageNames = {"net.akaish.kittyormdemo.sqlite.introductiondb"}
+        //, returnNullInsteadEmptyCollection = true
 )
 public class SimpleDatabase extends KittyDatabase {
 
