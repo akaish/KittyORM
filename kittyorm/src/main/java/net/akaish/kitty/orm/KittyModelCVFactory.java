@@ -159,7 +159,7 @@ public class KittyModelCVFactory {
                     Byte[] bytesObj = new Byte[bytes.length];
                     for (int i = 0; i < bytes.length; i++)
                         bytesObj[i] = bytes[i];
-                    columnField.set(model, bytes);
+                    columnField.set(model, bytesObj);
                     // double and Double
                 } else if (double.class.equals(fieldType) || Double.class.equals(fieldType)) {
                     double doubleV = cursor.getDouble(columnIndex);

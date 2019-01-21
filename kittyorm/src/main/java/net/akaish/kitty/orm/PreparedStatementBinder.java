@@ -103,6 +103,7 @@ public class PreparedStatementBinder {
             } else {
                 statement.bindLong(bindingIndex, (boolV ? 1 : 0));
             }
+            return statement;
         } else if (Integer.class.equals(fieldType)) {
             Integer intV = (Integer) columnField.get(model);
             AVUtils.checkIntValue(intV, column, model.getClass());
@@ -110,14 +111,27 @@ public class PreparedStatementBinder {
                 statement.bindNull(bindingIndex);
             else
                 statement.bindLong(bindingIndex, intV);
+            return statement;
         } else if (Byte.class.equals(fieldType)) {
             Byte byteV = (Byte) columnField.get(model);
             AVUtils.checkByteValue(byteV, column, model.getClass());
-            if(byteV == null) {
+            if (byteV == null) {
                 statement.bindNull(bindingIndex);
             } else {
                 statement.bindLong(bindingIndex, byteV);
             }
+            return statement;
+        } else if (Byte[].class.equals(fieldType)) {
+            Byte[] bytes = (Byte[]) columnField.get(model);
+            if(bytes == null) {
+                statement.bindNull(bindingIndex);
+            } else {
+                byte[] bytesToStatement = new byte[bytes.length];
+                for(int i = 0; i < bytes.length; i++)
+                    bytesToStatement[i] = bytes[i].byteValue();
+                statement.bindBlob(bindingIndex, bytesToStatement);
+            }
+            return statement;
         } else if (byte[].class.equals(fieldType)) {
             byte[] bytes = (byte[]) columnField.get(model);
             if(bytes == null) {
@@ -125,6 +139,7 @@ public class PreparedStatementBinder {
             } else {
                 statement.bindBlob(bindingIndex, bytes);
             }
+            return statement;
         } else if (Double.class.equals(fieldType)) {
             Double doubleV = (Double) columnField.get(model);
             AVUtils.checkDoubleValue(doubleV, column, model.getClass());
@@ -133,6 +148,7 @@ public class PreparedStatementBinder {
             } else {
                 statement.bindDouble(bindingIndex, doubleV);
             }
+            return statement;
         } else if (Short.class.equals(fieldType)) {
             Short shortV = (Short) columnField.get(model);
             AVUtils.checkShortValue(shortV, column, model.getClass());
@@ -141,6 +157,7 @@ public class PreparedStatementBinder {
             } else {
                 statement.bindLong(bindingIndex, shortV);
             }
+            return statement;
         } else if (Float.class.equals(fieldType)) {
             Float floatV = (Float) columnField.get(model);
             AVUtils.checkFloatValue(floatV, column, model.getClass());
@@ -149,7 +166,9 @@ public class PreparedStatementBinder {
             } else {
                 statement.bindDouble(bindingIndex, floatV);
             }
+            return statement;
         }
+        // TODO maybe exception here?
         return statement;
     }
 
