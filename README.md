@@ -1,6 +1,6 @@
 [KittyORM Project pages](https://akaish.github.io/KittyORMPages/)  
 [KittyORM Demo and tutorial application](https://play.google.com/store/apps/details?id=net.akaish.kittyormdemo)  
-Current version: [0.1.1](http://repo1.maven.org/maven2/net/akaish/kitty/orm/kitty-orm/)
+Current version: [0.1.2](http://repo1.maven.org/maven2/net/akaish/kitty/orm/kitty-orm/)
 
 
 ### What is KittyORM?
@@ -23,7 +23,7 @@ KittyORM is an Object-Relational Mapping library designed for use with Android a
 First step is to add KittyORM via Gradle to your app `build.gradle`:
 ```gradle
 dependencies {
-    compile 'net.akaish.kitty.orm:kitty-orm:0.1.1'
+    compile 'net.akaish.kitty.orm:kitty-orm:0.1.2'
 }
 ```
 
