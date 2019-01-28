@@ -40,7 +40,7 @@
 
 <p>First step is to add KittyORM via Gradle to your app <code>build.gradle</code>:
 <div class="highlight"><pre class="chroma"><code class="language-gradle" data-lang="gradle"><span class="ln">1</span><span class="n">dependencies</span> <span class="o">{</span>
-<span class="ln">2</span>    <span class="n">compile</span> <span class="s1">&#39;net.akaish.kitty.orm:kitty-orm:0.1.1&#39;</span>
+<span class="ln">2</span>    <span class="n">compile</span> <span class="s1">&#39;net.akaish.kitty.orm:kitty-orm:0.1.2&#39;</span>
 <span class="ln">3</span><span class="o">}</span></code></pre></div></p>
 
 <h3 id="kittyorm-configuration-and-implementation">KittyORM configuration and implementation</h3>
@@ -55,7 +55,7 @@
 
 <p><strong>Fourth step (optional):</strong> create extended database helper by extending <code>KittyDatabaseHelper</code> class and make sure that your KittyDatabase class implementation would return new instance of your extended database helper via <code>KittyDatabase.newDatabaseHelper()</code> method.</p>
 
-<p>In this lesson we create simple database that contains from only one table and would interact with it using default CRUD controller. This demo contains many database domains, so database domain was set in <code>@KITTY_DATABASE</code>. Also it is better to set this value if your application uses a lot of libraries so KittyORM would seek POJO and CRUD classes related to KittyORM only in specified location(s).</p>
+<p>In this lesson we create simple database that contains only one table and would interact with it using default CRUD controller. This demo contains many database domains, so database domain was set in <code>@KITTY_DATABASE</code>. Also it is better to set this value if your application uses a lot of libraries so KittyORM would seek POJO and CRUD classes related to KittyORM only in specified location(s).</p>
 
 <h3 id="working-with-entities">Working with entities</h3>
 
@@ -169,17 +169,32 @@
 <span class="ln"> 9</span><span class="n">pkBuilder</span><span class="o">.</span><span class="na">addKeyColumnValue</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">,</span> <span class="s">&#34;0&#34;</span><span class="o">);</span>
 <span class="ln">10</span><span class="n">SimpleExampleModel</span> <span class="n">model3</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findByPK</span><span class="o">(</span><span class="n">pkBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
 <span class="ln">11</span>
-<span class="ln">12</span><span class="c1">// find with condition
-</span><span class="ln">13</span><span class="c1"></span><span class="n">SQLiteConditionBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
-<span class="ln">14</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
-<span class="ln">15</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
-<span class="ln">16</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
-<span class="ln">17</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">marinas</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
-<span class="ln">18</span>
-<span class="ln">19</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">randModels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
-<span class="ln">20</span><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-<span class="ln">21</span>    <span class="n">randModels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">RandomSimpleExampleModelUtil</span><span class="o">.</span><span class="na">randomSEModel</span><span class="o">());</span>
-<span class="ln">22</span><span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">randModels</span><span class="o">);</span></code></pre></div>
+<span class="ln">12</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">marinas</span><span class="o">;</span>
+<span class="ln">13</span>
+<span class="ln">14</span><span class="c1">// find with condition
+</span><span class="ln">15</span><span class="c1"></span><span class="n">SQLiteConditionBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
+<span class="ln">16</span><span class="n">builder</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln">17</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln">18</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln">19</span><span class="n">marinas</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+<span class="ln">20</span>
+<span class="ln">21</span><span class="c1">// find with condition (you may use shorter syntax)
+</span><span class="ln">22</span><span class="c1"></span><span class="n">SQLiteConditionBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
+<span class="ln">23</span><span class="n">builder</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln">24</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="s">&#34;=&#34;</span><span class="o">)</span> <span class="c1">// You may use string operators instead SQLiteOperator enum element
+</span><span class="ln">25</span><span class="c1"></span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln">26</span><span class="n">marinas</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
+<span class="ln">27</span>
+<span class="ln">28</span><span class="c1">// find with condition (without query builder)
+</span><span class="ln">29</span><span class="c1"></span><span class="n">marinas</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="s">&#34;first_name = ?&#34;</span><span class="o">,</span> <span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln">30</span>
+<span class="ln">31</span><span class="c1">// find with condition (pass POJO field name as parameter, in #?fieldName form)
+</span><span class="ln">32</span><span class="c1"></span><span class="n">marinas</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="s">&#34;#?firstName; = ?&#34;</span><span class="o">,</span> <span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln">33</span>
+<span class="ln">34</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SimpleExampleModel</span><span class="o">&gt;</span> <span class="n">randModels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+<span class="ln">35</span><span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+<span class="ln">36</span>    <span class="n">randModels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">RandomSimpleExampleModelUtil</span><span class="o">.</span><span class="na">randomSEModel</span><span class="o">());</span>
+<span class="ln">37</span><span class="n">mapper</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">randModels</span><span class="o">);</span></code></pre></div>
 
 <ul>
 <li>Inserting 10 generated records into database table:</li>
@@ -198,11 +213,7 @@
 </span><span class="ln">2</span><span class="c1"></span><span class="n">mapper</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">alex</span><span class="o">);</span>
 <span class="ln">3</span>
 <span class="ln">4</span><span class="c1">// deleting from database with condition
-</span><span class="ln">5</span><span class="c1"></span><span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
-<span class="ln">6</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
-<span class="ln">7</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
-<span class="ln">8</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Alex&#34;</span><span class="o">);</span>
-<span class="ln">9</span><span class="n">mapper</span><span class="o">.</span><span class="na">deleteByWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span></code></pre></div>
+</span><span class="ln">5</span><span class="c1"></span><span class="n">mapper</span><span class="o">.</span><span class="na">deleteByWhere</span><span class="o">(</span><span class="s">&#34;first_name = ?&#34;</span><span class="o">,</span> <span class="s">&#34;Alex&#34;</span><span class="o">);</span></code></pre></div>
 
 <ul>
 <li>Updating some models:</li>
@@ -220,9 +231,9 @@
 </span><span class="ln">10</span><span class="c1"></span><span class="n">SimpleExampleModel</span> <span class="n">update</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleExampleModel</span><span class="o">();</span>
 <span class="ln">11</span><span class="n">update</span><span class="o">.</span><span class="na">randomInteger</span> <span class="o">=</span> <span class="n">121212</span><span class="o">;</span>
 <span class="ln">12</span><span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
-<span class="ln">13</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
-<span class="ln">14</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
-<span class="ln">15</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
+<span class="ln">13</span><span class="n">builder</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;first_name&#34;</span><span class="o">)</span>
+<span class="ln">14</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="s">&#34;=&#34;</span><span class="o">)</span>
+<span class="ln">15</span>       <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;Marina&#34;</span><span class="o">);</span>
 <span class="ln">16</span><span class="n">mapper</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">update</span><span class="o">,</span> <span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]{</span><span class="s">&#34;randomInteger&#34;</span><span class="o">},</span> <span class="n">CVUtils</span><span class="o">.</span><span class="na">INCLUDE_ONLY_SELECTED_FIELDS</span><span class="o">);</span></code></pre></div>
 
 <ul>

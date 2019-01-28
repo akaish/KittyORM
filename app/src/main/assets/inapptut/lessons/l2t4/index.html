@@ -56,7 +56,9 @@
 <span class="ln">15</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="n">AbstractRandomModel</span><span class="o">.</span><span class="na">RND_ANIMAL_CNAME</span><span class="o">)</span>
 <span class="ln">16</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
 <span class="ln">17</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">Animals</span><span class="o">.</span><span class="na">TIGER</span><span class="o">.</span><span class="na">name</span><span class="o">());</span>
-<span class="ln">18</span><span class="n">List</span><span class="o">&lt;</span><span class="n">RandomModel</span><span class="o">&gt;</span> <span class="n">hundredOfTigers</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="n">parameters</span><span class="o">);</span></code></pre></div></p>
+<span class="ln">18</span><span class="n">List</span><span class="o">&lt;</span><span class="n">RandomModel</span><span class="o">&gt;</span> <span class="n">hundredOfTigers</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="n">parameters</span><span class="o">);</span>
+<span class="ln">19</span><span class="c1">// Getting model with condition (fetching 100 existing tigers with SQLite string condition)
+</span><span class="ln">20</span><span class="c1"></span><span class="n">hundredOfTigers</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">findWhere</span><span class="o">(</span><span class="n">parameters</span><span class="o">,</span> <span class="s">&#34;#?randomAnimal = ?&#34;</span><span class="o">,</span> <span class="n">Animals</span><span class="o">.</span><span class="na">TIGER</span><span class="o">.</span><span class="na">name</span><span class="o">());</span></code></pre></div></p>
 
 <p><details>
   <summary>Click to view all already implemented find methods: </summary></p>
@@ -76,7 +78,17 @@
 </tr>
 
 <tr>
+<td><code>findWhere(QueryParameters qParams, String where, Object... conditionValues)</code></td>
+<td>Returns list of models associated with records in backed database table that suits provided clause and query parameters.</td>
+</tr>
+
+<tr>
 <td><code>findWhere(SQLiteCondition where)</code></td>
+<td>Returns list of models associated with records in backed database table that suits provided clause.</td>
+</tr>
+
+<tr>
+<td><code>findWhere(String where, Object... conditionValues)</code></td>
 <td>Returns list of models associated with records in backed database table that suits provided clause.</td>
 </tr>
 
@@ -147,7 +159,7 @@
 <span class="ln">11</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">Animals</span><span class="o">.</span><span class="na">DOG</span><span class="o">.</span><span class="na">name</span><span class="o">());</span>
 <span class="ln">12</span><span class="kt">long</span> <span class="n">dogsCount</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">countWhere</span><span class="o">(</span><span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>
 <span class="ln">13</span><span class="c1">// Sum all dog&#39;s random_int
-</span><span class="ln">14</span><span class="c1"></span><span class="kt">long</span> <span class="n">dogsRndIntSum</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">sum</span><span class="o">(</span><span class="s">&#34;random_int&#34;</span><span class="o">,</span> <span class="n">builder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span></code></pre></div></p>
+</span><span class="ln">14</span><span class="c1"></span><span class="kt">long</span> <span class="n">dogsRndIntSum</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="na">sum</span><span class="o">(</span><span class="s">&#34;random_int&#34;</span><span class="o">,</span> <span class="s">&#34;#?randomAnimal = ?&#34;</span><span class="o">,</span> <span class="n">Animals</span><span class="o">.</span><span class="na">DOG</span><span class="o">.</span><span class="na">name</span><span class="o">());</span></code></pre></div></p>
 
 <h3 id="implementing-extended-crud-controller">Implementing extended CRUD controller</h3>
 

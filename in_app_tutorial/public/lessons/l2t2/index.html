@@ -62,11 +62,11 @@ For example, you want to update all rows in <code>random</code> table where id i
 <ol>
 <li>Create new condition with the usage of <code>SQLiteConditionBuilder.class</code>:
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln">1</span><span class="n">SQLiteConditionBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
-<span class="ln">2</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
+<span class="ln">2</span><span class="n">builder</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
 <span class="ln">3</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">GREATER_OR_EQUAL</span><span class="o">)</span>
 <span class="ln">4</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">10</span><span class="o">)</span>
 <span class="ln">5</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">AND</span><span class="o">)</span>
-<span class="ln">6</span>       <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
+<span class="ln">6</span>       <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
 <span class="ln">7</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">LESS_OR_EQUAL</span><span class="o">)</span>
 <span class="ln">8</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">20</span><span class="o">);</span></code></pre></div></li>
 <li>Create new <code>RandomModel.class</code> instance and set <code>randomInt</code> to 50:
@@ -84,11 +84,11 @@ For example, you want to update all rows in <code>random</code> table where id i
 </span><span class="ln"> 4</span><span class="c1"></span><span class="n">RandomMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="o">(</span><span class="n">RandomMapper</span><span class="o">)</span> <span class="n">db</span><span class="o">.</span><span class="na">getMapper</span><span class="o">(</span><span class="n">RandomModel</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 <span class="ln"> 5</span><span class="c1">// Creating condition builder instance
 </span><span class="ln"> 6</span><span class="c1"></span><span class="n">SQLiteConditionBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
-<span class="ln"> 7</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
+<span class="ln"> 7</span><span class="n">builder</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
 <span class="ln"> 8</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">GREATER_OR_EQUAL</span><span class="o">)</span>
 <span class="ln"> 9</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">10</span><span class="o">)</span>
 <span class="ln">10</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">AND</span><span class="o">)</span>
-<span class="ln">11</span>       <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
+<span class="ln">11</span>       <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
 <span class="ln">12</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">LESS_OR_EQUAL</span><span class="o">)</span>
 <span class="ln">13</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">20</span><span class="o">);</span>
 <span class="ln">14</span><span class="c1">// Creating blank model and setting it fields

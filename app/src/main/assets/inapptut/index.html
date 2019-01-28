@@ -121,7 +121,7 @@ Just subscribe to our telegram channel to be kept informed of developments in th
   </h1>
   <span class="post-date">Thu, Nov 15, 2018</span>
   KittyORM insertion example 1// Initializing database instance 2BasicDatabase db = new BasicDatabase(getContext()); 3// Getting mapper instance 4RandomMapper mapper = (RandomMapper) db.getMapper(RandomModel.class); 5// Initializing model 6RandomModel toInsert = new RandomModel(); 7// Setting model fields 8toInsert.randomInt = 10; 9... 10// Saving model with save method 11mapper.save(toInsert); 12// Saving model with direct insert call 13mapper.insert(toInsert);
-KittyORM basic_datase implementation sources
+KittyORM basic_database implementation sources
   Click to view BasicDatabase.class:  1@KITTY_DATABASE( 2 databaseName = &#34;basic_database&#34;, 3 domainPackageNames = {&#34;net.
   
   <div class="read-more-link">
@@ -518,7 +518,7 @@ Main features we want to achieve with KittyORM are:  simple and clear API that h
     <a href="#ZgotmplZ">Lesson1 Tab2: Getting started with KittyORM</a>
   </h1>
   <span class="post-date">Thu, Aug 16, 2018</span>
-  Gradle setup First step is to add KittyORM via Gradle to your app build.gradle: 1dependencies { 2 compile &#39;net.akaish.kitty.orm:kitty-orm:0.1.1&#39; 3}
+  Gradle setup First step is to add KittyORM via Gradle to your app build.gradle: 1dependencies { 2 compile &#39;net.akaish.kitty.orm:kitty-orm:0.1.2&#39; 3}
 KittyORM configuration and implementation Create package for storing your POJO models, KittyORM database class, KittyORM helper class (if necessary) and KittyORM extended mappers (if necessary).
 First step: extend KittyDatabase class, implement default constructor and annotate it with @KITTY_DATABASE annotation (and, if necessary, with @KITTY_DATABASE_HELPER).
 Second step: create your first POJO model by extending KittyModel class, implement default constructor and annotate it with @KITTY_TABLE annotation.

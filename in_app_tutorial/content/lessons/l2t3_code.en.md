@@ -31,22 +31,30 @@ SQLiteCondition condition = new SQLiteConditionBuilder()
                 .addValue(0)
                 .addSQLOperator(AND)
                 .addField("random_int")
-                .addSQLOperator(LESS_OR_EQUAL)
+// Just as tip, you can pass SQLite operator as string, not only as
+// SQLiteOperator enum element
+                .addSQLOperator("<=") 
                 .addValue(10000)
                 .build();
 // Deleting with generated clause
-mapper.deleteByWhere(condition);
+mapper.deleteWhere(condition);
+
+// Also, you may use pass condition as SQLite string
+mapper.deleteWhere("random_int >= ? AND random_int <= ?", 0, 10000)
+
+// And, finally, in those string you may use POJO field names in #?fieldName
+mapper.deleteWhere("#?randomInt >= ? AND #?randomInt <= ?", 0, 10000)
 {{< /highlight >}}
 
 **KittyORM `SQLiteConditionBuilder` example**
 {{< highlight java "linenos=inline, linenostart=1">}}
 SQLiteCondition condition = new SQLiteConditionBuilder()
-            .addField("a_column")
+            .addColumn("a_column")
             .addSQLOperator(EQUAL)
             .addValue("a")
             .addSQLOperator(AND)
             .addSQLOperator(OPEN_SUBC)
-            .addField("b_column")
+            .addColumn("b_column")
             .addSQLOperator(GREATER_THAN)
             .addValue(0)
             .addSQLOperator(OR)
@@ -56,10 +64,52 @@ SQLiteCondition condition = new SQLiteConditionBuilder()
             .addValue(20)
             .addSQLOperator(CLOSE_SUBC)
             .build();
+
+// Note that following condition is equal to previous one
+SQLiteCondition condition2 = new SQLiteConditionBuilder()
+            .addColumn("a_column")
+            .addSQLOperator("=")
+            .addValue("a")
+            .addSQLOperator("AND")
+            .addSQLOperator("(")
+            .addColumn("b_column")
+            .addSQLOperator(">=")
+            .addValue(0)
+            .addSQLOperator("OR")
+            .addSQLOperator("BETWEEN")
+            .addValue(10)
+            .addSQLOperator("AND")
+            .addValue(20)
+            .addSQLOperator(")")
+            .build();
+
+// And, finally, you can pass to condition builder not only column names but POJO field names as well
+SQLiteCondition condition3 = new SQLiteConditionBuilder()
+            .addField("aColumn", SomeModel.class)
+            .addSQLOperator("=")
+            .addValue("a")
+            .addSQLOperator("AND")
+            .addSQLOperator("(")
+            .addField("bColumn", SomeModel.class)
+            .addSQLOperator(">=")
+            .addValue(0)
+            .addSQLOperator("OR")
+            .addSQLOperator("BETWEEN")
+            .addValue(10)
+            .addSQLOperator("AND")
+            .addValue(20)
+            .addSQLOperator(")")
+            .build();
+
+// Also, if you would like use SQLite string to build condition, you may use following method:
+SQLiteCondition condition4 = SQLiteConditionBuilder.fromSQL("WHERE a_column = ? AND (b_column > ? OR BETWEEN ? AND ?)", SomeModel.class, "a", 0, 10, 20);
+
+// And, for SQLite string, you may pass POJO field names as well using #?fieldName syntax
+SQLiteCondition condition5 = SQLiteConditionBuilder.fromSQL("WHERE #?aColumn = ? AND (#?bColumn > ? OR BETWEEN ? AND ?)", SomeModel.class, "a", 0, 10, 20);
 {{< /highlight >}}
 
 
-**KittyORM `basic_datase` implementation sources**
+**KittyORM `basic_database` implementation sources**
 
 1. 
 <details> 
@@ -183,6 +233,32 @@ public class RandomModel extends AbstractRandomModel {
 <details> 
   <summary>Click to view `RandomMapper.class`: </summary>
 {{< highlight java "linenos=inline, linenostart=1">}}
+package net.akaish.kittyormdemo.sqlite.basicdb;
+
+import net.akaish.kitty.orm.KittyMapper;
+import net.akaish.kitty.orm.KittyModel;
+import net.akaish.kitty.orm.configuration.conf.KittyTableConfiguration;
+import net.akaish.kitty.orm.query.QueryParameters;
+import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
+import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
+import net.akaish.kitty.orm.query.conditions.SQLiteOperator;
+import net.akaish.kitty.orm.util.KittyConstants;
+import net.akaish.kittyormdemo.sqlite.misc.Animals;
+
+import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.AND;
+import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.LESS_OR_EQUAL;
+import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.LESS_THAN;
+import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.GREATER_OR_EQUAL;
+import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.GREATER_THAN;
+import static net.akaish.kittyormdemo.sqlite.basicdb.AbstractRandomModel.RND_ANIMAL_CNAME;
+
+import java.util.List;
+
+
+/**
+ * Created by akaish on 09.08.18.
+ * @author akaish (Denis Bogomolov)
+ */
 public class RandomMapper extends KittyMapper {
 
     public <M extends KittyModel> RandomMapper(KittyTableConfiguration tableConfiguration,
@@ -193,27 +269,18 @@ public class RandomMapper extends KittyMapper {
 
     protected SQLiteCondition getAnimalCondition(Animals animal) {
         return new SQLiteConditionBuilder()
-                .addField(RND_ANIMAL_CNAME)
-                .addSQLOperator(SQLiteOperator.EQUAL)
+                .addColumn(RND_ANIMAL_CNAME)
+                .addSQLOperator("=")
                 .addObjectValue(animal)
                 .build();
     }
 
     public long deleteByRandomIntegerRange(int start, int end) {
-        SQLiteCondition condition = new SQLiteConditionBuilder()
-                .addField("random_int")
-                .addSQLOperator(GREATER_OR_EQUAL)
-                .addValue(start)
-                .addSQLOperator(AND)
-                .addField("random_int")
-                .addSQLOperator(LESS_OR_EQUAL)
-                .addValue(end)
-                .build();
-        return deleteByWhere(condition);
+        return deleteWhere("#?randomInt >= ? AND #?randomInt <= ?", start, end);
     }
 
     public long deleteByAnimal(Animals animal) {
-        return deleteByWhere(getAnimalCondition(animal));
+        return deleteWhere(getAnimalCondition(animal));
     }
 
     public List<RandomModel> findByAnimal(Animals animal, long offset, long limit, boolean groupingOn) {
@@ -229,11 +296,11 @@ public class RandomMapper extends KittyMapper {
 
     public List<RandomModel> findByIdRange(long fromId, long toId, boolean inclusive, Long offset, Long limit) {
         SQLiteCondition condition = new SQLiteConditionBuilder()
-                .addField("id")
+                .addColumn("id")
                 .addSQLOperator(inclusive ? GREATER_OR_EQUAL : GREATER_THAN)
                 .addValue(fromId)
                 .addSQLOperator(AND)
-                .addField("id")
+                .addColumn("id")
                 .addSQLOperator(inclusive ? LESS_OR_EQUAL : LESS_THAN)
                 .addValue(toId)
                 .build();
@@ -247,6 +314,7 @@ public class RandomMapper extends KittyMapper {
         qparam.setLimit(limit).setOffset(offset).setGroupByColumns(KittyConstants.ROWID);
         return findAll(qparam);
     }
+
 }
 {{< /highlight >}} 
 </details>
@@ -590,6 +658,36 @@ public class RNDRandomModelFactory {
 <details> 
   <summary>Click to view `Lesson2Tab3Delete.class`: </summary>
 {{< highlight java "linenos=inline, linenostart=1">}}
+package net.akaish.kittyormdemo.lessons.two;
+
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
+import net.akaish.kittyormdemo.KittyTutorialActivity;
+import net.akaish.kittyormdemo.R;
+import net.akaish.kittyormdemo.lessons.LessonsUriConstants;
+import net.akaish.kittyormdemo.sqlite.basicdb.BasicDatabase;
+import net.akaish.kittyormdemo.sqlite.basicdb.RandomMapper;
+import net.akaish.kittyormdemo.sqlite.misc.Animals;
+
+import static java.text.MessageFormat.format;
+import static net.akaish.kittyormdemo.sqlite.basicdb.BasicDatabase.LOG_TAG;
+
+/**
+ * Created by akaish on 03.08.18.
+ * @author akaish (Denis Bogomolov)
+ */
+
 public class Lesson2Tab3Delete extends Lesson2BaseFragment {
 
     public Lesson2Tab3Delete(){};
@@ -971,7 +1069,6 @@ public class Lesson2Tab3Delete extends Lesson2BaseFragment {
         return R.string._l2_t3_snackbar_message;
     }
 }
-
 {{< /highlight >}} 
 </details>
 

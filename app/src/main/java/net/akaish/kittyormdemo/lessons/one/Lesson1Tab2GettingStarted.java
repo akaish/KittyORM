@@ -143,7 +143,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
         Log.e(NST_LOGTAG, "#" + mapper.insert(p1));
         Log.e(NST_LOGTAG, "#" + mapper.insert(p2));
         mapper.save(p2);
-        List<SimpleExampleModel> pavels = mapper.findWhere("#?firstName; = ?", "pavel");
+        List<SimpleExampleModel> pavels = mapper.findWhere("#?firstName = ?", "pavel");
         Iterator<SimpleExampleModel> pavelsI = pavels.iterator();
         while (pavelsI.hasNext())
             Log.e(NST_LOGTAG, "3: " + pavelsI.next().toString());

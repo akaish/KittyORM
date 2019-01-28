@@ -58,7 +58,7 @@ public Bitmap byteArraySDFDeserialize(byte[] cursorData) {
 {{< /highlight >}} 
 </details>
 
-**KittyORM `basic_datase` implementation sources**
+**KittyORM `basic_database` implementation sources**
 
 1. 
 <details> 

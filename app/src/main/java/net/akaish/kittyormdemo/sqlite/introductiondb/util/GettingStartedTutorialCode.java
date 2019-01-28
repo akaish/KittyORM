@@ -100,12 +100,27 @@ public class GettingStartedTutorialCode {
         // Finding existing records in DB and mapping them to entities
 
         int findOperationId = 0;
+        List<SimpleExampleModel> marinas;
+
         // find with condition
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
         builder.addColumn("first_name")
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addValue("Marina");
-        List<SimpleExampleModel> marinas = mapper.findWhere(builder.build());
+        marinas = mapper.findWhere(builder.build());
+
+        // find with condition (you may use shorter syntax)
+        builder = new SQLiteConditionBuilder();
+        builder.addColumn("first_name")
+                .addSQLOperator("=") // You may use string operators instead SQLiteOperator enum element
+                .addValue("Marina");
+        marinas = mapper.findWhere(builder.build());
+
+        // find with condition (without query builder)
+        marinas = mapper.findWhere("first_name = ?", "Marina");
+
+        // find with condition (pass POJO field name as parameter, in ?#fieldName; form)
+        marinas = mapper.findWhere("?#firstName; = ?", "Marina");
 
 
         findOperationId++;
@@ -143,12 +158,7 @@ public class GettingStartedTutorialCode {
 
 
         // Deleting with condition
-        SQLiteCondition marina445555Condition = new SQLiteConditionBuilder()
-                .addColumn("random_integer")
-                .addSQLOperator(SQLiteOperator.EQUAL)
-                .addValue(marina2.randomInteger)
-                .build();
-        mapper.deleteWhere(marina445555Condition);
+        mapper.deleteWhere("random_integer = ?", marina2.randomInteger);
 
         // Updating models
         // updating current model

@@ -59,22 +59,13 @@ public class RandomMapper extends KittyMapper {
     protected SQLiteCondition getAnimalCondition(Animals animal) {
         return new SQLiteConditionBuilder()
                 .addColumn(RND_ANIMAL_CNAME)
-                .addSQLOperator(SQLiteOperator.EQUAL)
+                .addSQLOperator("=")
                 .addObjectValue(animal)
                 .build();
     }
 
     public long deleteByRandomIntegerRange(int start, int end) {
-        SQLiteCondition condition = new SQLiteConditionBuilder()
-                .addColumn("random_int")
-                .addSQLOperator(GREATER_OR_EQUAL)
-                .addValue(start)
-                .addSQLOperator(AND)
-                .addColumn("random_int")
-                .addSQLOperator(LESS_OR_EQUAL)
-                .addValue(end)
-                .build();
-        return deleteWhere(condition);
+        return deleteWhere("#?randomInt; >= ? AND #?randomInt; <= ?", start, end);
     }
 
     public long deleteByAnimal(Animals animal) {

@@ -116,14 +116,13 @@ public class RandomSimpleExampleModelUtil {
   <summary>Click to view `GettingStartedTutorialCode.allInOne()`</summary>
 {{< highlight java "linenos=inline, linenostart=1">}}
 // Creating new instance of SimpleDatabase
-SimpleDatabase simpleDatabase = new SimpleDatabase(ctx);
+SimpleDatabase simpleDatabase = new SimpleDatabase(context);
 
 KittyMapper mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
 
 // Counting records in db table and deleting them if table not empty
 if(mapper.countAll() > 0)
-    mapper.deleteAll();
-
+      mapper.deleteAll();
 // Insert new model example
 // Creating and setting three new models
 SimpleExampleModel alex = new SimpleExampleModel();
@@ -153,49 +152,65 @@ long marinaRowid = mapper.insert(marina);
 
 // Finding existing records in DB and mapping them to entities
 
+int findOperationId = 0;
+List<SimpleExampleModel> marinas;
+
 // find with condition
 SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-builder.addField("first_name")
-    .addSQLOperator(SQLiteOperator.EQUAL)
-    .addValue("Marina");
-List<SimpleExampleModel> marinas = mapper.findWhere(builder.build());
+builder.addColumn("first_name")
+       .addSQLOperator(SQLiteOperator.EQUAL)
+       .addValue("Marina");
+marinas = mapper.findWhere(builder.build());
 
+// find with condition (you may use shorter syntax)
+builder = new SQLiteConditionBuilder();
+builder.addColumn("first_name")
+       .addSQLOperator("=") // You may use string operators instead SQLiteOperator enum element
+       .addValue("Marina");
+marinas = mapper.findWhere(builder.build());
+
+// find with condition (without query builder)
+marinas = mapper.findWhere("first_name = ?", "Marina");
+
+// find with condition (pass POJO field name as parameter, in ?#fieldName; form)
+marinas = mapper.findWhere("?#firstName; = ?", "Marina");
+
+
+findOperationId++;
 // find with RowID
 SimpleExampleModel marinaFromTableRowid = mapper.findByRowID(marinaRowid);
 
+findOperationId++;
 // find with IPK
 SimpleExampleModel marinaFromTableIPK = mapper.findByIPK(marinaFromTableRowid.id);
 
 findOperationId++;
 // find with KittyPrimaryKey
 KittyPrimaryKey pk = new KittyPrimaryKeyBuilder()
-    .addKeyColumnValue("id", marinaFromTableRowid.id.toString())
-    .build();
+        .addKeyColumnValue("id", marinaFromTableRowid.id.toString())
+        .build();
 SimpleExampleModel marinaFromTableKPK = mapper.findByPK(pk);
+
 
 // Generating and inserting list of 10 random models
 List<SimpleExampleModel> randomModels = new LinkedList<>();
 for(int i = 0; i < 10; i++)
     randomModels.add(RandomSimpleExampleModelUtil.randomSEModel());
-    mapper.save(randomModels);
+mapper.save(randomModels);
 
 // Deleting some models
 // Deleting by entity, make sure that entity has RowID\IPK\PK set
 SQLiteCondition alexCondition = new SQLiteConditionBuilder()
-    .addField("first_name")
-    .addSQLOperator(SQLiteOperator.EQUAL)
-    .addValue("Alex")
-    .build();
+                .addColumn("first_name")
+                .addSQLOperator(SQLiteOperator.EQUAL)
+                .addValue("Alex")
+                .build();
 SimpleExampleModel alexToDelete = mapper.findFirst(alexCondition);
 mapper.delete(alexToDelete);
 
+
 // Deleting with condition
-SQLiteCondition marina445555Condition = new SQLiteConditionBuilder()
-    .addField("random_integer")
-    .addSQLOperator(SQLiteOperator.EQUAL)
-    .addValue(marina2.randomInteger)
-    .build();
-mapper.deleteByWhere(marina445555Condition);
+mapper.deleteWhere("random_integer = ?", marina2.randomInteger);
 
 // Updating models
 // updating current model
@@ -203,6 +218,7 @@ mapper.deleteByWhere(marina445555Condition);
 SimpleExampleModel newMarina = marinaFromTableIPK.clone(SimpleExampleModel.class);
 newMarina.randomInteger = 1337;
 if(mapper.update(newMarina) > 0) {
+    findOperationId++;
     SimpleExampleModel marinaFromTableIPK2 = mapper.findByIPK(marinaFromTableRowid.id);
 }
 
@@ -210,10 +226,11 @@ if(mapper.update(newMarina) > 0) {
 SimpleExampleModel updateMarina = new SimpleExampleModel();
 updateMarina.randomInteger = 121212;
 builder = new SQLiteConditionBuilder();
-builder.addField("first_name")
-    .addSQLOperator(SQLiteOperator.EQUAL)
-    .addValue("Marina");
+builder.addColumn("first_name")
+       .addSQLOperator(SQLiteOperator.EQUAL)
+       .addValue("Marina");
 if(mapper.update(updateMarina, builder.build(), new String[]{"randomInteger"}, CVUtils.INCLUDE_ONLY_SELECTED_FIELDS) > 0) {
+    findOperationId++;
     // find with IPK
     SimpleExampleModel marinaFromTableIPK2 = mapper.findByIPK(marinaFromTableRowid.id);
 }
@@ -230,11 +247,12 @@ mapper.close();
 </details>
 ### Lesson's activity fragment
 <details> 
-  <summary>Click to view `SimpleDatabase.class`</summary>
+  <summary>Click to view `Lesson1Tab2GettingStarted.class`</summary>
 {{< highlight java "linenos=inline, linenostart=1">}}
 package net.akaish.kittyormdemo.lessons.one;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -247,13 +265,14 @@ import net.akaish.kitty.orm.CVUtils;
 import net.akaish.kitty.orm.KittyMapper;
 import net.akaish.kitty.orm.pkey.KittyPrimaryKey;
 import net.akaish.kitty.orm.pkey.KittyPrimaryKeyBuilder;
-import net.akaish.kitty.orm.query.condtitions.SQLiteCondition;
-import net.akaish.kitty.orm.query.condtitions.SQLiteConditionBuilder;
-import net.akaish.kitty.orm.query.condtitions.SQLiteOperator;
+import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
+import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
+import net.akaish.kitty.orm.query.conditions.SQLiteOperator;
 import net.akaish.kitty.orm.util.KittyLog;
-import net.akaish.kittyormdemo.LessonDetailActivity;
+import net.akaish.kittyormdemo.KittyTutorialActivity;
 import net.akaish.kittyormdemo.R;
-import net.akaish.kittyormdemo.lessons.BasicArrayAdapter;
+import net.akaish.kittyormdemo.lessons.LessonTabFragmentOnVisibleAction;
+import net.akaish.kittyormdemo.lessons.adapters.BasicArrayAdapter;
 import net.akaish.kittyormdemo.lessons.LessonBaseFragment;
 import net.akaish.kittyormdemo.sqlite.introductiondb.SimpleDatabase;
 import net.akaish.kittyormdemo.sqlite.introductiondb.SimpleExampleModel;
@@ -264,16 +283,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static java.text.MessageFormat.format;
+import static net.akaish.kittyormdemo.lessons.LessonsUriConstants.L1_T2_SCHEMA;
+import static net.akaish.kittyormdemo.lessons.LessonsUriConstants.L1_T2_SOURCE;
+import static net.akaish.kittyormdemo.lessons.LessonsUriConstants.L1_T2_TUTORIAL;
 
 /**
  * Created by akaish on 21.08.18.
+ * @author akaish (Denis Bogomolov)
  */
 
-public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
-
-    private static final String tutorialPageName = "l1t2";
-    private static final String tutorialSchemaLocation = "l1_schema";
-    private static final String tutorialSourceCodeLocation = "l1_code";
+public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements LessonTabFragmentOnVisibleAction {
 
     private ListView actionsLW;
     private Button goButton;
@@ -335,6 +354,43 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
         mapper.close();
     }
 
+    private static final String NST_LOGTAG = "NST_LOGTAG";
+
+    private void newSyntaxTest() {
+        SimpleDatabase simpleDatabase = new SimpleDatabase(getContext());
+        KittyMapper mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
+        Log.e(NST_LOGTAG, "1: adding ten rgen models");
+        LinkedList<SimpleExampleModel> randModels = new LinkedList<>();
+        for(int i = 0; i < 10; i++)
+            randModels.add(RandomSimpleExampleModelUtil.randomSEModel());
+        mapper.saveInTransaction(randModels);
+        Log.e(NST_LOGTAG, "2: adding at least two Pavels");
+        SimpleExampleModel p1 = new SimpleExampleModel(); p1.randomInteger = 1; p1.firstName = "pavel";
+        SimpleExampleModel p2 = new SimpleExampleModel(); p2.randomInteger = 2; p2.firstName = "pavel";
+        Log.e(NST_LOGTAG, "#" + mapper.insert(p1));
+        Log.e(NST_LOGTAG, "#" + mapper.insert(p2));
+        mapper.save(p2);
+        List<SimpleExampleModel> pavels = mapper.findWhere("#?firstName = ?", "pavel");
+        Iterator<SimpleExampleModel> pavelsI = pavels.iterator();
+        while (pavelsI.hasNext())
+            Log.e(NST_LOGTAG, "3: " + pavelsI.next().toString());
+        Log.e(NST_LOGTAG, "4: adding at least one Morty");
+        SimpleExampleModel d1 = new SimpleExampleModel(); d1.randomInteger = 228; d1.firstName = "Morty";
+        mapper.save(d1);
+        SQLiteConditionBuilder sqb = new SQLiteConditionBuilder();
+        sqb.addColumn("first_name").addSQLOperator("=").addValue("Morty");
+        List<SimpleExampleModel> mortys = mapper.findWhere(sqb.build());
+        Iterator<SimpleExampleModel> mI = mortys.iterator();
+        while (mI.hasNext())
+            Log.e(NST_LOGTAG, "5: " + mI.next().toString());
+        Log.e(NST_LOGTAG, "6: " + mapper.countWhere("first_name = ?", "pavel"));
+        Log.e(NST_LOGTAG, "7: " + mapper.countAll());
+        Log.e(NST_LOGTAG, "8: " + mapper.deleteWhere("first_name = ?", "pavel"));
+        Log.e(NST_LOGTAG, "9: " + mapper.countAll());
+        Log.e(NST_LOGTAG, "0: " + mapper.deleteAll());
+        mapper.close();
+    }
+
     void go() {
         if(actionsLW != null) {
             actionsLW.setAdapter(new BasicArrayAdapter(getContext(), new LinkedList<String>()));
@@ -361,8 +417,10 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
             KittyMapper mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
 
             // Counting records in db table and deleting them if table not empty
-            if(mapper.countAll() > 0)
-                mapper.deleteAll();
+            if(mapper.countAll() > 0) {
+                addActionListItem(format(getString(R.string._l1_t2_count), mapper.countAll()));
+                addActionListItem(format(getString(R.string._l1_t2_clear), mapper.deleteAll()));
+            }
 
             // Insert new model example
             // Creating and setting three new models
@@ -408,10 +466,14 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
             // find with condition
             addActionListItem(format(getContext().getString(R.string._l1_t2_retrieving), "mapper.findWhere", "WHERE first_name = Marina", findOperationId));
             SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-            builder.addField("first_name")
+            builder.addColumn("first_name")
                     .addSQLOperator(SQLiteOperator.EQUAL)
                     .addValue("Marina");
             List<SimpleExampleModel> marinas = mapper.findWhere(builder.build());
+            // Also you may define conditions in alternative way
+            marinas = mapper.findWhere(SQLiteConditionBuilder.fromSQL("first_name = ?", null, "Marina"));
+            // Or specify field name instead column name using following syntax
+            marinas = mapper.findWhere(SQLiteConditionBuilder.fromSQL("#?firstName = ?", SimpleExampleModel.class, "Marina"));
             if(marinas != null) {
                 addActionListItem(format(getString(R.string._l1_t2_retrieved),  marinas.size(), findOperationId));
             }
@@ -463,7 +525,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
             // Deleting some models
             // Deleting by entity, make sure that entity has RowID\IPK\PK set
             SQLiteCondition alexCondition = new SQLiteConditionBuilder()
-                                                        .addField("first_name")
+                                                        .addColumn("first_name")
                                                         .addSQLOperator(SQLiteOperator.EQUAL)
                                                         .addValue("Alex")
                                                         .build();
@@ -478,12 +540,12 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
 
             // Deleting with condition
             SQLiteCondition marina445555Condition = new SQLiteConditionBuilder()
-                                                            .addField("random_integer")
+                                                            .addColumn("random_integer")
                                                             .addSQLOperator(SQLiteOperator.EQUAL)
                                                             .addValue(marina2.randomInteger)
                                                             .build();
             addActionListItem(getString(R.string._l1_2_one_marina_deleting));
-            if(mapper.deleteByWhere(marina445555Condition) > 0) {
+            if(mapper.deleteWhere(marina445555Condition) > 0) {
                 addActionListItem(getString(R.string._l1_2_one_marina_deleted));
                 addActionListItem(format(getString(R.string._l1_t2_count), mapper.countAll()));
             }
@@ -513,7 +575,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
             updateMarina.randomInteger = 121212;
             addActionListItem(format(getString(R.string._l1_t2_updating_query_like), updateMarina));
             builder = new SQLiteConditionBuilder();
-            builder.addField("first_name")
+            builder.addColumn("first_name")
                     .addSQLOperator(SQLiteOperator.EQUAL)
                     .addValue("Marina");
             if(mapper.update(updateMarina, builder.build(), new String[]{"randomInteger"}, CVUtils.INCLUDE_ONLY_SELECTED_FIELDS) > 0) {
@@ -546,29 +608,31 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
     }
 
     void updateExpandPanelList() {
-        if(expandedText != null && expandedLW != null && expandedTextPattern != null) {
+        if (expandedText != null && expandedLW != null && expandedTextPattern != null) {
             SimpleDatabase sdb = new SimpleDatabase(getContext());
             KittyMapper mapper = sdb.getMapper(SimpleExampleModel.class);
             expandedText.setText(format(expandedTextPattern, mapper.countAll()));
             List<SimpleExampleModel> models = mapper.findAll();
-            if(models!=null) {
-                LinkedList<String> modelsToString = new LinkedList<>();
-                Iterator<SimpleExampleModel> modelIterator = models.iterator();
-                while (modelIterator.hasNext()) {
-                    modelsToString.addLast(modelIterator.next().toString());
-                }
-                expandedLW.setAdapter(new BasicArrayAdapter(getContext(), modelsToString));
-                expandedLW.setOnTouchListener(new View.OnTouchListener() {
-
-                    // Setting on Touch Listener for handling the touch inside ScrollView
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        // Disallow the touch request for parent scroll on touch of child view
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                        return false;
-                    }
-                });
+            if (models == null) {
+                models = new LinkedList<>();
             }
+            LinkedList<String> modelsToString = new LinkedList<>();
+            Iterator<SimpleExampleModel> modelIterator = models.iterator();
+            while (modelIterator.hasNext()) {
+                modelsToString.addLast(modelIterator.next().toString());
+            }
+            expandedLW.setAdapter(new BasicArrayAdapter(getContext(), modelsToString));
+            expandedLW.setOnTouchListener(new View.OnTouchListener() {
+
+                // Setting on Touch Listener for handling the touch inside ScrollView
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // Disallow the touch request for parent scroll on touch of child view
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+
             mapper.close();
         }
     }
@@ -593,7 +657,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
              */
             @Override
             public void onClick(View v) {
-                ((LessonDetailActivity) getParentFragment().getActivity()).showWebViewDialog(tutorialPageName, null);
+                ((KittyTutorialActivity) getParentFragment().getActivity()).showWebViewDialog(L1_T2_TUTORIAL);
             }
         };
     }
@@ -609,7 +673,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
              */
             @Override
             public void onClick(View v) {
-                ((LessonDetailActivity) getParentFragment().getActivity()).showWebViewDialog(tutorialSourceCodeLocation, null);
+                ((KittyTutorialActivity) getParentFragment().getActivity()).showWebViewDialog(L1_T2_SOURCE);
             }
         };
     }
@@ -625,7 +689,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
              */
             @Override
             public void onClick(View v) {
-                ((LessonDetailActivity) getParentFragment().getActivity()).showWebViewDialog(tutorialSchemaLocation, null);
+                ((KittyTutorialActivity) getParentFragment().getActivity()).showWebViewDialog(L1_T2_SCHEMA);
             }
         };
     }
@@ -634,7 +698,13 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment {
     protected int snackbarMessageResource() {
         return R.string._l1_t2_snackbar_message;
     }
+
+    @Override
+    public void onVisible() {
+
+    }
 }
+
 {{< /highlight >}}
 </details>
 
