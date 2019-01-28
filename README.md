@@ -75,7 +75,7 @@ In this lesson we create simple database that contains only one table and would 
 This example shows basic KittyORM usage when you just want to store some information in your database. Just very simple database to go. Database would be created at first call of `getMapper(Class<M> recordClass)` method of  `SimpleDatabase.class` instance, it would be named **simple_database** and would contain only one table called **simple_example**. This database would have **version 1** by default.
 
 `SimpleDatabase.class`:
-```
+```Java
 package net.akaish.kittyormdemo.sqlite.introductiondb;
 
 import android.content.Context;
@@ -96,7 +96,7 @@ public class SimpleDatabase extends KittyDatabase {
 
 
 `SimpleExampleModel.class`:
-```
+```Java
 package net.akaish.kittyormdemo.sqlite.introductiondb;
 
 import net.akaish.kitty.orm.KittyModel;
@@ -134,7 +134,7 @@ We are ready to go, just get `KittyMapper` from instance of `SimpleDatabase` wit
 
 * Inserting new record associated with new model into database table:
 
-```
+```Java
 SimpleExampleModel alex = new SimpleExampleModel();
 
 alex.randomInteger = 545141;
@@ -153,7 +153,7 @@ long marinaRowid = mapper.insert(marina);
 
 * Finding record in table and returning its content as POJO model:
 
-```
+```Java
 // find with row id
 SimpleExampleModel model1 = mapper.findByRowID(0l);
 
@@ -195,7 +195,7 @@ mapper.save(randModels);
 
 * Inserting 10 generated records into database table:
 
-```
+```Java
 List<SimpleExampleModel> randModels = new LinkedList<>();
 for(int i = 0; i < 10; i++)
     randModels.add(RandomSimpleExampleModelUtil.randomSEModel());
@@ -204,7 +204,7 @@ mapper.save(randModels);
 
 * Deleting some models:
 
-{{< highlight java "linenos=inline, linenostart=1">}}
+```Java
 // deleting entity
 mapper.delete(alex);
 
@@ -214,7 +214,7 @@ mapper.deleteByWhere("first_name = ?", "Alex");
 
 * Updating some models:
 
-```
+```Java
 // updating current model
 // if model has RowId or IPK or PrimaryKey values set (3 is slowest) just
 marina.randomInteger = 1337;
@@ -235,7 +235,7 @@ mapper.update(update, builder.build(), new String[]{"randomInteger"}, CVUtils.IN
 
 * Bulk operations in transaction mode:
 
-```
+```Java
 randModels = new LinkedList<>();
 for(int i = 0; i < 10; i++)
     randModels.add(RandomSimpleExampleModelUtil.randomSEModel());
