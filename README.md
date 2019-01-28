@@ -41,3 +41,5 @@ Create package for storing your POJO models, KittyORM database class, KittyORM h
 [Read more...](https://akaish.github.io/KittyORMPages/getting_started/)
 
 [KittyORM license](https://akaish.github.io/KittyORMPages/license/)
+
+[![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-KittyORM-green.svg?style=flat )]( https://android-arsenal.com/details/1/7445 )
