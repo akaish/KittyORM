@@ -82,7 +82,7 @@
 <span class="ln">14</span><span class="c1">// Running some write database operations
 </span><span class="ln">15</span><span class="c1"></span><span class="n">mapper</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">toSave</span><span class="o">);</span>
 <span class="ln">16</span><span class="n">SQLiteConditionBuilder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">();</span>
-<span class="ln">17</span><span class="n">builder</span><span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="n">AbstractRandomModel</span><span class="o">.</span><span class="na">RND_ANIMAL_CNAME</span><span class="o">)</span>
+<span class="ln">17</span><span class="n">builder</span><span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="n">AbstractRandomModel</span><span class="o">.</span><span class="na">RND_ANIMAL_CNAME</span><span class="o">)</span>
 <span class="ln">18</span>       <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
 <span class="ln">19</span>       <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">Animals</span><span class="o">.</span><span class="na">DOG</span><span class="o">.</span><span class="na">name</span><span class="o">());</span>
 <span class="ln">20</span><span class="n">mapper</span><span class="o">.</span><span class="na">deleteWhere</span><span class="o">();</span>

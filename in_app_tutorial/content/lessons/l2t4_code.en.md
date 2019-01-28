@@ -626,6 +626,46 @@ public class RNDRandomModelFactory {
 <details> 
   <summary>Click to view `Lesson2Tab4Find.class`: </summary>
 {{< highlight java "linenos=inline, linenostart=1">}}
+package net.akaish.kittyormdemo.lessons.two;
+
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import net.akaish.kitty.orm.enums.AscDesc;
+import net.akaish.kitty.orm.query.QueryParameters;
+import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
+import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
+import net.akaish.kitty.orm.query.conditions.SQLiteOperator;
+import net.akaish.kittyormdemo.KittyTutorialActivity;
+import net.akaish.kittyormdemo.R;
+import net.akaish.kittyormdemo.lessons.LessonsUriConstants;
+import net.akaish.kittyormdemo.lessons.adapters.BasicRandomModelAdapter;
+import net.akaish.kittyormdemo.sqlite.basicdb.AbstractRandomModel;
+import net.akaish.kittyormdemo.sqlite.basicdb.RandomMapper;
+import net.akaish.kittyormdemo.sqlite.basicdb.RandomModel;
+import net.akaish.kittyormdemo.sqlite.misc.Animals;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.text.MessageFormat.format;
+
+/**
+ * Created by akaish on 03.08.18.
+ * @author akaish (Denis Bogomolov)
+ */
 public class Lesson2Tab4Find extends Lesson2BaseFragment {
 
     // Pagination start
@@ -757,7 +797,7 @@ public class Lesson2Tab4Find extends Lesson2BaseFragment {
             return;
         }
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-        builder.addField("id").addSQLOperator(SQLiteOperator.EQUAL).addValue(idToFind);
+        builder.addColumn("id").addSQLOperator(SQLiteOperator.EQUAL).addValue(idToFind);
         setPaginationResults(builder.build());
     }
 
@@ -793,11 +833,11 @@ public class Lesson2Tab4Find extends Lesson2BaseFragment {
             return;
         }
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-        builder.addField("random_int")
+        builder.addColumn("random_int")
                 .addSQLOperator(SQLiteOperator.GREATER_OR_EQUAL)
                 .addValue(rangeStartInt)
                 .addSQLOperator(SQLiteOperator.AND)
-                .addField("random_int")
+                .addColumn("random_int")
                 .addSQLOperator(SQLiteOperator.LESS_OR_EQUAL)
                 .addValue(rangeEndInt);
         setPaginationResults(builder.build());
@@ -815,7 +855,7 @@ public class Lesson2Tab4Find extends Lesson2BaseFragment {
         }
         Animals animal = Animals.valueOf(animalStr);
         SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-        builder.addField(AbstractRandomModel.RND_ANIMAL_CNAME)
+        builder.addColumn(AbstractRandomModel.RND_ANIMAL_CNAME)
                 .addSQLOperator(SQLiteOperator.EQUAL)
                 .addValue(animal.name());
         setPaginationResults(builder.build());
@@ -1147,7 +1187,6 @@ public class Lesson2Tab4Find extends Lesson2BaseFragment {
         }
     }
 }
-
 {{< /highlight >}} 
 </details>
 

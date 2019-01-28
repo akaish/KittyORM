@@ -207,62 +207,53 @@
 <span class="ln"> 8</span>
 <span class="ln"> 9</span>    <span class="kd">protected</span> <span class="n">SQLiteCondition</span> <span class="nf">getAnimalCondition</span><span class="o">(</span><span class="n">Animals</span> <span class="n">animal</span><span class="o">)</span> <span class="o">{</span>
 <span class="ln">10</span>        <span class="k">return</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
-<span class="ln">11</span>                <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="n">RND_ANIMAL_CNAME</span><span class="o">)</span>
-<span class="ln">12</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">SQLiteOperator</span><span class="o">.</span><span class="na">EQUAL</span><span class="o">)</span>
+<span class="ln">11</span>                <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="n">RND_ANIMAL_CNAME</span><span class="o">)</span>
+<span class="ln">12</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="s">&#34;=&#34;</span><span class="o">)</span>
 <span class="ln">13</span>                <span class="o">.</span><span class="na">addObjectValue</span><span class="o">(</span><span class="n">animal</span><span class="o">)</span>
 <span class="ln">14</span>                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 <span class="ln">15</span>    <span class="o">}</span>
 <span class="ln">16</span>
 <span class="ln">17</span>    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">deleteByRandomIntegerRange</span><span class="o">(</span><span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">)</span> <span class="o">{</span>
-<span class="ln">18</span>        <span class="n">SQLiteCondition</span> <span class="n">condition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
-<span class="ln">19</span>                <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;random_int&#34;</span><span class="o">)</span>
-<span class="ln">20</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">GREATER_OR_EQUAL</span><span class="o">)</span>
-<span class="ln">21</span>                <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">start</span><span class="o">)</span>
-<span class="ln">22</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">AND</span><span class="o">)</span>
-<span class="ln">23</span>                <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;random_int&#34;</span><span class="o">)</span>
-<span class="ln">24</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">LESS_OR_EQUAL</span><span class="o">)</span>
-<span class="ln">25</span>                <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">end</span><span class="o">)</span>
-<span class="ln">26</span>                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-<span class="ln">27</span>        <span class="k">return</span> <span class="n">deleteByWhere</span><span class="o">(</span><span class="n">condition</span><span class="o">);</span>
-<span class="ln">28</span>    <span class="o">}</span>
-<span class="ln">29</span>
-<span class="ln">30</span>    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">deleteByAnimal</span><span class="o">(</span><span class="n">Animals</span> <span class="n">animal</span><span class="o">)</span> <span class="o">{</span>
-<span class="ln">31</span>        <span class="k">return</span> <span class="n">deleteByWhere</span><span class="o">(</span><span class="n">getAnimalCondition</span><span class="o">(</span><span class="n">animal</span><span class="o">));</span>
-<span class="ln">32</span>    <span class="o">}</span>
-<span class="ln">33</span>
-<span class="ln">34</span>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">RandomModel</span><span class="o">&gt;</span> <span class="nf">findByAnimal</span><span class="o">(</span><span class="n">Animals</span> <span class="n">animal</span><span class="o">,</span> <span class="kt">long</span> <span class="n">offset</span><span class="o">,</span> <span class="kt">long</span> <span class="n">limit</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">groupingOn</span><span class="o">)</span> <span class="o">{</span>
-<span class="ln">35</span>        <span class="n">SQLiteCondition</span> <span class="n">condition</span> <span class="o">=</span> <span class="n">getAnimalCondition</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
-<span class="ln">36</span>        <span class="n">QueryParameters</span> <span class="n">qparam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryParameters</span><span class="o">();</span>
-<span class="ln">37</span>        <span class="n">qparam</span><span class="o">.</span><span class="na">setLimit</span><span class="o">(</span><span class="n">limit</span><span class="o">).</span><span class="na">setOffset</span><span class="o">(</span><span class="n">offset</span><span class="o">);</span>
-<span class="ln">38</span>        <span class="k">if</span><span class="o">(</span><span class="n">groupingOn</span><span class="o">)</span>
-<span class="ln">39</span>            <span class="n">qparam</span><span class="o">.</span><span class="na">setGroupByColumns</span><span class="o">(</span><span class="n">RND_ANIMAL_CNAME</span><span class="o">);</span>
-<span class="ln">40</span>        <span class="k">else</span>
-<span class="ln">41</span>            <span class="n">qparam</span><span class="o">.</span><span class="na">setGroupByColumns</span><span class="o">(</span><span class="n">KittyConstants</span><span class="o">.</span><span class="na">ROWID</span><span class="o">);</span>
-<span class="ln">42</span>        <span class="k">return</span> <span class="n">findWhere</span><span class="o">(</span><span class="n">condition</span><span class="o">,</span> <span class="n">qparam</span><span class="o">);</span>
-<span class="ln">43</span>    <span class="o">}</span>
-<span class="ln">44</span>
-<span class="ln">45</span>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">RandomModel</span><span class="o">&gt;</span> <span class="nf">findByIdRange</span><span class="o">(</span><span class="kt">long</span> <span class="n">fromId</span><span class="o">,</span> <span class="kt">long</span> <span class="n">toId</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">inclusive</span><span class="o">,</span> <span class="n">Long</span> <span class="n">offset</span><span class="o">,</span> <span class="n">Long</span> <span class="n">limit</span><span class="o">)</span> <span class="o">{</span>
-<span class="ln">46</span>        <span class="n">SQLiteCondition</span> <span class="n">condition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
-<span class="ln">47</span>                <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
-<span class="ln">48</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">inclusive</span> <span class="o">?</span> <span class="n">GREATER_OR_EQUAL</span> <span class="o">:</span> <span class="n">GREATER_THAN</span><span class="o">)</span>
-<span class="ln">49</span>                <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">fromId</span><span class="o">)</span>
-<span class="ln">50</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">AND</span><span class="o">)</span>
-<span class="ln">51</span>                <span class="o">.</span><span class="na">addField</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
-<span class="ln">52</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">inclusive</span> <span class="o">?</span> <span class="n">LESS_OR_EQUAL</span> <span class="o">:</span> <span class="n">LESS_THAN</span><span class="o">)</span>
-<span class="ln">53</span>                <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">toId</span><span class="o">)</span>
-<span class="ln">54</span>                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-<span class="ln">55</span>        <span class="n">QueryParameters</span> <span class="n">qparam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryParameters</span><span class="o">();</span>
-<span class="ln">56</span>        <span class="n">qparam</span><span class="o">.</span><span class="na">setLimit</span><span class="o">(</span><span class="n">limit</span><span class="o">).</span><span class="na">setOffset</span><span class="o">(</span><span class="n">offset</span><span class="o">).</span><span class="na">setGroupByColumns</span><span class="o">(</span><span class="n">KittyConstants</span><span class="o">.</span><span class="na">ROWID</span><span class="o">);</span>
-<span class="ln">57</span>        <span class="k">return</span> <span class="n">findWhere</span><span class="o">(</span><span class="n">condition</span><span class="o">,</span> <span class="n">qparam</span><span class="o">);</span>
-<span class="ln">58</span>    <span class="o">}</span>
-<span class="ln">59</span>
-<span class="ln">60</span>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">RandomModel</span><span class="o">&gt;</span> <span class="nf">findAllRandomModels</span><span class="o">(</span><span class="n">Long</span> <span class="n">offset</span><span class="o">,</span> <span class="n">Long</span> <span class="n">limit</span><span class="o">)</span> <span class="o">{</span>
-<span class="ln">61</span>        <span class="n">QueryParameters</span> <span class="n">qparam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryParameters</span><span class="o">();</span>
-<span class="ln">62</span>        <span class="n">qparam</span><span class="o">.</span><span class="na">setLimit</span><span class="o">(</span><span class="n">limit</span><span class="o">).</span><span class="na">setOffset</span><span class="o">(</span><span class="n">offset</span><span class="o">).</span><span class="na">setGroupByColumns</span><span class="o">(</span><span class="n">KittyConstants</span><span class="o">.</span><span class="na">ROWID</span><span class="o">);</span>
-<span class="ln">63</span>        <span class="k">return</span> <span class="n">findAll</span><span class="o">(</span><span class="n">qparam</span><span class="o">);</span>
-<span class="ln">64</span>    <span class="o">}</span>
-<span class="ln">65</span>
-<span class="ln">66</span><span class="o">}</span></code></pre></div></p></li>
+<span class="ln">18</span>        <span class="k">return</span> <span class="n">deleteWhere</span><span class="o">(</span><span class="s">&#34;#?randomInt &gt;= ? AND #?randomInt &lt;= ?&#34;</span><span class="o">,</span> <span class="n">start</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
+<span class="ln">19</span>    <span class="o">}</span>
+<span class="ln">20</span>
+<span class="ln">21</span>    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">deleteByAnimal</span><span class="o">(</span><span class="n">Animals</span> <span class="n">animal</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">22</span>        <span class="k">return</span> <span class="n">deleteWhere</span><span class="o">(</span><span class="n">getAnimalCondition</span><span class="o">(</span><span class="n">animal</span><span class="o">));</span>
+<span class="ln">23</span>    <span class="o">}</span>
+<span class="ln">24</span>
+<span class="ln">25</span>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">RandomModel</span><span class="o">&gt;</span> <span class="nf">findByAnimal</span><span class="o">(</span><span class="n">Animals</span> <span class="n">animal</span><span class="o">,</span> <span class="kt">long</span> <span class="n">offset</span><span class="o">,</span> <span class="kt">long</span> <span class="n">limit</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">groupingOn</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">26</span>        <span class="n">SQLiteCondition</span> <span class="n">condition</span> <span class="o">=</span> <span class="n">getAnimalCondition</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
+<span class="ln">27</span>        <span class="n">QueryParameters</span> <span class="n">qparam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryParameters</span><span class="o">();</span>
+<span class="ln">28</span>        <span class="n">qparam</span><span class="o">.</span><span class="na">setLimit</span><span class="o">(</span><span class="n">limit</span><span class="o">).</span><span class="na">setOffset</span><span class="o">(</span><span class="n">offset</span><span class="o">);</span>
+<span class="ln">29</span>        <span class="k">if</span><span class="o">(</span><span class="n">groupingOn</span><span class="o">)</span>
+<span class="ln">30</span>            <span class="n">qparam</span><span class="o">.</span><span class="na">setGroupByColumns</span><span class="o">(</span><span class="n">RND_ANIMAL_CNAME</span><span class="o">);</span>
+<span class="ln">31</span>        <span class="k">else</span>
+<span class="ln">32</span>            <span class="n">qparam</span><span class="o">.</span><span class="na">setGroupByColumns</span><span class="o">(</span><span class="n">KittyConstants</span><span class="o">.</span><span class="na">ROWID</span><span class="o">);</span>
+<span class="ln">33</span>        <span class="k">return</span> <span class="n">findWhere</span><span class="o">(</span><span class="n">condition</span><span class="o">,</span> <span class="n">qparam</span><span class="o">);</span>
+<span class="ln">34</span>    <span class="o">}</span>
+<span class="ln">35</span>
+<span class="ln">36</span>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">RandomModel</span><span class="o">&gt;</span> <span class="nf">findByIdRange</span><span class="o">(</span><span class="kt">long</span> <span class="n">fromId</span><span class="o">,</span> <span class="kt">long</span> <span class="n">toId</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">inclusive</span><span class="o">,</span> <span class="n">Long</span> <span class="n">offset</span><span class="o">,</span> <span class="n">Long</span> <span class="n">limit</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">37</span>        <span class="n">SQLiteCondition</span> <span class="n">condition</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SQLiteConditionBuilder</span><span class="o">()</span>
+<span class="ln">38</span>                <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
+<span class="ln">39</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">inclusive</span> <span class="o">?</span> <span class="n">GREATER_OR_EQUAL</span> <span class="o">:</span> <span class="n">GREATER_THAN</span><span class="o">)</span>
+<span class="ln">40</span>                <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">fromId</span><span class="o">)</span>
+<span class="ln">41</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">AND</span><span class="o">)</span>
+<span class="ln">42</span>                <span class="o">.</span><span class="na">addColumn</span><span class="o">(</span><span class="s">&#34;id&#34;</span><span class="o">)</span>
+<span class="ln">43</span>                <span class="o">.</span><span class="na">addSQLOperator</span><span class="o">(</span><span class="n">inclusive</span> <span class="o">?</span> <span class="n">LESS_OR_EQUAL</span> <span class="o">:</span> <span class="n">LESS_THAN</span><span class="o">)</span>
+<span class="ln">44</span>                <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="n">toId</span><span class="o">)</span>
+<span class="ln">45</span>                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="ln">46</span>        <span class="n">QueryParameters</span> <span class="n">qparam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryParameters</span><span class="o">();</span>
+<span class="ln">47</span>        <span class="n">qparam</span><span class="o">.</span><span class="na">setLimit</span><span class="o">(</span><span class="n">limit</span><span class="o">).</span><span class="na">setOffset</span><span class="o">(</span><span class="n">offset</span><span class="o">).</span><span class="na">setGroupByColumns</span><span class="o">(</span><span class="n">KittyConstants</span><span class="o">.</span><span class="na">ROWID</span><span class="o">);</span>
+<span class="ln">48</span>        <span class="k">return</span> <span class="n">findWhere</span><span class="o">(</span><span class="n">condition</span><span class="o">,</span> <span class="n">qparam</span><span class="o">);</span>
+<span class="ln">49</span>    <span class="o">}</span>
+<span class="ln">50</span>
+<span class="ln">51</span>    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">RandomModel</span><span class="o">&gt;</span> <span class="nf">findAllRandomModels</span><span class="o">(</span><span class="n">Long</span> <span class="n">offset</span><span class="o">,</span> <span class="n">Long</span> <span class="n">limit</span><span class="o">)</span> <span class="o">{</span>
+<span class="ln">52</span>        <span class="n">QueryParameters</span> <span class="n">qparam</span> <span class="o">=</span> <span class="k">new</span> <span class="n">QueryParameters</span><span class="o">();</span>
+<span class="ln">53</span>        <span class="n">qparam</span><span class="o">.</span><span class="na">setLimit</span><span class="o">(</span><span class="n">limit</span><span class="o">).</span><span class="na">setOffset</span><span class="o">(</span><span class="n">offset</span><span class="o">).</span><span class="na">setGroupByColumns</span><span class="o">(</span><span class="n">KittyConstants</span><span class="o">.</span><span class="na">ROWID</span><span class="o">);</span>
+<span class="ln">54</span>        <span class="k">return</span> <span class="n">findAll</span><span class="o">(</span><span class="n">qparam</span><span class="o">);</span>
+<span class="ln">55</span>    <span class="o">}</span>
+<span class="ln">56</span>
+<span class="ln">57</span><span class="o">}</span></code></pre></div></p></li>
 </ol>
 
 <p></details></p>

@@ -58,7 +58,7 @@ startTransaction(TRANSACTION_MODES.NON_EXCLUSIVE_MODE);
 // Running some write database operations
 mapper.insert(toSave);
 SQLiteConditionBuilder builder = new SQLiteConditionBuilder();
-builder.addField(AbstractRandomModel.RND_ANIMAL_CNAME)
+builder.addColumn(AbstractRandomModel.RND_ANIMAL_CNAME)
        .addSQLOperator(SQLiteOperator.EQUAL)
        .addValue(Animals.DOG.name());
 mapper.deleteWhere();
