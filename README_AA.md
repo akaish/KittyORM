@@ -246,4 +246,4 @@ mapper.saveInTransaction(randModels);
 
 **KittyORM** support a lot of cool features and can do a lot of fancy things. Please refer official KittyORM project pages located at https://akaish.github.io/KittyORMPages/ for more info.
 
-[KittyORM license](https://akaish.github.io/KittyORMPages/license/)
+
