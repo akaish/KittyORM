@@ -200,7 +200,7 @@ List<SimpleExampleModel> randModels = new LinkedList<>();
 for(int i = 0; i < 10; i++)
     randModels.add(RandomSimpleExampleModelUtil.randomSEModel());
 mapper.save(randModels);
-{{< /highlight >}}
+```
 
 * Deleting some models:
 
@@ -209,7 +209,7 @@ mapper.save(randModels);
 mapper.delete(alex);
 
 // deleting from database with condition
-mapper.deleteByWhere("first_name = ?", "Alex");
+mapper.deleteWhere("first_name = ?", "Alex");
 ```
 
 * Updating some models:

@@ -200,21 +200,21 @@ List<SimpleExampleModel> randModels = new LinkedList<>();
 for(int i = 0; i < 10; i++)
     randModels.add(RandomSimpleExampleModelUtil.randomSEModel());
 mapper.save(randModels);
-{{< /highlight >}}
+```
 
 * Deleting some models:
 
-{{< highlight java "linenos=inline, linenostart=1">}}
+```
 // deleting entity
 mapper.delete(alex);
 
 // deleting from database with condition
-mapper.deleteByWhere("first_name = ?", "Alex");
+mapper.deleteWhere("first_name = ?", "Alex");
 ```
 
 * Updating some models:
 
-```
+```Java
 // updating current model
 // if model has RowId or IPK or PrimaryKey values set (3 is slowest) just
 marina.randomInteger = 1337;
