@@ -118,4 +118,15 @@ public abstract class KittyModel implements Cloneable {
         exclusions.add(fieldName);
     }
 
+    /**
+     * Sets field exclusions for setting it explicitly
+     * <br> Usefull for inserting values that should have to be assigned by DEFAULT constraint
+     * <br> or for fields that are parts of PK that should be generated automatically by trigger
+     * @param fieldNames
+     */
+    public final void setFieldExclusions(String... fieldNames) {
+        for(String fieldName : fieldNames)
+            setFieldExclusion(fieldName);
+    }
+
 }
