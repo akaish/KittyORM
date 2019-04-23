@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Denis Bogomolov (akaish)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  ~ This file is a part of KittyORM project (KittyORM Demo), more information at
+  ~ https://akaish.github.io/KittyORMPages/license/
+  -->
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="@dimen/sliding_bar_lesson_expand_me_height"
+    sothree:umanoShadowHeight="4dp">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollbarAlwaysDrawVerticalTrack="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/colorGrayLightest"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/l1_t3_database_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_l1_t3_database_pattern"
+                android:layout_margin="@dimen/lesson_elements_margin"
+                android:background="@color/colorGrayLightest"
+                />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/l1_t3_db_buttons_ll"
+                android:layout_below="@id/l1_t3_database_file"
+                android:background="@color/colorGrayLightest"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/l1_t3_open_db_button"
+                    android:layout_weight="0.5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lesson_elements_margin"
+                    android:text="@string/_l1_t3_pick_db" />
+
+                <Button
+                    android:id="@+id/l1_t3_copy_from_assets_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lesson_elements_margin"
+                    android:text="@string/_l1_t3_copy_db" />
+
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l1_t3_db_buttons_ll"
+                android:id="@+id/l1_t3_buttons_ll"
+                android:background="@color/colorGrayLightest"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/l1_t3_go_button"
+                    android:layout_weight="0.5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lesson_elements_margin"
+                    android:text="@string/_l1_t3_go_button" />
+
+                <Button
+                    android:id="@+id/l1_t3_clear_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/lesson_elements_margin"
+                    android:text="@string/_l1_t3_clear_button" />
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/l1_t3_actions"
+                android:layout_below="@+id/l1_t3_buttons_ll"
+                android:background="@color/colorGrayLightest"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="@color/colorPrimaryDark"
+            android:id="@+id/_l1_t3_expanded_panel">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/_l1_t3_expanded_panel_text"
+                android:gravity="center|center"
+                android:text="@string/_l2_common_sliding_expand"
+                android:textColor="@color/colorGrayLightest"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+        <ListView
+            android:layout_below="@+id/_l1_t3_expanded_panel"
+            android:id="@+id/_l1_t3_expanded_panel_list"
+            android:layout_width="match_parent"
+            android:background="@color/colorGrayLightest"
+            android:layout_height="0dip"
+            android:layout_weight="1">
+
+        </ListView>
+    </LinearLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

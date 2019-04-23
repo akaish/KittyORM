@@ -88,16 +88,27 @@ public class KittyAnnoDatabaseConfigurationUtil {
 
     private static final String IA_REGISTRY_PAIRS_BAD_ARRAY = "[KittyAnnoDatabaseConfigurationUtil] Static registry for {0}: {1} v. {2} present as @interface defined as registry pairs unable to process, reason: {3}";
 
+    private static final String IA_ERROR_BAD_SETTINGS = "[KittyAnnoDatabaseConfigurationUtil] If you want to use database located not in default database folder, please set @KITTY_DATABASE.useExternalDatabase() to true";
+
+    private static final String LI_GETTING_EXTERNAL_DATABASE = "[KittyAnnoDatabaseConfigurationUtil] Using external database located at {0}";
+
     public static <T extends KittyDatabase, M extends KittyModel> KittyDatabaseConfiguration generateDatabaseConfiguration(
-            Class<T> database, Context ctx, Map<Class<M>, Class<KittyMapper>> registry) {
+            Class<T> database, Context ctx, Map<Class<M>, Class<KittyMapper>> registry, String databaseFilePath, int databaseVersion) {
         if(database.isAnnotationPresent(KITTY_DATABASE.class)) {
             KITTY_DATABASE databaseAnno = database.getAnnotation(KITTY_DATABASE.class);
+            if(databaseFilePath != null && !databaseAnno.useExternalDatabase()) {
+                throw new IllegalArgumentException(IA_ERROR_BAD_SETTINGS);
+            }
+            boolean useExternalDB = (databaseFilePath != null && databaseAnno.useExternalDatabase());
+            if(useExternalDB)
+                Log.i(databaseAnno.logTag(), format(LI_GETTING_EXTERNAL_DATABASE, databaseFilePath));
+
             if(databaseAnno.logTag().length()>LOG_TAG_MAX_LENGTH) {
                 throw new IllegalArgumentException(format(IA_EXCEPTION_LOG_TAG_TOO_LONG, databaseAnno.logTag(), Integer.toString(databaseAnno.logTag().length())));
             }
             if(databaseAnno.isLoggingOn())
                 Log.i(databaseAnno.logTag(), format(LI_STARTED, database.getCanonicalName()));
-            String databaseName = null;
+            String databaseName = null; // TODO stopped here
             if(databaseAnno.databaseName().length() == 0) {
                 databaseName = generateSchemaNameFromDatabaseClassName(database);
                 if(databaseAnno.isLoggingOn())
@@ -179,7 +190,7 @@ public class KittyAnnoDatabaseConfigurationUtil {
                 Log.i(databaseAnno.logTag(), format(LI_GENERATING_COLUMNS_FINISHED,  database.getCanonicalName(), databaseName, databaseAnno.databaseVersion()));
             KittyDatabaseConfigurationBuilder builder = new KittyDatabaseConfigurationBuilder();
             final KittyDatabaseConfiguration configuration = builder.setDatabaseName(databaseName)
-                        .setDatabaseVersion(databaseAnno.databaseVersion())
+                        .setDatabaseVersion(databaseVersion > 0 ? databaseVersion : databaseAnno.databaseVersion())
                         .setIsGenerateRegistryFromPackage(databaseAnno.isGenerateRegistryFromPackage())
                         .setIsLoggingOn(databaseAnno.isLoggingOn())
                         .setIsPragmaON(databaseAnno.isPragmaOn())
@@ -189,7 +200,10 @@ public class KittyAnnoDatabaseConfigurationUtil {
                         .setRecordsConfigurations(tableConfigurations)
                         .setRegistry(generatedRegistry)
                         .setIsKittyDexUtilLoggingEnabled(databaseAnno.isKittyDexUtilLoggingEnabled())
-                        .returnNullInsteadEmptyCollection(databaseAnno.returnNullInsteadEmptyCollection())
+                        .setReturnNullInsteadEmptyCollection(databaseAnno.returnNullInsteadEmptyCollection())
+                        .setExternalDatabaseFilePath(databaseFilePath)
+                        .setIsUseExternalDatabase(useExternalDB)
+                        .setExternalDatabaseSupportedVersions(databaseAnno.supportedExternalDatabaseVersionNumbers())
                         .createKittyDatabaseConfiguration();
             if(databaseAnno.isLoggingOn())
                 Log.i(databaseAnno.logTag(), format(LI_GENERATING_DB_CONF_FINISHED,  database.getCanonicalName(), databaseName, databaseAnno.databaseVersion(), configuration));

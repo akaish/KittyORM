@@ -52,6 +52,21 @@ public @interface KITTY_DATABASE {
     String databaseName() default ZERO_LENGTH_STRING;
 
     /**
+     * Usage of external database located at filepath provided
+     * throw {@link net.akaish.kitty.orm.KittyDatabase} constructor
+     * <br> If true, than helper on upgrade and on create behaviour would
+     * skip upgrade and create routine
+     */
+    boolean useExternalDatabase() default false;
+
+    /**
+     * Supported by current schema external database file numbers,
+     * if empty than no check on version mismatch would be run.
+     * @return
+     */
+    int[] supportedExternalDatabaseVersionNumbers() default {};
+
+    /**
      * Database version int
      * @return
      */

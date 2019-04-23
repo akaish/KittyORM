@@ -46,15 +46,16 @@ public class KittyConfiguratorADC extends KittyConfigurator {
 
     public <DB extends KittyDatabase, M extends KittyModel> KittyConfiguratorADC(Context context,
                                                            Map<Class<M>, Class<KittyMapper>> registry,
-                                                           Class<DB> kittyDatabase) {
-        super(context, registry);
+                                                           Class<DB> kittyDatabase, String databaseFilePath,
+                                                           int databaseVersion) {
+        super(context, registry, databaseFilePath, databaseVersion);
         this.databaseClass = kittyDatabase;
     }
 
     @Override
     public KittyDatabaseConfiguration generateDatabaseConfiguration() {
         return KittyAnnoDatabaseConfigurationUtil.generateDatabaseConfiguration(
-                databaseClass, context, registry
+                databaseClass, context, registry, databaseFilePath, databaseVersion
         );
     }
 }

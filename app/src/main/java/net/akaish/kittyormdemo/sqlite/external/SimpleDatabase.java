@@ -22,7 +22,7 @@
  * ---
  */
 
-package net.akaish.kittyormdemo.sqlite.introductiondb;
+package net.akaish.kittyormdemo.sqlite.external;
 
 import android.content.Context;
 
@@ -36,9 +36,10 @@ import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
 @KITTY_DATABASE(
         isLoggingOn = true,
         isProductionOn = false,
-        isKittyDexUtilLoggingEnabled = true,
-        domainPackageNames = {"net.akaish.kittyormdemo.sqlite.introductiondb"}
-        //, setReturnNullInsteadEmptyCollection = true
+        isKittyDexUtilLoggingEnabled = false,
+        domainPackageNames = {"net.akaish.kittyormdemo.sqlite.external"},
+        useExternalDatabase = true,
+        supportedExternalDatabaseVersionNumbers = {1, 2, 3, 4, 5}
 )
 public class SimpleDatabase extends KittyDatabase {
 
@@ -51,7 +52,7 @@ public class SimpleDatabase extends KittyDatabase {
      *
      * @param ctx
      */
-    public SimpleDatabase(Context ctx) {
-        super(ctx);
+    public SimpleDatabase(Context ctx, String path) {
+        super(ctx, path);
     }
 }

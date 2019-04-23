@@ -25,13 +25,18 @@
 package net.akaish.kittyormdemo;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -86,6 +91,12 @@ public abstract class KittyTutorialActivity extends AppCompatActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requestPermissions();
     }
 
     protected abstract void setFabCoordinatorParentView();
@@ -254,5 +265,67 @@ public abstract class KittyTutorialActivity extends AppCompatActivity implements
         }
 
         fabMenus.getFirst().animate().rotation(0f);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        boolean allowed = true;
+        switch (requestCode){
+            case PERM_REQUEST_CODE:
+
+                for (int res : grantResults){
+                    // if user granted all permissions.
+                    allowed = allowed && (res == PackageManager.PERMISSION_GRANTED);
+                }
+                break;
+            default:
+                // if user not granted permissions.
+                allowed = false;
+                break;
+        }
+        if (allowed){
+        } else {
+            // we will give warning to user that they haven't granted permissions.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (shouldShowRequestPermissionRationale(DemoPermissions.READ) ||
+                        shouldShowRequestPermissionRationale(DemoPermissions.WRITE)) {
+                    requestPermissions();
+                    return;
+                } else {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                    dialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
+                    dialogBuilder.setTitle(getString(R.string._perm_dialog_title));
+                    dialogBuilder.setMessage(getString(R.string._perm_dialog_message));
+                    dialogBuilder.setPositiveButton(R.string._perm_dialog_positive, openPermissionsMenuListener());
+                    dialogBuilder.show();
+                    return;
+                }
+            }
+        }
+    }
+
+    public void requestPermissions() {
+        if(!DemoPermissions.isPermissionGranted(this, DemoPermissions.READ) ||
+                !DemoPermissions.isPermissionGranted(this, DemoPermissions.WRITE)) {
+            String[] permissions = new String[]{DemoPermissions.READ, DemoPermissions.WRITE};
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                requestPermissions(permissions, PERM_REQUEST_CODE);
+            }
+        }
+    }
+
+    private static final int PERM_REQUEST_CODE = 0xAA;
+
+
+
+    private DialogInterface.OnClickListener openPermissionsMenuListener() {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(appSettingsIntent, PERM_REQUEST_CODE);
+            }
+        };
     }
 }

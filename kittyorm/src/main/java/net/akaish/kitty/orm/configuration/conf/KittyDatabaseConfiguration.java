@@ -33,6 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static net.akaish.kitty.orm.util.KittyConstants.WHITESPACE;
+
 /**
  * Configuration DAO for KittyDatabase implementation
  * Created by akaish on 13.02.18.
@@ -99,6 +101,26 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
     public final boolean returnNullInsteadEmptyCollection;
 
     /**
+     * Defines external filepath that should be used as database file
+     */
+    public final String databaseFilePath;
+
+    /**
+     * Flag that defines usage of external database. If you use external database, KittyORM would
+     * try to open database located at provided filepath and would skip all onUpgrade and onCreate
+     * helper routine
+     */
+    public final boolean useExternalFilepath;
+
+
+     /**
+      * Supported by current schema external database file numbers,
+      * if empty than no check on version mismatch would be run.
+      * @return
+      */
+    public final int[] externalDatabaseSupportedVersions;
+
+    /**
      * Package names where model classes are located
      */
     public final String[] mmPackageNames;
@@ -108,7 +130,9 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
                                       boolean isPragmaON, boolean isProductionOn,
                                       boolean isGenerateRegistryFromPackage,
                                       String[] mmPackageNames, Map<Class<M>, Class<KittyMapper>> registry,
-                                      boolean isKittyDexUtilLoggingEnabled, boolean returnNullInsteadEmptyCollection) {
+                                      boolean isKittyDexUtilLoggingEnabled, boolean returnNullInsteadEmptyCollection,
+                                      String databaseFilePath, boolean useExternalFilepath,
+                                      int[] externalDatabaseSupportedVersions) {
         this.tableConfigurations = tableConfigurations;
         this.schemaName = schemaName;
         this.schemaVersion = schemaVersion;
@@ -121,6 +145,9 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
         this.registry = registry;
         this.isKittyDexUtilLoggingEnabled = isKittyDexUtilLoggingEnabled;
         this.returnNullInsteadEmptyCollection = returnNullInsteadEmptyCollection;
+        this.databaseFilePath = databaseFilePath;
+        this.useExternalFilepath = useExternalFilepath;
+        this.externalDatabaseSupportedVersions = externalDatabaseSupportedVersions;
     }
 
     @Override
@@ -133,9 +160,12 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
                 .append(" ; isPragmaOn = ").append(isPragmaON)
                 .append(" ; isProductionOn = ").append(isProductionOn)
                 .append(" ; isGenerateRegistryFromPackage = ").append(isGenerateRegistryFromPackage)
-                .append(" ; returnNullInsteadEmptyCollection = ").append(returnNullInsteadEmptyCollection)
+                .append(" ; setReturnNullInsteadEmptyCollection = ").append(returnNullInsteadEmptyCollection)
                 .append(" ; mmPackageNames = ").append(KittyUtils.implodeWithCommaInBKT(mmPackageNames))
                 .append(" ; isKittyDexUtilLoggingEnabled = ").append(isKittyDexUtilLoggingEnabled)
+                .append(" ; databaseFilePath = ").append(databaseFilePath)
+                .append(" ; useExternalFilePath = ").append(useExternalFilepath)
+                .append(" ; externalDatabaseSupportedVersions : ").append(supportedExternalDatabaseVersionNumbersString())
                 .append(" ; registry = ").append(registryString()).append(" ]");
         return sb.toString();
     }
@@ -150,5 +180,15 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
             registryToPrint.addLast(sb.toString());
         }
         return KittyUtils.implodeWithCommaInBKT(registryToPrint.toArray(new String[registryToPrint.size()]));
+    }
+
+    private String supportedExternalDatabaseVersionNumbersString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
+        for(int i : externalDatabaseSupportedVersions) {
+            sb.append(Integer.toString(i)).append(WHITESPACE);
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }

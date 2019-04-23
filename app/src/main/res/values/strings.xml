@@ -83,10 +83,15 @@
     <string name="paginator_page_down">&#62;</string>
     <string name="paginator_last_page">&#62;&#62;</string>
 
+    <string name="_perm_dialog_title">Warning!</string>
+    <string name="_perm_dialog_message">KittyORM Demo requires READ\WRITE access to external storage for external db demo. Please provide them manually.</string>
+    <string name="_perm_dialog_positive">Open permissions</string>
+
     <!-- Lesson 1 UI strings -->
     <!-- Lesson 1 common strings -->
     <string name="_l1_tab_intro">Introduction to KittyORM</string>
     <string name="_l1_tab_getting_started">Getting started</string>
+    <string name="_l1_tab_external">External DB</string>
 
     <!-- Lesson 1 UI strings Tab 1 -->
     <string name="_l1_t1_snackbar_message">Introduction to KittyORM, what it can and why it was created.</string>
@@ -125,6 +130,56 @@
     <string name="_l1_t2_expanded_text_pattern">Records in simple_example: {0} (clickable)</string>
 
     <string name="_l1_t2_snackbar_message">Basic usage of KittyORM CRUD controller. Click \'RUN CRUD OPERATIONS\' to run CRUD operations with DB.</string>
+
+    <!-- Lesson 1 UI strings Tab 2 -->
+    <string name="_l1_t3_database_pattern">Database file: {0}</string>
+    <string name="_l1_t3_state_exists_connected">connected to {0}</string>
+    <string name="_l1_t3_state_waiting">db path: {0}, disconnected</string>
+    <string name="_l1_t3_state_no_file">no db file found at {0}</string>
+
+    <string name="_l1_t3_toasts_db_copied">Successfully copied database from assets to {0}!</string>
+    <string name="_l1_t3_toasts_db_already_exists_at">Unable to copy database: it already exists at {0}</string>
+    <string name="_l1_t3_toasts_db_already_io_exception">Unable to copy database: see IO exception details...</string>
+    <string name="_l1_t3_toasts_db_already_read_only">Unable to copy database from assets, reason: external storage mounted is read only!</string>
+    <string name="_l1_t3_toasts_db_already_not_available">Unable to copy database from assets, reason: external storage is not accessible!</string>
+
+    <string name="_l1_t3_pick_db">Open DB</string>
+    <string name="_l1_t3_copy_db">Copy DB from assets</string>
+
+
+    <string name="_l1_t3_go_button">RUN CRUD OPERATIONS</string>
+    <string name="_l1_t3_clear_button">CLEAR TABLE</string>
+
+    <string name="_l1_t3_inserting">Inserting new record from entity {0} to table simple_database.simple_example.</string>
+    <string name="_l1_t3_inserted">New record from entity {0} inserted successfully to table simple_database.simple_example.</string>
+
+    <string name="_l1_t3_count">Right now simple_database.simple_example has {0} records.</string>
+
+    <string name="_l1_t3_retrieving">Retrieving existing record from simple_database.simple_example table; method: {0}, parameters: {1}, operation id: {2} .</string>
+    <string name="_l1_t3_retrieved">{0} model(s) successfully retrieved from simple_database.simple_example table; operation id = {1} .</string>
+    <string name="_l1_t3_retrieved_model_show">Operation id = {0}, model number = {1}, model data: {2} .</string>
+
+    <string name="_l1_t3_random_save">Ten random models generated and successfully inserted into simple_database.simple_example.</string>
+
+    <string name="_l1_t3_one_alex_to_delete_found">Found one "Alex" to delete, deleting...</string>
+    <string name="_l1_t3_one_alex_deleted">One "Alex" deleted successfully!</string>
+
+    <string name="_l1_3_one_marina_deleting">Deleting record where record value random_integer = 445555 ...</string>
+    <string name="_l1_3_one_marina_deleted">Record\'s where record value random_integer = 445555 deleted successfully!</string>
+
+    <string name="_l1_t3_updating_entity">Updating entity {0} to {1}.</string>
+    <string name="_l1_t3_updated">Entity updated successfully from {0} to {1}.</string>
+
+    <string name="_l1_t3_random_save_tx">Ten random models generated and successfully inserted into simple_database.simple_example (TX mode).</string>
+
+    <string name="_l1_t3_updating_query_like">Updating with query like method, entity {0}, WHERE first_name = Marina .</string>
+    <string name="_l1_t3_updating_query_like_updated">Update successfully finished with query like method, entity {0}, WHERE first_name = Marina .</string>
+
+    <string name="_l1_t3_clear">{0} record(s) deleted from simple_database.simple_example.</string>
+
+    <string name="_l1_t3_expanded_text_pattern">Records in simple_example: {0} (clickable)</string>
+
+    <string name="_l1_t3_snackbar_message">KittyORM and external databases, copy DB, open it and run some CRUD operations.</string>
 
     <!-- Lesson 2 UI strings -->
     <!-- Lesson 2 UI string (common) -->

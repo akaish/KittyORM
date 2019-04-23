@@ -25,6 +25,7 @@
 package net.akaish.kitty.orm;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
@@ -39,6 +40,7 @@ import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.util.KittyLog;
 import net.akaish.kitty.orm.query.CreateDropHelper;
 import net.akaish.kitty.orm.query.KittySQLiteQuery;
+import net.akaish.kitty.orm.util.KittyUtils;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -98,17 +100,30 @@ public abstract class  KittyDatabase<M extends KittyModel> {
     protected final KittyMMEntryFactory modelMapperEntryFactory;
     protected final String databasePassword;
 
+    protected final String databaseFilePath;
+
     protected final boolean logOn;
     protected final String logTag;
 
     /**
      * KittyORM main database class that represents bootstrap and holder for all related with database
      * components.
-     * <br> See {@link #KittyDatabase(Context, String)} for more info.
+     * <br> See {@link #KittyDatabase(Context, String, String)} for more info.
      * @param ctx
      */
     protected KittyDatabase(Context ctx) {
-        this(ctx, null);
+        this(ctx, null, null);
+    }
+
+    /**
+     * KittyORM main database class that represents bootstrap and holder for all related with database
+     * components.
+     * <br> See {@link #KittyDatabase(Context, String, String)} for more info.
+     * @param ctx
+     * @param databaseFilePath
+     */
+    protected KittyDatabase(Context ctx, String databaseFilePath) {
+        this(ctx, null, databaseFilePath);
     }
 
     /**
@@ -131,8 +146,8 @@ public abstract class  KittyDatabase<M extends KittyModel> {
      * But it is expensive operation and after designing your database it would be good point to optimise it and create
      * model mapper instance storage manually via overriding {@link #getStaticModelMapperInstancesStorage()}.
      *
-     * <br> 4) Setting {@link KittyDatabaseConfiguration} from {@link #getConfigurator(Context, Map)}. If
-     * you want to use your own configurator than you should override {@link #getConfigurator(Context, Map)}
+     * <br> 4) Setting {@link KittyDatabaseConfiguration} from {@link #getConfigurator(Context, Map, String, int)}. If
+     * you want to use your own configurator than you should override {@link #getConfigurator(Context, Map, String, int)}
      * in your implementation to use your own implementation of {@link KittyConfigurator}.
      *
      * <br> 5) Setting helper configuration with {@link #getDBHelperConfiguration()}. You can also override it
@@ -165,10 +180,12 @@ public abstract class  KittyDatabase<M extends KittyModel> {
      *                         you have to override {@link #newDatabaseHelper()} to pass it into
      *                         KittyDatabase implementation.
      */
-    protected KittyDatabase(Context ctx, String databasePassword) {
+    protected KittyDatabase(Context ctx, String databasePassword, String databaseFilepath) {
+        databaseFilePath = databaseFilepath;
         // Checking that implementation has KDB annotation and setting logging options
+        KITTY_DATABASE kAnno = null;
         if(getClass().isAnnotationPresent(KITTY_DATABASE.class)) {
-            KITTY_DATABASE kAnno = getClass().getAnnotation(KITTY_DATABASE.class);
+            kAnno = getClass().getAnnotation(KITTY_DATABASE.class);
             logOn = kAnno.isLoggingOn();
             logTag = kAnno.logTag();
         } else {
@@ -200,8 +217,13 @@ public abstract class  KittyDatabase<M extends KittyModel> {
             log(I, LI_STATIC_MM_SET, true, null);
         }
 
+        int externalDBVersion = -1;
+        if(kAnno.useExternalDatabase() && databaseFilepath != null) {
+            externalDBVersion = checkExternalDatabaseVersion(kAnno, databaseFilepath);
+        }
+
         // Now getting databaseClass configuration
-        databaseConfiguration = getConfigurator(ctx, registry).generateDatabaseConfiguration();
+        databaseConfiguration = getConfigurator(ctx, registry, databaseFilepath, externalDBVersion).generateDatabaseConfiguration();
         log(I, LI_DB_CONFIGURATION_ACQUIRED, true, null);
 
         // Also getting helper configuration and modelMapperEntryFactory ready for this databaseClass
@@ -235,16 +257,79 @@ public abstract class  KittyDatabase<M extends KittyModel> {
     }
 
     /**
+     * Returns true if provided int array contains provided int value (simple search)
+     * @param array
+     * @param value
+     * @return
+     */
+    private static final boolean inArray(int[] array, int value) {
+        for(int i : array) {
+            if(i == value) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns versions as a string imploded with usage of comma-whitespace separator
+     * @param versions
+     * @return
+     */
+    private static final String versionsArrayString(int[] versions) {
+        String[] versionsStrings = new String[versions.length];
+        int counter = 0;
+        for(int version : versions) {
+            versionsStrings[counter] = Integer.toString(version);
+            counter++;
+        }
+        return KittyUtils.implode(versionsStrings, ", ");
+    }
+
+    protected final static String LI_EDB_GETTING_EXTERNAL_DB_VERSION = "[KittyORM Bootstrap] Getting database version [{0}]...";
+    protected final static String LE_EDB_GETTING_EXTERNAL_DB_NOT_OPENED = "[KittyORM Bootstrap] Unable to open external database [{0}], see exception details!";
+    protected final static String LI_EDB_GETTING_EXTERNAL_DB_VERSION_SUCCESS = "[KittyORM Bootstrap] Requested database [{0}] has version {1}!";
+    protected final static String LE_EDB_GETTING_EXTERNAL_DB_VERSION_MISMATCH = "[KittyORM Bootstrap] Requested database [{0}] has version {1} but this KittyORM schema supports only following versions: {2}";
+
+    protected int checkExternalDatabaseVersion(KITTY_DATABASE anno, String databaseFilepath) {
+        Log.i(anno.logTag(), format(LI_EDB_GETTING_EXTERNAL_DB_VERSION, databaseFilepath));
+        SQLiteDatabase database = openDatabaseConnectionReadOnly(databaseFilepath);
+        if(!database.isOpen())
+            throw new KittyRuntimeException(format(LE_EDB_GETTING_EXTERNAL_DB_NOT_OPENED, databaseFilepath));
+        int version = database.getVersion();
+        Log.i(anno.logTag(), format(LI_EDB_GETTING_EXTERNAL_DB_VERSION_SUCCESS, databaseFilepath, version));
+        database.close();
+        if(anno.supportedExternalDatabaseVersionNumbers().length > 0) {
+            if(!inArray(anno.supportedExternalDatabaseVersionNumbers(), version)) {
+                throw new KittyRuntimeException(format(
+                        LE_EDB_GETTING_EXTERNAL_DB_VERSION_MISMATCH,
+                        databaseFilepath,
+                        version,
+                        versionsArrayString(anno.supportedExternalDatabaseVersionNumbers()))
+                );
+            } else {
+                return version;
+            }
+        } else {
+            return version;
+        }
+    }
+
+    public final SQLiteDatabase openDatabaseConnectionReadOnly(String nameOrFilepath) {
+        SQLiteDatabase database = SQLiteDatabase.openDatabase(nameOrFilepath, null, SQLiteDatabase.OPEN_READONLY);
+        return database;
+    }
+
+    /**
      * Returns KittyConfigurator to be used with this database
      * By default would be created {@link KittyConfiguratorADC}, however
      * you can implement any configuration storage you want.
      * <br> This method used at KittyDatabase initialization
      * @param ctx application context
      * @param registry application registry
+     * @param databaseFilepath filepath to database
      * @return KittyConfigurator
      */
-    protected KittyConfigurator getConfigurator(Context ctx, Map<Class<M>, Class<KittyMapper>> registry) {
-        return new KittyConfiguratorADC(ctx, registry, getClass());
+    protected KittyConfigurator getConfigurator(Context ctx, Map<Class<M>, Class<KittyMapper>> registry, String databaseFilepath, int databaseVersion) {
+        return new KittyConfiguratorADC(ctx, registry, getClass(), databaseFilepath, databaseVersion);
     }
 
     protected KittyDatabaseHelper newDatabaseHelper() {
@@ -321,7 +406,7 @@ public abstract class  KittyDatabase<M extends KittyModel> {
     }
 
     /**
-     * By implementing this vias static collection of queries you would speed up KittyORM initialization.
+     * By implementing this via static collection of queries you would speed up KittyORM initialization.
      *
      * <br> Also
      * <br>

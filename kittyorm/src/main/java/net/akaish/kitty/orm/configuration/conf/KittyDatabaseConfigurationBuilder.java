@@ -49,6 +49,10 @@ public class KittyDatabaseConfigurationBuilder<M extends KittyModel> {
     private boolean isKittyDexUtilLoggingEnabled;
     private boolean returnNullInsteadEmptyCollection;
 
+    private String externalDatabasePath;
+    private boolean useExternalDatabase;
+    private int[] externalSupportedDatabaseVersions;
+
     public KittyDatabaseConfigurationBuilder setRecordsConfigurations(List<KittyTableConfiguration> recordsConfigurations) {
         this.recordsConfigurations = recordsConfigurations;
         return this;
@@ -104,8 +108,23 @@ public class KittyDatabaseConfigurationBuilder<M extends KittyModel> {
         return this;
     }
 
-    public KittyDatabaseConfigurationBuilder returnNullInsteadEmptyCollection(boolean returnNullInsteadEmptyCollection) {
+    public KittyDatabaseConfigurationBuilder setReturnNullInsteadEmptyCollection(boolean returnNullInsteadEmptyCollection) {
         this.returnNullInsteadEmptyCollection = returnNullInsteadEmptyCollection;
+        return this;
+    }
+
+    public KittyDatabaseConfigurationBuilder setExternalDatabaseFilePath(String externalDatabaseFilePath) {
+        this.externalDatabasePath = externalDatabaseFilePath;
+        return this;
+    }
+
+    public KittyDatabaseConfigurationBuilder setIsUseExternalDatabase(boolean isUseExternalDatabase) {
+        this.useExternalDatabase = isUseExternalDatabase;
+        return this;
+    }
+
+    public KittyDatabaseConfigurationBuilder setExternalDatabaseSupportedVersions(int[] externalDatabaseSupportedVersions) {
+        this.externalSupportedDatabaseVersions = externalDatabaseSupportedVersions;
         return this;
     }
 
@@ -113,7 +132,8 @@ public class KittyDatabaseConfigurationBuilder<M extends KittyModel> {
         return new KittyDatabaseConfiguration(
                 recordsConfigurations, databaseName, databaseVersion, isLoggingOn, logTag,
                 isPragmaON, isProductionOn, isGenerateRegistryFromPackage, mmPackageNames,
-                registry, isKittyDexUtilLoggingEnabled, returnNullInsteadEmptyCollection
+                registry, isKittyDexUtilLoggingEnabled, returnNullInsteadEmptyCollection,
+                externalDatabasePath, useExternalDatabase, externalSupportedDatabaseVersions
         );
     }
 }

@@ -39,6 +39,11 @@ public class LessonsUriConstants {
     public static final String L1_T2_SCHEMA = "l1_schema";
     public static final String L1_T2_SOURCE = "l1_code";
 
+    // TODO change to new stuff
+    public static final String L1_T3_TUTORIAL = "l1t2";
+    public static final String L1_T3_SCHEMA = "l1_schema";
+    public static final String L1_T3_SOURCE = "l1_code";
+
     // Lesson two
     public static final String L2_T1_TUTORIAL = "l2t1";
     public static final String L2_T1_SCHEMA = "l2_schema";

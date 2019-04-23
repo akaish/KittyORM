@@ -41,12 +41,17 @@ public abstract class KittyConfigurator<M extends KittyModel> {
 
     protected final Context context;
     protected final Map<Class<M>, Class<KittyMapper>> registry;
+    protected final String databaseFilePath;
+    protected final int databaseVersion;
 
 
     public KittyConfigurator(Context context,
-                             Map<Class<M>, Class<KittyMapper>> registry) {
+                             Map<Class<M>, Class<KittyMapper>> registry,
+                             String databaseFilePath, int databaseVersion) {
         this.context = context;
         this.registry = registry;
+        this.databaseFilePath = databaseFilePath;
+        this.databaseVersion = databaseVersion;
     }
 
     public abstract KittyDatabaseConfiguration generateDatabaseConfiguration();

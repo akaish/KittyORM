@@ -74,6 +74,7 @@ public class Lesson1KittyORMIntroduction extends Fragment implements LessonFabBa
         lesson1TabAdapter = new LessonTabAdapter(this, getChildFragmentManager());
         lesson1TabAdapter.addFragment(new Lesson1Tab1Introduction(), getContext().getString(R.string._l1_tab_intro));
         lesson1TabAdapter.addFragment(new Lesson1Tab2GettingStarted(), getContext().getString(R.string._l1_tab_getting_started));
+        lesson1TabAdapter.addFragment(new Lesson1Tab3ExternalDatabases(), getContext().getString(R.string._l1_tab_external));
         viewPager.setAdapter(lesson1TabAdapter);
         TabLayout tabs = (TabLayout) rootView.findViewById(R.id.lt_result_tabs);
         tabs.setupWithViewPager(viewPager);
