@@ -24,6 +24,8 @@
 
 package net.akaish.kitty.orm.annotations.column;
 
+import net.akaish.kitty.orm.enums.AscDesc;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -43,5 +45,6 @@ public @interface ONE_COLUMN_INDEX {
     boolean unique() default false;
     boolean ifNotExists() default true;
     String indexName() default ZERO_LENGTH_STRING;
+    AscDesc indexOrder() default AscDesc.NOT_SET_SKIP_OR_DEFAULT; // TODO check at code generators
     String whereExpression() default ZERO_LENGTH_STRING;
 }

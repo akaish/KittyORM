@@ -25,7 +25,9 @@
 package net.akaish.kitty.orm;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
@@ -36,7 +38,9 @@ import net.akaish.kitty.orm.configuration.adc.KittyAnnoDBHelperConfigurationUtil
 import net.akaish.kitty.orm.configuration.conf.KittyDatabaseConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyTableConfiguration;
 import net.akaish.kitty.orm.dumputils.scripts.KittySQLiteDumpScript;
+import net.akaish.kitty.orm.exceptions.KittyExternalDBHasNotSupportedUserVersionException;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
+import net.akaish.kitty.orm.exceptions.KittyUnableToOpenDatabaseException;
 import net.akaish.kitty.orm.util.KittyLog;
 import net.akaish.kitty.orm.query.CreateDropHelper;
 import net.akaish.kitty.orm.query.KittySQLiteQuery;
@@ -269,48 +273,37 @@ public abstract class  KittyDatabase<M extends KittyModel> {
         return false;
     }
 
-    /**
-     * Returns versions as a string imploded with usage of comma-whitespace separator
-     * @param versions
-     * @return
-     */
-    private static final String versionsArrayString(int[] versions) {
-        String[] versionsStrings = new String[versions.length];
-        int counter = 0;
-        for(int version : versions) {
-            versionsStrings[counter] = Integer.toString(version);
-            counter++;
-        }
-        return KittyUtils.implode(versionsStrings, ", ");
-    }
-
     protected final static String LI_EDB_GETTING_EXTERNAL_DB_VERSION = "[KittyORM Bootstrap] Getting database version [{0}]...";
     protected final static String LE_EDB_GETTING_EXTERNAL_DB_NOT_OPENED = "[KittyORM Bootstrap] Unable to open external database [{0}], see exception details!";
     protected final static String LI_EDB_GETTING_EXTERNAL_DB_VERSION_SUCCESS = "[KittyORM Bootstrap] Requested database [{0}] has version {1}!";
-    protected final static String LE_EDB_GETTING_EXTERNAL_DB_VERSION_MISMATCH = "[KittyORM Bootstrap] Requested database [{0}] has version {1} but this KittyORM schema supports only following versions: {2}";
 
     protected int checkExternalDatabaseVersion(KITTY_DATABASE anno, String databaseFilepath) {
         Log.i(anno.logTag(), format(LI_EDB_GETTING_EXTERNAL_DB_VERSION, databaseFilepath));
-        SQLiteDatabase database = openDatabaseConnectionReadOnly(databaseFilepath);
+        SQLiteDatabase database = null;
+        try {
+            database = openDatabaseConnectionReadOnly(databaseFilepath);
+        } catch (SQLiteException e) {
+            throw new KittyUnableToOpenDatabaseException(databaseFilepath, e);
+        }
         if(!database.isOpen())
-            throw new KittyRuntimeException(format(LE_EDB_GETTING_EXTERNAL_DB_NOT_OPENED, databaseFilepath));
+            throw new KittyUnableToOpenDatabaseException(databaseFilepath);
         int version = database.getVersion();
         Log.i(anno.logTag(), format(LI_EDB_GETTING_EXTERNAL_DB_VERSION_SUCCESS, databaseFilepath, version));
         database.close();
         if(anno.supportedExternalDatabaseVersionNumbers().length > 0) {
             if(!inArray(anno.supportedExternalDatabaseVersionNumbers(), version)) {
-                throw new KittyRuntimeException(format(
-                        LE_EDB_GETTING_EXTERNAL_DB_VERSION_MISMATCH,
-                        databaseFilepath,
-                        version,
-                        versionsArrayString(anno.supportedExternalDatabaseVersionNumbers()))
-                );
+                throw new KittyExternalDBHasNotSupportedUserVersionException(databaseFilepath,
+                        version, anno.supportedExternalDatabaseVersionNumbers());
             } else {
                 return version;
             }
         } else {
             return version;
         }
+    }
+
+    protected boolean checkExternalDatabaseSchema() {
+        return false;
     }
 
     public final SQLiteDatabase openDatabaseConnectionReadOnly(String nameOrFilepath) {

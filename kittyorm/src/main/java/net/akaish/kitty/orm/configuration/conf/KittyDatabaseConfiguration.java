@@ -116,7 +116,6 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
      /**
       * Supported by current schema external database file numbers,
       * if empty than no check on version mismatch would be run.
-      * @return
       */
     public final int[] externalDatabaseSupportedVersions;
 
