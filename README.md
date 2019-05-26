@@ -7,7 +7,7 @@ You can find KittyORM Demo application that shows KittyORM capabilities and cont
 [KittyORM Project pages](https://akaish.github.io/KittyORMPages/)  
 [KittyORM Project at GitHub](https://github.com/akaish/KittyORM)  
 [KittyORM Demo and tutorial application](https://play.google.com/store/apps/details?id=net.akaish.kittyormdemo)  
-Current version: [0.1.2](http://repo1.maven.org/maven2/net/akaish/kitty/orm/kitty-orm/)
+Current version: [0.1.4](http://repo1.maven.org/maven2/net/akaish/kitty/orm/kitty-orm/)
 
 ## Table of contents
 1. [Introduction to KittyORM](#introduction-to-kittyorm)
@@ -54,7 +54,7 @@ And some other features as well.
 First step is to add KittyORM via Gradle to your app `build.gradle`:
 ```Java
 dependencies {
-    compile 'net.akaish.kitty.orm:kitty-orm:0.1.2'
+    implementation 'net.akaish.kitty.orm:kitty-orm:$latest_version'
 }
 ```
 
