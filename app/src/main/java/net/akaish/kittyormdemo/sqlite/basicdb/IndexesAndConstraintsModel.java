@@ -36,6 +36,7 @@ import net.akaish.kitty.orm.annotations.column.constraints.UNIQUE;
 import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
 import net.akaish.kitty.orm.annotations.table.constraints.FOREIGN_KEY_T;
 import net.akaish.kitty.orm.annotations.table.index.INDEX;
+import net.akaish.kitty.orm.annotations.table.index.INDEX_ENTRY;
 import net.akaish.kitty.orm.enums.LiteralValues;
 import net.akaish.kitty.orm.enums.OnUpdateDeleteActions;
 import net.akaish.kittyormdemo.sqlite.misc.Animals;
@@ -57,7 +58,7 @@ import java.sql.Timestamp;
                 onDelete = OnUpdateDeleteActions.CASCADE
         )
 )
-@INDEX(indexColumns = {"creation_date"})
+@INDEX(indexColumns = {@INDEX_ENTRY(columnName = "creation_date")})
 public class IndexesAndConstraintsModel extends KittyModel {
     static final String RANDOM_ID_CNAME = "rnd_id";
 

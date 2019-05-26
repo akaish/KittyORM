@@ -42,6 +42,6 @@ public @interface INDEX {
     boolean unique() default false;
     boolean ifNotExists() default true;
     String indexName() default ZERO_LENGTH_STRING;
-    String[] indexColumns();
+    INDEX_ENTRY[] indexColumns();
     String whereExpression() default ZERO_LENGTH_STRING;
 }

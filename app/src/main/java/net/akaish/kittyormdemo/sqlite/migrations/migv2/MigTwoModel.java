@@ -30,7 +30,10 @@ import net.akaish.kitty.orm.annotations.column.constraints.FOREIGN_KEY;
 import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
 import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.annotations.table.index.INDEX;
+import net.akaish.kitty.orm.annotations.table.index.INDEX_ENTRY;
+import net.akaish.kitty.orm.enums.AscDesc;
 import net.akaish.kitty.orm.enums.OnUpdateDeleteActions;
+import net.akaish.kitty.orm.indexes.Index;
 import net.akaish.kittyormdemo.sqlite.misc.Animals;
 
 /**
@@ -42,7 +45,7 @@ import net.akaish.kittyormdemo.sqlite.misc.Animals;
 )
 @INDEX(
         indexName = "m2_sa_index",
-        indexColumns = {"some_animal"}
+        indexColumns = {@INDEX_ENTRY(columnName = "some_animal", sortingOrder = AscDesc.DESCENDING)}
 )
 public class MigTwoModel extends KittyModel {
 

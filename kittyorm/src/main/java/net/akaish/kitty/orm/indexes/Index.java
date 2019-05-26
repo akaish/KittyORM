@@ -26,19 +26,21 @@ package net.akaish.kitty.orm.indexes;
 
 import net.akaish.kitty.orm.annotations.column.ONE_COLUMN_INDEX;
 import net.akaish.kitty.orm.annotations.table.index.INDEX;
+import net.akaish.kitty.orm.annotations.table.index.INDEX_ENTRY;
+import net.akaish.kitty.orm.enums.AscDesc;
 import net.akaish.kitty.orm.enums.Keywords;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static net.akaish.kitty.orm.util.KittyConstants.DOT;
 import static net.akaish.kitty.orm.util.KittyConstants.SEMICOLON;
-import static net.akaish.kitty.orm.util.KittyConstants.UNDERSCORE;
 import static net.akaish.kitty.orm.util.KittyConstants.WHITESPACE;
-import static net.akaish.kitty.orm.util.KittyUtils.implode;
+import static net.akaish.kitty.orm.util.KittyNamingUtils.generateIndexName;
 import static net.akaish.kitty.orm.util.KittyUtils.implodeWithCommaInBKT;
 
 /**
@@ -52,14 +54,14 @@ public class Index {
     protected final String schemaName;
     protected final String indexName;
     protected final String tableName;
-    protected final String[] indexColumns;
+    protected final IndexEntry[] indexColumns;
     protected final String whereExpression;
-    protected final HashSet<String> uniqueIndexColumns;
+    protected final HashSet<IndexEntry> uniqueIndexColumnEntries;
 
     protected static final String AME_INDEX_BAD_COLUMNS = "Index columns for index {0} at {1}.{2} has duplicate column names!";
 
     public Index(boolean unique, boolean ifNotExists, String schemaName, String indexName,
-                 String tableName, String[] indexColumns, String whereExpression) {
+                 String tableName, IndexEntry[] indexColumns, String whereExpression) {
         this.unique = unique;
         this.ifNotExists = ifNotExists;
         this.schemaName = schemaName;
@@ -73,42 +75,33 @@ public class Index {
             this.whereExpression = whereExpression;
         else
             this.whereExpression = null;
-        uniqueIndexColumns = new HashSet<>();
-        uniqueIndexColumns.addAll(Arrays.asList(indexColumns));
-        if(uniqueIndexColumns.size() != indexColumns.length)
+        uniqueIndexColumnEntries = new HashSet<>();
+        uniqueIndexColumnEntries.addAll(Arrays.asList(indexColumns));
+        if(uniqueIndexColumnEntries.size() != indexColumns.length)
             throw new KittyRuntimeException(MessageFormat.format(AME_INDEX_BAD_COLUMNS, this.indexName, schemaName, tableName));
     }
 
     public Index(INDEX index, String schemaName, String tableName) {
         this(index.unique(), index.ifNotExists(), schemaName, index.indexName().length() == 0 ? null : index.indexName(),
-                tableName, index.indexColumns(), index.whereExpression().length() == 0 ? null : index.whereExpression());
+                tableName, annoToObject(index.indexColumns()), index.whereExpression().length() == 0 ? null : index.whereExpression());
     }
 
     public Index(ONE_COLUMN_INDEX index, String indexColumn, String schemaName, String tableName) {
         this(index.unique(), index.ifNotExists(), schemaName, index.indexName().length() == 0 ? null : index.indexName(),
-                tableName, new String[]{indexColumn}, index.whereExpression().length() == 0 ? null : index.whereExpression());
+                tableName, new IndexEntry[]{new IndexEntry(indexColumn, index.indexOrder())}, index.whereExpression().length() == 0 ? null : index.whereExpression());
     }
 
-    protected String generateIndexName(String schemaName, String tableName, String[] indexColumns, boolean unique) {
-        String[] parts;
-        if(unique) {
-            parts = new String[4+indexColumns.length];
-        } else {
-            parts = new String[3+indexColumns.length];
-        }
-        parts[0] = schemaName;
-        parts[1] = tableName;
-        System.arraycopy(indexColumns, 0, parts, 2, indexColumns.length);
-        if(unique) {
-            parts[parts.length - 2] = Keywords.UNIQUE.toString();
-        }
-        parts[parts.length - 1] = Keywords.INDEX.toString();
-        return implode(parts, UNDERSCORE);
+    private final static IndexEntry[] annoToObject(INDEX_ENTRY[] indexColumns) {
+        IndexEntry[] out = new IndexEntry[indexColumns.length];
+        for(int i = 0; i < out.length; i++)
+            out[i] = new IndexEntry(indexColumns[i].columnName(), indexColumns[i].sortingOrder());
+        return out;
     }
 
     public final Set<String> getIndexColumsSet() {
         Set<String> out = new HashSet<>();
-        out.addAll(Arrays.asList(indexColumns));
+        for(IndexEntry ie : indexColumns)
+            out.add(ie.columnName);
         return out;
     }
 
@@ -122,6 +115,30 @@ public class Index {
 
     public final String getTableName() {
         return tableName;
+    }
+
+    public static class IndexEntry {
+        public final String columnName;
+        final AscDesc sortingOrder;
+
+        IndexEntry(String columnName, AscDesc sortingOrder) {
+            this.columnName = columnName;
+            this.sortingOrder = sortingOrder;
+        }
+
+        IndexEntry(INDEX_ENTRY indexEntry) {
+            this.columnName = indexEntry.columnName();
+            this.sortingOrder = indexEntry.sortingOrder();
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(columnName);
+            if(sortingOrder != AscDesc.NOT_SET_SKIP_OR_DEFAULT)
+                sb.append(WHITESPACE).append(sortingOrder.toString());
+            return sb.toString();
+        }
     }
 
     @Override
@@ -139,9 +156,10 @@ public class Index {
             isb.append(Keywords.IF_NOT_EXISTS).append(WHITESPACE);
         if(!skipSchemaName)
             isb.append(schemaName).append(DOT);
+        List indexColumnsToImplode = Arrays.asList(indexColumns);
         isb.append(indexName).append(WHITESPACE).append(Keywords.ON)
                 .append(WHITESPACE).append(tableName)
-                .append(WHITESPACE).append(implodeWithCommaInBKT(indexColumns));
+                .append(WHITESPACE).append(implodeWithCommaInBKT(indexColumnsToImplode));
         if(whereExpression != null) {
             isb.append(WHITESPACE).append(Keywords.WHERE).append(WHITESPACE).append(whereExpression);
         }

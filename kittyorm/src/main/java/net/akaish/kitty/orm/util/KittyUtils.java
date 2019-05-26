@@ -116,6 +116,22 @@ public class KittyUtils {
 	}
 
 	/**
+	 * Implodes elements of provided list into string with comma + space separator and surrounded
+	 * <br> with bkt's. If array null or empty than empty string would be returned.
+	 * @param toImplode
+	 * @return
+	 */
+	public static String implodeWithCommaInBKT(List<Object> toImplode) {
+		String[] toImplodeS = new String[toImplode.size()];
+		int counter = 0;
+		for(Object o : toImplode) {
+			toImplodeS[counter] = o.toString();
+			counter++;
+		}
+		return implodeWithCommaInBKT(toImplodeS);
+	}
+
+	/**
 	 * Simple method to remove duplicate spaces from statements
 	 * @param generatedStatement
 	 * @return

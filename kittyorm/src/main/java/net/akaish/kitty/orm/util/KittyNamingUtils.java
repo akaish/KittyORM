@@ -28,6 +28,8 @@ import android.content.Context;
 
 import net.akaish.kitty.orm.KittyDatabase;
 import net.akaish.kitty.orm.KittyModel;
+import net.akaish.kitty.orm.enums.Keywords;
+import net.akaish.kitty.orm.indexes.Index;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -35,6 +37,8 @@ import static java.text.MessageFormat.format;
 import static net.akaish.kitty.orm.util.KittyConstants.EMPTY_STRING;
 import static net.akaish.kitty.orm.util.KittyConstants.MODEL_END;
 import static net.akaish.kitty.orm.util.KittyConstants.RECORD_END;
+import static net.akaish.kitty.orm.util.KittyConstants.UNDERSCORE;
+import static net.akaish.kitty.orm.util.KittyUtils.implode;
 
 /**
  * Just some namings utils for default strings and filenames
@@ -82,6 +86,25 @@ public class KittyNamingUtils {
      */
     public static final String generateColumnNameFromModelField(Field f) {
         return KittyUtils.fieldNameToLowerCaseUnderScore(f.getName());
+    }
+
+    public static final String generateIndexName(String schemaName, String tableName, Index.IndexEntry[] indexColumns, boolean unique) {
+        String[] parts;
+        if(unique) {
+            parts = new String[3+indexColumns.length];
+        } else {
+            parts = new String[2+indexColumns.length];
+        }
+        parts[0] = schemaName;
+        parts[1] = tableName;
+        for(int i = 2; i < indexColumns.length; i++) {
+            parts[i] = indexColumns[i-2].columnName;
+        }
+        if(unique) {
+            parts[parts.length - 2] = Keywords.UNIQUE.toString();
+        }
+        parts[parts.length - 1] = Keywords.INDEX.toString();
+        return implode(parts, UNDERSCORE);
     }
 
 //    /**

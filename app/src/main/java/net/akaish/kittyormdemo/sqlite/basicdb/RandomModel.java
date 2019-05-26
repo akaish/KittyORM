@@ -28,6 +28,8 @@ import net.akaish.kitty.orm.annotations.KITTY_EXTENDED_CRUD;
 import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
 import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
 import net.akaish.kitty.orm.annotations.table.index.INDEX;
+import net.akaish.kitty.orm.annotations.table.index.INDEX_ENTRY;
+import net.akaish.kitty.orm.enums.AscDesc;
 
 /**
  * Created by akaish on 29.07.18.
@@ -37,7 +39,7 @@ import net.akaish.kitty.orm.annotations.table.index.INDEX;
 @KITTY_EXTENDED_CRUD(extendedCrudController = RandomMapper.class)
 @INDEX(
         indexName = "random_animal_index",
-        indexColumns = {AbstractRandomModel.RND_ANIMAL_CNAME}
+        indexColumns = {@INDEX_ENTRY(columnName = AbstractRandomModel.RND_ANIMAL_CNAME, sortingOrder = AscDesc.ASCENDING)}
 )
 public class RandomModel extends AbstractRandomModel {
 
