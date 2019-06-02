@@ -50,7 +50,7 @@ public class GettingStartedTutorialCode {
 
     public GettingStartedTutorialCode(Context ctx) {
         context = ctx;
-        database = new SimpleDatabase(context, null); // TODO path for tutorial
+        database = new SimpleDatabase(context, null, null); // TODO path for tutorial
     }
 
     public void insertNewRecord(int randomInteger, String firstName) {
@@ -62,7 +62,7 @@ public class GettingStartedTutorialCode {
 
     public void allInOne() {
         // Creating new instance of SimpleDatabase
-        SimpleDatabase simpleDatabase = new SimpleDatabase(context, null); // TODO path for tutorial
+        SimpleDatabase simpleDatabase = new SimpleDatabase(context, null, null); // TODO path for tutorial
 
         KittyMapper mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
 

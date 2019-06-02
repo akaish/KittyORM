@@ -28,6 +28,8 @@ import android.content.Context;
 
 import net.akaish.kitty.orm.KittyDatabase;
 import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
+import net.akaish.kitty.orm.util.KittySchemaColumnDefinition;
+import net.akaish.kitty.orm.util.KittySchemaDefinition;
 
 /**
  * Created by akaish on 09.08.18.
@@ -52,7 +54,7 @@ public class SimpleDatabase extends KittyDatabase {
      *
      * @param ctx
      */
-    public SimpleDatabase(Context ctx, String path) {
-        super(ctx, path);
+    public SimpleDatabase(Context ctx, String path, KittySchemaDefinition definition) {
+        super(ctx, null, path, definition);
     }
 }

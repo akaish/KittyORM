@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2019 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,34 +22,22 @@
  * ---
  */
 
-package net.akaish.kitty.orm.exceptions;
+package net.akaish.kitty.orm.query;
 
 /**
+ * Created by akaish on 01.06.2019.
  * @author akaish (Denis Bogomolov)
  */
-public class KittyRuntimeException extends RuntimeException{
+public class PragmaTableInfoQuery extends BaseKittyQuery {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 9024028455723761882L;
-	
-	Exception nestedException = null;
+    static final String PRAGMA_TABLE_INFO = "PRAGMA table_info({0})";
 
-	public KittyRuntimeException(String message) {
-		super(message);
-	}
-	
-	public KittyRuntimeException(String message, Exception e) {
-		super(message);
-		nestedException = e;
-	}
+    public PragmaTableInfoQuery(String tableName) {
+        super(tableName);
+    }
 
-	public Exception getNestedException() {
-		return nestedException;
-	}
-
-	public void setNestedException(Exception e) {
-		nestedException = e;
-	}
+    @Override
+    String getMainClause() {
+        return PRAGMA_TABLE_INFO;
+    }
 }

@@ -25,10 +25,11 @@
 package net.akaish.kitty.orm;
 
 import android.content.Context;
-import android.database.SQLException;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
+import android.util.SparseArray;
 
 import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
 import net.akaish.kitty.orm.configuration.KittyConfigurator;
@@ -39,12 +40,15 @@ import net.akaish.kitty.orm.configuration.conf.KittyDatabaseConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyTableConfiguration;
 import net.akaish.kitty.orm.dumputils.scripts.KittySQLiteDumpScript;
 import net.akaish.kitty.orm.exceptions.KittyExternalDBHasNotSupportedUserVersionException;
+import net.akaish.kitty.orm.exceptions.KittyExternalDBSchemaMismatchException;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.exceptions.KittyUnableToOpenDatabaseException;
+import net.akaish.kitty.orm.query.PragmaTableInfoQuery;
 import net.akaish.kitty.orm.util.KittyLog;
 import net.akaish.kitty.orm.query.CreateDropHelper;
 import net.akaish.kitty.orm.query.KittySQLiteQuery;
-import net.akaish.kitty.orm.util.KittyUtils;
+import net.akaish.kitty.orm.util.KittySchemaColumnDefinition;
+import net.akaish.kitty.orm.util.KittySchemaDefinition;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -109,6 +113,8 @@ public abstract class  KittyDatabase<M extends KittyModel> {
     protected final boolean logOn;
     protected final String logTag;
 
+    protected final KittySchemaDefinition expectedDefinition;
+
     /**
      * KittyORM main database class that represents bootstrap and holder for all related with database
      * components.
@@ -116,7 +122,7 @@ public abstract class  KittyDatabase<M extends KittyModel> {
      * @param ctx
      */
     protected KittyDatabase(Context ctx) {
-        this(ctx, null, null);
+        this(ctx, null, null, null);
     }
 
     /**
@@ -127,7 +133,7 @@ public abstract class  KittyDatabase<M extends KittyModel> {
      * @param databaseFilePath
      */
     protected KittyDatabase(Context ctx, String databaseFilePath) {
-        this(ctx, null, databaseFilePath);
+        this(ctx, null, databaseFilePath, null);
     }
 
     /**
@@ -184,10 +190,11 @@ public abstract class  KittyDatabase<M extends KittyModel> {
      *                         you have to override {@link #newDatabaseHelper()} to pass it into
      *                         KittyDatabase implementation.
      */
-    protected KittyDatabase(Context ctx, String databasePassword, String databaseFilepath) {
+    protected KittyDatabase(Context ctx, String databasePassword, String databaseFilepath, KittySchemaDefinition expectedDefinition) {
         databaseFilePath = databaseFilepath;
         // Checking that implementation has KDB annotation and setting logging options
         KITTY_DATABASE kAnno = null;
+        this.expectedDefinition = expectedDefinition;
         if(getClass().isAnnotationPresent(KITTY_DATABASE.class)) {
             kAnno = getClass().getAnnotation(KITTY_DATABASE.class);
             logOn = kAnno.isLoggingOn();
@@ -223,7 +230,11 @@ public abstract class  KittyDatabase<M extends KittyModel> {
 
         int externalDBVersion = -1;
         if(kAnno.useExternalDatabase() && databaseFilepath != null) {
-            externalDBVersion = checkExternalDatabaseVersion(kAnno, databaseFilepath);
+            externalDBVersion = getExternalDatabaseVersion(kAnno, databaseFilepath);
+        }
+
+        if(kAnno.useExternalDatabase() && databaseFilepath != null && this.expectedDefinition != null) {
+            checkExternalDatabaseSchema(kAnno, expectedDefinition, databaseFilepath);
         }
 
         // Now getting databaseClass configuration
@@ -274,10 +285,19 @@ public abstract class  KittyDatabase<M extends KittyModel> {
     }
 
     protected final static String LI_EDB_GETTING_EXTERNAL_DB_VERSION = "[KittyORM Bootstrap] Getting database version [{0}]...";
-    protected final static String LE_EDB_GETTING_EXTERNAL_DB_NOT_OPENED = "[KittyORM Bootstrap] Unable to open external database [{0}], see exception details!";
     protected final static String LI_EDB_GETTING_EXTERNAL_DB_VERSION_SUCCESS = "[KittyORM Bootstrap] Requested database [{0}] has version {1}!";
 
-    protected int checkExternalDatabaseVersion(KITTY_DATABASE anno, String databaseFilepath) {
+    protected final static String LI_EDB_CHECKING_EXTERNAL_DB_SCHEMA = "[KittyORM Bootstrap] Checking external database schema [{0}]...";
+
+    /**
+     * Returns external database version
+     * @param anno
+     * @param databaseFilepath
+     * @return external database version (PRAGMA.user_version)
+     * @throws  KittyUnableToOpenDatabaseException if unable to open DB
+     * @throws  KittyExternalDBHasNotSupportedUserVersionException if fetched version not listed in {@link KITTY_DATABASE#supportedExternalDatabaseVersionNumbers()}
+     */
+    protected int getExternalDatabaseVersion(KITTY_DATABASE anno, String databaseFilepath) {
         Log.i(anno.logTag(), format(LI_EDB_GETTING_EXTERNAL_DB_VERSION, databaseFilepath));
         SQLiteDatabase database = null;
         try {
@@ -302,8 +322,128 @@ public abstract class  KittyDatabase<M extends KittyModel> {
         }
     }
 
-    protected boolean checkExternalDatabaseSchema() {
-        return false;
+    private static final int PRAGMA_TABLE_INFO_COLUMN_CID = 0;
+    private static final int PRAGMA_TABLE_INFO_COLUMN_NAME = 1;
+    private static final int PRAGMA_TABLE_INFO_COLUMN_TYPE = 2;
+    private static final int PRAGMA_TABLE_INFO_COLUMN_NOT_NULL = 3;
+    private static final int PRAGMA_TABLE_INFO_COLUMN_PK = 5;
+    private static final int EXCEPTION_ON_GETTING_SCHEMA = 6;
+    private static final int TABLE_NOT_FOUND = 7;
+    private static final int EXPECTED_COLUMN_NOT_FOUND = 8;
+
+    /**
+     * Return true if all ok with expected schema, else - throws exception
+     * @param anno
+     * @param definition
+     * @param databaseFilePath
+     * @return
+     */
+    protected boolean checkExternalDatabaseSchema(KITTY_DATABASE anno, KittySchemaDefinition definition, String databaseFilePath) {
+        Log.i(anno.logTag(), format(LI_EDB_GETTING_EXTERNAL_DB_VERSION, databaseFilePath));
+        SQLiteDatabase database = null;
+        try {
+            database = openDatabaseConnectionReadOnly(databaseFilePath);
+        } catch (SQLiteException e) {
+            throw new KittyUnableToOpenDatabaseException(databaseFilePath, e);
+        }
+        if(!database.isOpen())
+            throw new KittyUnableToOpenDatabaseException(databaseFilePath);
+        Iterator<String> expectedTableNameIterator = definition.getExpectedTableNames().iterator();
+        while (expectedTableNameIterator.hasNext()) {
+            String expectedTableName = expectedTableNameIterator.next();
+            SparseArray<KittySchemaColumnDefinition> expectedTableColumns = definition.getTableDefinition(expectedTableName);
+            KittySQLiteQuery query = new PragmaTableInfoQuery(expectedTableName).getSQLQuery();
+            Cursor cursor = database.rawQuery(query.toString(), null);
+            if(cursor != null) {
+                if(cursor.moveToFirst()) {
+                    do {
+                        String errMessage = null;
+                        Exception any = null;
+                        int errCode = -1;
+                        try {
+                            int cid = cursor.getInt(PRAGMA_TABLE_INFO_COLUMN_CID);
+                            String name = cursor.getString(PRAGMA_TABLE_INFO_COLUMN_NAME);
+                            String type = cursor.getString(PRAGMA_TABLE_INFO_COLUMN_TYPE);
+                            int notNull = cursor.getInt(PRAGMA_TABLE_INFO_COLUMN_NOT_NULL);
+                            int pk = cursor.getInt(PRAGMA_TABLE_INFO_COLUMN_PK);
+                            if(expectedTableColumns.get(cid) != null) {
+                                if(name.equals(expectedTableColumns.get(cid).getName())) {
+                                    if(type.equalsIgnoreCase(expectedTableColumns.get(cid).getType().name())) {
+                                        if(notNull == expectedTableColumns.get(cid).getNotNull()) {
+                                            if(pk == expectedTableColumns.get(cid).getPk()) {
+                                                expectedTableColumns.get(cid).setChecked(true);
+                                            } else {
+                                                errCode = PRAGMA_TABLE_INFO_COLUMN_PK;
+                                                StringBuilder sb = new StringBuilder();
+                                                sb.append("For column with cid ").append(expectedTableName).append(".").append(cid)
+                                                        .append(" found column PK flag '").append(pk)
+                                                        .append("' but expected '")
+                                                        .append(expectedTableColumns.get(cid).getPk())
+                                                        .append("';");
+                                                errMessage = sb.toString();
+                                            }
+                                        } else {
+                                            errCode = PRAGMA_TABLE_INFO_COLUMN_NOT_NULL;
+                                            StringBuilder sb = new StringBuilder();
+                                            sb.append("For column with cid ").append(expectedTableName).append(".").append(cid)
+                                                    .append(" found column NotNull flag '").append(notNull)
+                                                    .append("' but expected '")
+                                                    .append(expectedTableColumns.get(cid).getNotNull())
+                                                    .append("';");
+                                            errMessage = sb.toString();
+                                        }
+                                    } else {
+                                        errCode = PRAGMA_TABLE_INFO_COLUMN_TYPE;
+                                        StringBuilder sb = new StringBuilder();
+                                        sb.append("For column with cid ").append(expectedTableName).append(".").append(cid)
+                                                .append(" found column type '").append(type)
+                                                .append("' but expected '")
+                                                .append(expectedTableColumns.get(cid).getType().name())
+                                                .append("';");
+                                        errMessage = sb.toString();
+                                    }
+                                } else {
+                                    errCode = PRAGMA_TABLE_INFO_COLUMN_NAME;
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.append("For column with cid ").append(expectedTableName).append(".").append(cid)
+                                            .append(" found column name '").append(name)
+                                            .append("' but expected '")
+                                            .append(expectedTableColumns.get(cid).getName())
+                                            .append("';");
+                                    errMessage = sb.toString();
+                                }
+                            } else {
+                                errCode = PRAGMA_TABLE_INFO_COLUMN_CID;
+                                errMessage = "Found column not listed in expected columns!";
+                            }
+                        } catch (Exception ame) {
+                            Log.e(databaseHelper.helperConfiguration.logTag, "Exception caught", ame);
+                            errMessage = "Exception caught while trying to get external database schema";
+                            any = ame;
+                            errCode = EXCEPTION_ON_GETTING_SCHEMA;
+                        }
+                        if(errMessage != null) {
+                            KittyRuntimeException rethrow = new KittyExternalDBSchemaMismatchException(
+                                    databaseFilePath, errMessage, errCode
+                            );
+                            if(any != null) rethrow.setNestedException(any);
+                            throw rethrow;
+                        }
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+            } else {
+                String errMessage = "Unable to get table_info for " + expectedTableName;
+                throw new KittyExternalDBSchemaMismatchException(databaseFilePath, errMessage, TABLE_NOT_FOUND);
+            }
+            for(int i = 0; i < expectedTableColumns.size(); i++) {
+                if(!expectedTableColumns.valueAt(i).isChecked()) {
+                    String errMessage = "Column "+expectedTableName+"."+expectedTableColumns.valueAt(i).getName()+" not found at "+databaseFilePath;
+                    throw new KittyExternalDBSchemaMismatchException(databaseFilePath, errMessage, EXPECTED_COLUMN_NOT_FOUND);
+                }
+            }
+        }
+        return true;
     }
 
     public final SQLiteDatabase openDatabaseConnectionReadOnly(String nameOrFilepath) {

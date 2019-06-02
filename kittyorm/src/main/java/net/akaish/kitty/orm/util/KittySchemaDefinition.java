@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2019 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,34 +22,31 @@
  * ---
  */
 
-package net.akaish.kitty.orm.exceptions;
+package net.akaish.kitty.orm.util;
+
+import android.util.SparseArray;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
+ * Model used for checking schema
+ * Created by akaish on 1.6.19.
  * @author akaish (Denis Bogomolov)
  */
-public class KittyRuntimeException extends RuntimeException{
+public class KittySchemaDefinition {
+    final Map<String, SparseArray<KittySchemaColumnDefinition>> definitions = new HashMap<>();
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 9024028455723761882L;
-	
-	Exception nestedException = null;
+    public void addDefinition(String name, SparseArray<KittySchemaColumnDefinition> definition) {
+        definitions.put(name, definition);
+    }
 
-	public KittyRuntimeException(String message) {
-		super(message);
-	}
-	
-	public KittyRuntimeException(String message, Exception e) {
-		super(message);
-		nestedException = e;
-	}
+    public SparseArray<KittySchemaColumnDefinition> getTableDefinition(String name) {
+        return definitions.get(name);
+    }
 
-	public Exception getNestedException() {
-		return nestedException;
-	}
-
-	public void setNestedException(Exception e) {
-		nestedException = e;
-	}
+    public Set<String> getExpectedTableNames() {
+        return definitions.keySet();
+    }
 }

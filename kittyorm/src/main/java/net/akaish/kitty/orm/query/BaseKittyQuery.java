@@ -26,6 +26,8 @@ package net.akaish.kitty.orm.query;
 
 import java.text.MessageFormat;
 
+import static net.akaish.kitty.orm.util.KittyConstants.SEMICOLON;
+
 /**
  * Created by akaish on 06.02.2018.
  * @author akaish (Denis Bogomolov)
@@ -49,5 +51,9 @@ public abstract class BaseKittyQuery {
 
     public String getQueryStart() {
         return MessageFormat.format(getMainClause(), tableName);
+    }
+
+    public KittySQLiteQuery getSQLQuery() {
+        return new KittySQLiteQuery(getQueryStart() + SEMICOLON, null);
     }
 }

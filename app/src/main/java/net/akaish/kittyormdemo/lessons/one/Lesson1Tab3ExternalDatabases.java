@@ -28,6 +28,7 @@ package net.akaish.kittyormdemo.lessons.one;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,6 +46,9 @@ import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
 import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
 import net.akaish.kitty.orm.query.conditions.SQLiteOperator;
 import net.akaish.kitty.orm.util.KittyLog;
+import net.akaish.kitty.orm.util.KittySchemaColumnDefinition;
+import net.akaish.kitty.orm.util.KittySchemaColumnDefinitionBuilder;
+import net.akaish.kitty.orm.util.KittySchemaDefinition;
 import net.akaish.kitty.orm.util.KittyUtils;
 import net.akaish.kittyormdemo.KittyTutorialActivity;
 import net.akaish.kittyormdemo.R;
@@ -62,6 +66,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static java.text.MessageFormat.format;
+import static net.akaish.kitty.orm.util.KittySchemaColumnDefinition.PRAGMA_TYPES.integer;
+import static net.akaish.kitty.orm.util.KittySchemaColumnDefinition.PRAGMA_TYPES.text;
 import static net.akaish.kittyormdemo.lessons.LessonsUriConstants.L1_T3_SCHEMA;
 import static net.akaish.kittyormdemo.lessons.LessonsUriConstants.L1_T3_SOURCE;
 import static net.akaish.kittyormdemo.lessons.LessonsUriConstants.L1_T3_TUTORIAL;
@@ -85,8 +91,18 @@ public class Lesson1Tab3ExternalDatabases extends LessonBaseFragment implements 
     private SimpleDatabase database;
 
     private SimpleDatabase getDatabase() {
-        if(database == null)
-            database = new SimpleDatabase(getContext(), getDBFile().getAbsolutePath());
+        if(database == null) {
+            KittySchemaDefinition expectedSchema  = new KittySchemaDefinition();
+            SparseArray<KittySchemaColumnDefinition> siEx = new SparseArray<>();
+            KittySchemaColumnDefinition siExID = new KittySchemaColumnDefinitionBuilder().setName("id").setPk().setNotNull().setType(integer).build();
+            KittySchemaColumnDefinition siExRanInt = new KittySchemaColumnDefinitionBuilder().setName("random_integer").setType(integer).build();
+            KittySchemaColumnDefinition siExFN = new KittySchemaColumnDefinitionBuilder().setName("first_name").setType(text).build();
+            siEx.put(0,siExID);
+            siEx.put(1,siExRanInt);
+            siEx.put(2,siExFN);
+            expectedSchema.addDefinition("simple_example", siEx);
+            database = new SimpleDatabase(getContext(), getDBFile().getAbsolutePath(), expectedSchema);
+        }
         return database;
     }
 
