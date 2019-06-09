@@ -38,7 +38,7 @@ dependencies {
 
 group = "net.akaish.kitty.orm"
 archivesBaseName = "kitty-orm"
-version = "0.2.0"
+version = "0.2.1"
 
 task deleteJar(type: Delete) {
     delete 'libs/jars/'+archivesBaseName+'.'+version+'.jar'

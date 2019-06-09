@@ -254,7 +254,7 @@ public class Lesson1Tab3ExternalDatabases extends LessonBaseFragment implements 
             }
             // create app folder
             if ( !appDirectory.exists() ) {
-                appDirectory.mkdir();
+                appDirectory.mkdirs();
             }
 
             try {
