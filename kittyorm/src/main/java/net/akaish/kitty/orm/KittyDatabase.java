@@ -118,7 +118,7 @@ public abstract class  KittyDatabase<M extends KittyModel> {
     /**
      * KittyORM main database class that represents bootstrap and holder for all related with database
      * components.
-     * <br> See {@link #KittyDatabase(Context, String, String)} for more info.
+     * <br> See {@link #KittyDatabase(Context, String, String, KittySchemaDefinition)} for more info.
      * @param ctx
      */
     protected KittyDatabase(Context ctx) {
@@ -128,7 +128,7 @@ public abstract class  KittyDatabase<M extends KittyModel> {
     /**
      * KittyORM main database class that represents bootstrap and holder for all related with database
      * components.
-     * <br> See {@link #KittyDatabase(Context, String, String)} for more info.
+     * <br> See {@link #KittyDatabase(Context, String, String, KittySchemaDefinition)} for more info.
      * @param ctx
      * @param databaseFilePath
      */
@@ -234,7 +234,7 @@ public abstract class  KittyDatabase<M extends KittyModel> {
         }
 
         if(kAnno.useExternalDatabase() && databaseFilepath != null && this.expectedDefinition != null) {
-            checkExternalDatabaseSchema(kAnno.logTag(), expectedDefinition, databaseFilepath);
+            checkExternalDatabaseSchema(kAnno.logTag(), expectedDefinition, databaseFilepath, true);
         }
 
         // Now getting databaseClass configuration
@@ -345,9 +345,10 @@ public abstract class  KittyDatabase<M extends KittyModel> {
      * @param logTag
      * @param definition
      * @param databaseFilePath
+     * @param strictMatch if true than {@link KittyExternalDBSchemaMismatchException} would be thrown in cases when expected table would have unexpected column
      * @return
      */
-    public static final boolean checkExternalDatabaseSchema(String logTag, KittySchemaDefinition definition, String databaseFilePath) {
+    public static final boolean checkExternalDatabaseSchema(String logTag, KittySchemaDefinition definition, String databaseFilePath, boolean strictMatch) {
         Log.i(logTag, format(LI_EDB_GETTING_EXTERNAL_DB_VERSION, databaseFilePath));
         SQLiteDatabase database = null;
         try {
@@ -427,8 +428,10 @@ public abstract class  KittyDatabase<M extends KittyModel> {
                                     errMessage = sb.toString();
                                 }
                             } else {
-                                errCode = PRAGMA_TABLE_INFO_COLUMN_CID;
-                                errMessage = "Found column not listed in expected columns!";
+                                if(strictMatch) {
+                                    errCode = PRAGMA_TABLE_INFO_COLUMN_CID;
+                                    errMessage = "Found column not listed in expected columns!";
+                                }
                             }
                         } catch (Exception ame) {
                             closeDB(database);
