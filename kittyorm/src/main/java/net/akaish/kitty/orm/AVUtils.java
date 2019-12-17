@@ -26,8 +26,8 @@ package net.akaish.kitty.orm;
 
 import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_ACCEPTED_VALUES;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
-import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.exceptions.KittyRestrictedValueException;
+import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 
 import java.util.Arrays;
 
@@ -54,7 +54,7 @@ class AVUtils {
      * @param column column configuration
      * @param modelClass modelClass class for generating exception info
      */
-    static final void checkStringValue(String value, KittyColumnConfiguration column, Class modelClass) {
+    static void checkStringValue(String value, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
         if(column.avConfiguration != null && value == null)
             throw new KittyRestrictedValueException(R_STRING_V, modelClass, column.mainConfiguration.columnName);
@@ -70,7 +70,7 @@ class AVUtils {
      * @param column column configuration
      * @param modelClass modelClass class for generating exception info
      */
-    static final void checkIntValue(Integer intValue, KittyColumnConfiguration column, Class modelClass) {
+    static void checkIntValue(Integer intValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
         if(column.avConfiguration != null && intValue == null)
             throw new KittyRestrictedValueException(R_INT_V, modelClass, column.mainConfiguration.columnName);
@@ -91,9 +91,9 @@ class AVUtils {
      * @param column column configuration
      * @param modelClass modelClass class for generating exception info
      */
-    static final void checkByteValue(Byte byteValue, KittyColumnConfiguration column, Class modelClass) {
+    static void checkByteValue(Byte byteValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
-        if(column.avConfiguration != null && byteValue == null)
+        if(byteValue == null)
             throw new KittyRestrictedValueException(R_BYTE_V, modelClass, column.mainConfiguration.columnName);
         if(column.avConfiguration.acceptedValuesByte.length!=0) {
             for(byte i : column.avConfiguration.acceptedValuesByte)
@@ -114,7 +114,7 @@ class AVUtils {
      */
     static final void checkDoubleValue(Double doubleValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
-        if(column.avConfiguration != null && doubleValue == null)
+        if(doubleValue == null)
             throw new KittyRestrictedValueException(R_DOUBLE_V, modelClass, column.mainConfiguration.columnName);
         if(column.avConfiguration.acceptedValuesDouble.length!=0) {
             for(double i : column.avConfiguration.acceptedValuesDouble)
@@ -135,7 +135,7 @@ class AVUtils {
      */
     static final void checkLongValue(Long longValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
-        if(column.avConfiguration != null && longValue == null)
+        if(longValue == null)
             throw new KittyRestrictedValueException(R_LONG_V, modelClass, column.mainConfiguration.columnName);
         if(column.avConfiguration.acceptedValuesLong.length!=0) {
             for(long i : column.avConfiguration.acceptedValuesLong)
@@ -156,7 +156,7 @@ class AVUtils {
      */
     static final void checkShortValue(Short shortValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
-        if(column.avConfiguration != null && shortValue == null)
+        if(shortValue == null)
             throw new KittyRestrictedValueException(R_LONG_V, modelClass, column.mainConfiguration.columnName);
         if(column.avConfiguration.acceptedValuesShort.length!=0) {
             for(short i : column.avConfiguration.acceptedValuesShort)
@@ -177,7 +177,7 @@ class AVUtils {
      */
     static final void checkFloatValue(Float floatValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
-        if(column.avConfiguration != null && floatValue == null)
+        if(floatValue == null)
             throw new KittyRestrictedValueException(R_FLOAT_V, modelClass, column.mainConfiguration.columnName);
         if(column.avConfiguration.acceptedValuesFloat.length!=0) {
             for(float i : column.avConfiguration.acceptedValuesFloat)

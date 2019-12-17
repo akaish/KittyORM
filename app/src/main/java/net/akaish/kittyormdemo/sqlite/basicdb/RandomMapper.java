@@ -25,20 +25,18 @@
 package net.akaish.kittyormdemo.sqlite.basicdb;
 
 import net.akaish.kitty.orm.KittyMapper;
-import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.configuration.conf.KittyTableConfiguration;
 import net.akaish.kitty.orm.query.QueryParameters;
 import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
 import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
-import net.akaish.kitty.orm.query.conditions.SQLiteOperator;
 import net.akaish.kitty.orm.util.KittyConstants;
 import net.akaish.kittyormdemo.sqlite.misc.Animals;
 
-import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.AND;
-import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.LESS_OR_EQUAL;
-import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.LESS_THAN;
-import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.GREATER_OR_EQUAL;
-import static net.akaish.kitty.orm.query.conditions.SQLiteOperator.GREATER_THAN;
+import static net.akaish.kitty.orm.enums.SQLiteOperator.AND;
+import static net.akaish.kitty.orm.enums.SQLiteOperator.LESS_OR_EQUAL;
+import static net.akaish.kitty.orm.enums.SQLiteOperator.LESS_THAN;
+import static net.akaish.kitty.orm.enums.SQLiteOperator.GREATER_OR_EQUAL;
+import static net.akaish.kitty.orm.enums.SQLiteOperator.GREATER_THAN;
 import static net.akaish.kittyormdemo.sqlite.basicdb.AbstractRandomModel.RND_ANIMAL_CNAME;
 
 import java.util.List;
@@ -48,10 +46,10 @@ import java.util.List;
  * Created by akaish on 09.08.18.
  * @author akaish (Denis Bogomolov)
  */
-public class RandomMapper extends KittyMapper {
+public class RandomMapper extends KittyMapper<RandomModel> {
 
-    public <M extends KittyModel> RandomMapper(KittyTableConfiguration tableConfiguration,
-                                              M blankModelInstance,
+    public RandomMapper(KittyTableConfiguration tableConfiguration,
+                                               RandomModel blankModelInstance,
                                               String databasePassword) {
         super(tableConfiguration, blankModelInstance, databasePassword);
     }

@@ -39,5 +39,5 @@ public interface KittySQLiteScript {
      * Returns sql dump script as String
      * @return
      */
-    public List<KittySQLiteQuery> getSqlScript();
+    List<KittySQLiteQuery> getSqlScript();
 }

@@ -25,7 +25,6 @@
 package net.akaish.kitty.orm.dumputils.scripts;
 
 import android.content.Context;
-import android.util.Log;
 
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.query.KittySQLiteQuery;

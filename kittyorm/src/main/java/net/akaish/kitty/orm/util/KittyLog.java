@@ -55,8 +55,6 @@ public class KittyLog {
                     Log.w(tag, msg, tr);
                     break;
                 case WTF:
-                    Log.wtf(tag, msg, tr);
-                    break;
                 default:
                     Log.wtf(tag, msg, tr);
                     break;

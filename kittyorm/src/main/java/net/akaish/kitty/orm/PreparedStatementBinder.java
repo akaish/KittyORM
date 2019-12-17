@@ -128,7 +128,7 @@ public class PreparedStatementBinder {
             } else {
                 byte[] bytesToStatement = new byte[bytes.length];
                 for(int i = 0; i < bytes.length; i++)
-                    bytesToStatement[i] = bytes[i].byteValue();
+                    bytesToStatement[i] = bytes[i];
                 statement.bindBlob(bindingIndex, bytesToStatement);
             }
             return statement;
@@ -253,12 +253,6 @@ public class PreparedStatementBinder {
         serializer.setAccessible(true);
         switch(column.mainConfiguration.columnAffinity) {
             case BLOB:
-                byte[] blob = (byte[]) serializer.invoke(model);
-                if(blob != null)
-                    statement.bindBlob(bindingIndex, blob);
-                else
-                    statement.bindNull(bindingIndex);
-                break;
             case NONE:
                 byte[] none = (byte[]) serializer.invoke(model);
                 if(none != null)

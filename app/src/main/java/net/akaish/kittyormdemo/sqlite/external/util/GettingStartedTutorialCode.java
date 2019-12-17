@@ -32,7 +32,7 @@ import net.akaish.kitty.orm.pkey.KittyPrimaryKey;
 import net.akaish.kitty.orm.pkey.KittyPrimaryKeyBuilder;
 import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
 import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
-import net.akaish.kitty.orm.query.conditions.SQLiteOperator;
+import net.akaish.kitty.orm.enums.SQLiteOperator;
 import net.akaish.kittyormdemo.sqlite.external.SimpleDatabase;
 import net.akaish.kittyormdemo.sqlite.external.SimpleExampleModel;
 
@@ -64,7 +64,7 @@ public class GettingStartedTutorialCode {
         // Creating new instance of SimpleDatabase
         SimpleDatabase simpleDatabase = new SimpleDatabase(context, null, null); // TODO path for tutorial
 
-        KittyMapper mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
+        KittyMapper<SimpleExampleModel> mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
 
         // Counting records in db table and deleting them if table not empty
         if(mapper.countAll() > 0)

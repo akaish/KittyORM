@@ -24,9 +24,9 @@
 
 package net.akaish.kitty.orm.query;
 
+import net.akaish.kitty.orm.enums.AscDesc;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
-import net.akaish.kitty.orm.enums.AscDesc;
 import net.akaish.kitty.orm.util.KittyUtils;
 
 import java.text.MessageFormat;

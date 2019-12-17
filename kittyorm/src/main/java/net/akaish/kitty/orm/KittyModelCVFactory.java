@@ -53,7 +53,7 @@ import java.util.Iterator;
  * Created by akaish on 07.09.18.
  * @author akaish (Denis Bogomolov)
  */
-public class KittyModelCVFactory {
+public class KittyModelCVFactory<M extends KittyModel> {
     private final KittyTableConfiguration tableConfiguration;
 
     private static String VALUE_OF_METHOD_NAME = "valueOf";
@@ -89,7 +89,6 @@ public class KittyModelCVFactory {
      *
      * @param cursor cursor to read
      * @param model blank modelClass to fill
-     * @param <M>
      * @return filled from provided cursor instance of KittyModel
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
@@ -97,7 +96,7 @@ public class KittyModelCVFactory {
      * @throws NoSuchMethodException
      */
 
-    public <M extends KittyModel> M cursorToModel(Cursor cursor, M model, boolean rowidOn)
+    public M cursorToModel(Cursor cursor, M model, boolean rowidOn)
             throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException {
         Iterator<KittyColumnConfiguration> iterator = tableConfiguration.sortedColumns.iterator();
@@ -237,23 +236,20 @@ public class KittyModelCVFactory {
      * @param column
      * @param model
      * @param cursor
-     * @param <M>
      * @return
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    private final <M extends KittyModel> M putSDFromCursorToModel(KittyColumnConfiguration column,
+    private final M putSDFromCursorToModel(KittyColumnConfiguration column,
                                                                    M model, Cursor cursor, int columnIndex)
             throws InvocationTargetException, IllegalAccessException {
         Field columnField = column.mainConfiguration.columnField;
         columnField.setAccessible(true);
         Method deserializer = column.sdConfiguration.deserealizationMethod;
         deserializer.setAccessible(true);
-        Object fieldData = null;
+        Object fieldData;
         switch(column.mainConfiguration.columnAffinity) {
             case BLOB:
-                fieldData = cursor.getBlob(columnIndex);
-                break;
             case NONE:
                 fieldData = cursor.getBlob(columnIndex);
                 break;

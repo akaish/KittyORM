@@ -40,7 +40,7 @@ import net.akaish.kitty.orm.pkey.KittyPrimaryKey;
 import net.akaish.kitty.orm.pkey.KittyPrimaryKeyBuilder;
 import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
 import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
-import net.akaish.kitty.orm.query.conditions.SQLiteOperator;
+import net.akaish.kitty.orm.enums.SQLiteOperator;
 import net.akaish.kitty.orm.util.KittyLog;
 import net.akaish.kittyormdemo.KittyTutorialActivity;
 import net.akaish.kittyormdemo.R;
@@ -187,7 +187,7 @@ public class Lesson1Tab2GettingStarted extends LessonBaseFragment implements Les
 
             // Printing registry to log (e.g. collection of KittyModels->KittyMappers that would be used)
             simpleDatabase.printRegistryToLog(KittyLog.LOG_LEVEL.E);
-            KittyMapper mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
+            KittyMapper<SimpleExampleModel> mapper = simpleDatabase.getMapper(SimpleExampleModel.class);
 
             // Counting records in db table and deleting them if table not empty
             if(mapper.countAll() > 0) {

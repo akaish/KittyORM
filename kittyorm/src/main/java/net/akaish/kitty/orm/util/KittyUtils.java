@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -53,7 +52,14 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import static net.akaish.kitty.orm.util.KittyConstants.*;
+import static net.akaish.kitty.orm.util.KittyConstants.COMMA;
+import static net.akaish.kitty.orm.util.KittyConstants.COMMA_SEPARATOR;
+import static net.akaish.kitty.orm.util.KittyConstants.DOUBLE_QUOTE;
+import static net.akaish.kitty.orm.util.KittyConstants.EMPTY_STRING;
+import static net.akaish.kitty.orm.util.KittyConstants.LEFT_BKT;
+import static net.akaish.kitty.orm.util.KittyConstants.QUOTE;
+import static net.akaish.kitty.orm.util.KittyConstants.RIGHT_BKT;
+import static net.akaish.kitty.orm.util.KittyConstants.WHITESPACE;
 import static net.akaish.kitty.orm.util.KittyNamingUtils.ASSETS_URI_START;
 
 /**
@@ -217,13 +223,13 @@ public class KittyUtils {
 	 * @throws IOException as usual
 	 * @throws IllegalArgumentException when file is directory or has no read access
 	 */
-	public static final String readFileToString(File file) throws IOException{
+	public static String readFileToString(File file) throws IOException{
 		if(file.isDirectory())
 			throw new IllegalArgumentException(MessageFormat.format(RFTS_EXC_MSG_IS_DIR, file.getAbsolutePath()));
 		if(!file.canRead())
 			throw new IllegalArgumentException(MessageFormat.format(RFTS_EXC_MSG_NO_R_ACCESS, file.getAbsolutePath()));
 		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String line = null;
+		String line;
 		StringBuilder stringBuilder = new StringBuilder();
 		String ls = System.getProperty(LS_PROPERTY);
 		try {
@@ -232,8 +238,7 @@ public class KittyUtils {
 				stringBuilder.append(ls);
 			}
 		} finally {
-			if (reader!=null)
-				reader.close();
+			reader.close();
 		}
 		return stringBuilder.toString();
 	}
@@ -244,21 +249,20 @@ public class KittyUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static final LinkedList<String> readFileToLinkedList(File file) throws IOException {
+	public static LinkedList<String> readFileToLinkedList(File file) throws IOException {
 		if(file.isDirectory())
 			throw new IllegalArgumentException(MessageFormat.format(RFTS_EXC_MSG_IS_DIR, file.getAbsolutePath()));
 		if(!file.canRead())
 			throw new IllegalArgumentException(MessageFormat.format(RFTS_EXC_MSG_NO_R_ACCESS, file.getAbsolutePath()));
 		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String line = null;
+		String line;
 		LinkedList<String> out = new LinkedList<>();
 		try {
 			while ((line = reader.readLine()) != null) {
 				out.addLast(line);
 			}
 		} finally {
-			if (reader!=null)
-				reader.close();
+			reader.close();
 		}
 		return out;
 	}
@@ -270,7 +274,7 @@ public class KittyUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static final LinkedList<String> readFileFromAssetsToLinkedList(Context ctx, String relativeFilePath) throws IOException {
+	public static LinkedList<String> readFileFromAssetsToLinkedList(Context ctx, String relativeFilePath) throws IOException {
 		if(relativeFilePath.startsWith(ASSETS_URI_START))
 			relativeFilePath = relativeFilePath.replace(ASSETS_URI_START, EMPTY_STRING);
 		BufferedReader reader = null;
@@ -401,10 +405,6 @@ public class KittyUtils {
 			}
 		}
 	}
-
-	public static final int CODE_UNABLE_TO_COPY_ALREADY_EXISTS = 0;
-	public static final int CODE_UNABLE_TO_COPY = 1;
-	public static final int CODE_COPIED_SUCCESSFULLY = 2;
 	
 	public static final void copyDirectoryFromAssetsToFS(Context ctx, String assetsPath, File baseFile) {
 		if(assetsPath.startsWith(ASSETS_URI_START)) {
@@ -452,7 +452,7 @@ public class KittyUtils {
 		in.close();
 	}
 
-	public static final void writeStringsToFile(File filepath, List<String> data, boolean append, boolean createIfNotExists)
+	public static void writeStringsToFile(File filepath, List<String> data, boolean append, boolean createIfNotExists)
 			throws IOException {
 		BufferedWriter bufferedWriter = null;
 		FileWriter writer = null;
@@ -491,7 +491,7 @@ public class KittyUtils {
 	 * @param input string to replace illegal symbols
 	 * @return string without illegal symbols (they would be changed with underscore)
 	 */
-	public static final String removeAllIllegalCharactersFromPathString(String input) {
+	public static String removeAllIllegalCharactersFromPathString(String input) {
 		return input.replaceAll(LEGAL_CHARACTERS_PATTERN, LEGAL_UNDERSCORE);
 	}
 

@@ -29,10 +29,11 @@ package net.akaish.kitty.orm;
  * @author akaish (Denis Bogomolov)
  */
 
-public class KittyMMEntry<M extends KittyModel, D extends KittyMapper> {
-	final M model;
-	final D mapper;
-	public KittyMMEntry(M model, D mapper) {
+public class KittyMMEntry<M extends KittyModel, D extends KittyMapper<M>> {
+	private final M model;
+	private final D mapper;
+
+	KittyMMEntry(M model, D mapper) {
 		super();
 		this.model = model;
 		this.mapper = mapper;

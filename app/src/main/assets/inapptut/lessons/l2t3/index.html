@@ -139,7 +139,7 @@
 <span class="ln">56</span>
 <span class="ln">57</span><span class="c1">// And, for SQLite string, you may pass POJO field names as well using #?fieldName syntax
 </span><span class="ln">58</span><span class="c1"></span><span class="n">SQLiteCondition</span> <span class="n">condition5</span> <span class="o">=</span> <span class="n">SQLiteConditionBuilder</span><span class="o">.</span><span class="na">fromSQL</span><span class="o">(</span><span class="s">&#34;WHERE #?aColumn = ? AND (#?bColumn &gt; ? OR BETWEEN ? AND ?)&#34;</span><span class="o">,</span> <span class="n">SomeModel</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">&#34;a&#34;</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">10</span><span class="o">,</span> <span class="n">20</span><span class="o">);</span></code></pre></div>
-All supported by KittyORM SQLite operators presented at <code>net.akaish.kitty.orm.query.conditions.SQLiteOperator</code> enumeration.</p>
+All supported by KittyORM SQLite operators presented at <code>net.akaish.kitty.orm.enums.SQLiteOperator</code> enumeration.</p>
 
 <p>This page is a part of KittyORM project (KittyORM Documentation) and licensed under a Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit <a href="http://creativecommons.org/licenses/by-sa/4.0/">http://creativecommons.org/licenses/by-sa/4.0/</a> or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, US., more information at <a href="https://akaish.github.io/KittyORMPages/license/">https://akaish.github.io/KittyORMPages/license/</a></p>
 

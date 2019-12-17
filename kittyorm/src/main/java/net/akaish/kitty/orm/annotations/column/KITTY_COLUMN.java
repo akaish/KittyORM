@@ -31,11 +31,11 @@ import net.akaish.kitty.orm.annotations.column.constraints.PRIMARY_KEY;
 import net.akaish.kitty.orm.enums.AscDesc;
 import net.akaish.kitty.orm.enums.TypeAffinities;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
 
 import static net.akaish.kitty.orm.util.KittyConstants.ZERO_LENGTH_STRING;
 

@@ -38,7 +38,7 @@ public abstract class KittyModel implements Cloneable {
 
     public static final String EXCEPTION_UNABLE_TO_CLONE = "Unable to clone model class, see exception details!";
 
-    private Long rowid;
+    public Long rowid;
     final ArrayList<String> exclusions = new ArrayList<>();
 
     final void setRowID(Long rowid) {

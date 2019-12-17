@@ -22,7 +22,7 @@
  * ---
  */
 
-package net.akaish.kitty.orm.query.conditions;
+package net.akaish.kitty.orm.enums;
 
 /**
  * @author akaish (Denis Bogomolov)

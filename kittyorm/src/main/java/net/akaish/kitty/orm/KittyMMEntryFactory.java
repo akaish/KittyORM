@@ -77,7 +77,7 @@ public class KittyMMEntryFactory {
      * @return MM entry
      * @throws KittyRuntimeException if any errors happened (original exception is wrapped inside KittyRuntimeException)
      */
-    public <D extends KittyMapper, M extends KittyModel> KittyMMEntry newMMEntry(Class<D> mapperClass, KittyTableConfiguration tableCfg) {
+    public <D extends KittyMapper<M>, M extends KittyModel> KittyMMEntry newMMEntry(Class<D> mapperClass, KittyTableConfiguration tableCfg) {
         if(databaseConfiguration == null)
             throw new IllegalArgumentException(IA_NOT_SET);
         M kittyModel = newKittyModel( (Class<M>) tableCfg.modelClass);
@@ -114,7 +114,7 @@ public class KittyMMEntryFactory {
      * @return KittyMapper instance ready to be used with provided model
      * @throws KittyRuntimeException (InstantiationException, NoSuchMethodException, InvocationTargetException and IllegalAccessException will be wrapped into KittyRuntimeException)
      */
-    static final <D extends KittyMapper, M extends KittyModel> D newKittyMapper(Class<D> kittyDataMapperClass,
+    static final <D extends KittyMapper<M>, M extends KittyModel> D newKittyMapper(Class<D> kittyDataMapperClass,
                                                                                 KittyTableConfiguration tableConfiguration,
                                                                                 KittyDatabaseConfiguration dbConfiguration,
                                                                                 M blankModel,
@@ -130,18 +130,16 @@ public class KittyMMEntryFactory {
             );
         }
         try {
-            Constructor<D> mapperConstructor = kittyDataMapperClass.getConstructor(
-                    KittyTableConfiguration.class,
-                    KittyModel.class,
-                    String.class
-            );
+            Constructor<D> mapperConstructor = (Constructor<D>) kittyDataMapperClass.getConstructors()[0];
             D kittyMapper = mapperConstructor.newInstance(tableConfiguration, blankModel, dbPassword);
             kittyMapper.setLogOn(dbConfiguration.isLoggingOn);
             kittyMapper.setLogTag(dbConfiguration.logTag);
             kittyMapper.setRowIDSupport(!tableConfiguration.isNoRowid);
-            kittyMapper.setReturnNullNotEmptyCollection(dbConfiguration.returnNullInsteadEmptyCollection);
+            // TODO
+            // TODO
+            // TODO better solution than getconstructors [0]
             return kittyMapper;
-        } catch (NoSuchMethodException e) {
+        } catch (IndexOutOfBoundsException e) {
             throw new KittyRuntimeException(MessageFormat.format(AME_MAPPER_INIT, kittyDataMapperClass.getCanonicalName()), e);
         } catch (InstantiationException e) {
             throw new KittyRuntimeException(MessageFormat.format(AME_MAPPER_INIT, kittyDataMapperClass.getCanonicalName()), e);

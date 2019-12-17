@@ -33,6 +33,7 @@ import net.akaish.kitty.orm.indexes.Index;
 
 import java.io.File;
 import java.lang.reflect.Field;
+
 import static java.text.MessageFormat.format;
 import static net.akaish.kitty.orm.util.KittyConstants.EMPTY_STRING;
 import static net.akaish.kitty.orm.util.KittyConstants.MODEL_END;
@@ -47,8 +48,6 @@ import static net.akaish.kitty.orm.util.KittyUtils.implode;
  */
 
 public class KittyNamingUtils {
-
-    private static String IA_ASATL_BAD_ARRAY_LENGTH = "Expected value must be a String array with 0 or 1 elements but provided array has more elements!";
 
     private static String DB_SCRIPTS_PATH_ROOT = "kittysqliteorm";
     private static String DB_MIGRATIONS_SCRIPTS_ROOT = "version_migrations";

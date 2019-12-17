@@ -139,9 +139,9 @@ public class KittyReflectionUtils {
 		if (object == null) return NULL;
 		if (String.class.equals(object.getClass())) {
 	    } else if (BigDecimal.class.equals(object.getClass())) {
-			return ((BigDecimal)object).toString();
+			return object.toString();
 		} else if (BigInteger.class.equals(object.getClass())) {
-			return ((BigInteger)object).toString();
+			return object.toString();
 		} else if (object.getClass().isEnum()) {
 			return ((Enum)object).name();
 		} else if (Calendar.class.equals(object.getClass())) {
@@ -162,7 +162,7 @@ public class KittyReflectionUtils {
 
 	private static final String KITTY_RNTE_TO_STRING_NOT_DEFINED = "There is no default mapping to SQLite string defined for java type {0} (KittyORM, KittyReflectionUtils.getSQLiteStringRepresentation(Object object))!";
 
-	public static final String getSQLiteStringRepresentation(Object object) {
+	public static String getSQLiteStringRepresentation(Object object) {
 		if(object == null) return NULL;
 		Class objClass = object.getClass();
 		if (boolean.class.equals(objClass) || Boolean.class.equals(objClass)) {
@@ -210,7 +210,7 @@ public class KittyReflectionUtils {
 	 * @return
 	 * @throws NoSuchFieldException
 	 */
-	public static final Field getField(Object obj, String fieldName) throws NoSuchFieldException {
+	public static Field getField(Object obj, String fieldName) throws NoSuchFieldException {
 		Field field = obj.getClass().getField(fieldName);
 		field.setAccessible(true);
 		return field;

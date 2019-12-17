@@ -34,7 +34,7 @@ import java.util.Map;
  * Builder for {@link KittyDatabaseConfiguration}
  * @author akaish (Denis Bogomolov)
  */
-public class KittyDatabaseConfigurationBuilder<M extends KittyModel> {
+public class KittyDatabaseConfigurationBuilder<M extends KittyModel, D extends KittyMapper<M>> {
 
     private List<KittyTableConfiguration> recordsConfigurations;
     private String databaseName;
@@ -45,9 +45,8 @@ public class KittyDatabaseConfigurationBuilder<M extends KittyModel> {
     private boolean isProductionOn;
     private boolean isGenerateRegistryFromPackage;
     private String[] mmPackageNames;
-    private Map<Class<M>, Class<KittyMapper>> registry;
+    private Map<Class<M>, Class<D>> registry;
     private boolean isKittyDexUtilLoggingEnabled;
-    private boolean returnNullInsteadEmptyCollection;
 
     private String externalDatabasePath;
     private boolean useExternalDatabase;
@@ -98,18 +97,13 @@ public class KittyDatabaseConfigurationBuilder<M extends KittyModel> {
         return this;
     }
 
-    public KittyDatabaseConfigurationBuilder setRegistry(Map<Class<M>, Class<KittyMapper>> registry) {
+    public KittyDatabaseConfigurationBuilder setRegistry(Map<Class<M>, Class<D>> registry) {
         this.registry = registry;
         return this;
     }
 
     public KittyDatabaseConfigurationBuilder setIsKittyDexUtilLoggingEnabled(boolean isKittyDexUtilLoggingEnabled) {
         this.isKittyDexUtilLoggingEnabled = isKittyDexUtilLoggingEnabled;
-        return this;
-    }
-
-    public KittyDatabaseConfigurationBuilder setReturnNullInsteadEmptyCollection(boolean returnNullInsteadEmptyCollection) {
-        this.returnNullInsteadEmptyCollection = returnNullInsteadEmptyCollection;
         return this;
     }
 
@@ -132,7 +126,7 @@ public class KittyDatabaseConfigurationBuilder<M extends KittyModel> {
         return new KittyDatabaseConfiguration(
                 recordsConfigurations, databaseName, databaseVersion, isLoggingOn, logTag,
                 isPragmaON, isProductionOn, isGenerateRegistryFromPackage, mmPackageNames,
-                registry, isKittyDexUtilLoggingEnabled, returnNullInsteadEmptyCollection,
+                registry, isKittyDexUtilLoggingEnabled,
                 externalDatabasePath, useExternalDatabase, externalSupportedDatabaseVersions
         );
     }

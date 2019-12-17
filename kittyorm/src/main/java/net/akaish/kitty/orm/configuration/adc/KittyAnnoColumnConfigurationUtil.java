@@ -25,12 +25,10 @@
 package net.akaish.kitty.orm.configuration.adc;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.column.ONE_COLUMN_INDEX;
 import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_SERIALIZATION;
-import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
-import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_ACCEPTED_VALUES;
+import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_SERIALIZATION;
+import net.akaish.kitty.orm.annotations.column.ONE_COLUMN_INDEX;
 import net.akaish.kitty.orm.annotations.column.constraints.CHECK;
 import net.akaish.kitty.orm.annotations.column.constraints.COLLATE;
 import net.akaish.kitty.orm.annotations.column.constraints.DEFAULT;
@@ -39,6 +37,7 @@ import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
 import net.akaish.kitty.orm.annotations.column.constraints.PRIMARY_KEY;
 import net.akaish.kitty.orm.annotations.column.constraints.UNIQUE;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnAcceptedValuesConfiguration;
+import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnMainConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnSDConfiguration;
 import net.akaish.kitty.orm.constraints.column.CheckColumnConstraint;
@@ -51,6 +50,7 @@ import net.akaish.kitty.orm.constraints.column.UniqueColumnConstraint;
 import net.akaish.kitty.orm.enums.AscDesc;
 import net.akaish.kitty.orm.enums.ConflictClauses;
 import net.akaish.kitty.orm.enums.TypeAffinities;
+import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.indexes.Index;
 import net.akaish.kitty.orm.util.KittyUtils;
 
@@ -75,11 +75,11 @@ public class KittyAnnoColumnConfigurationUtil {
      * Returns null, if field not annotated with at least {@link KITTY_COLUMN}
      * @param field
      * @param record
-     * @param <T>
+     * @param <M>
      * @return
      * @throws NoSuchMethodException
      */
-    public static final <T extends KittyModel> KittyColumnConfiguration generateAMColumnConfiguration(Field field, Class<T> record, String schemaName, String tableName)
+    public static <M extends KittyModel> KittyColumnConfiguration generateAMColumnConfiguration(Field field, Class<M> record, String schemaName, String tableName)
             throws NoSuchMethodException {
         // Fetching main configuration, if no KITTY_COLUMN annotation present - return null
         if(field.isAnnotationPresent(KITTY_COLUMN.class)) {
@@ -110,7 +110,7 @@ public class KittyAnnoColumnConfigurationUtil {
      * @param f
      * @return
      */
-    private static final KittyColumnAcceptedValuesConfiguration generateAMColumnAcceptedValuesConfiguration(Field f) {
+    private static KittyColumnAcceptedValuesConfiguration generateAMColumnAcceptedValuesConfiguration(Field f) {
         KITTY_COLUMN_ACCEPTED_VALUES avAnnotation = f.getAnnotation(KITTY_COLUMN_ACCEPTED_VALUES.class);
         boolean anySet = false;
         Type fType = f.getType();
@@ -178,20 +178,18 @@ public class KittyAnnoColumnConfigurationUtil {
      * @param f
      * @param record
      * @param mainConfiguration
-     * @param <T>
+     * @param <M>
      * @return
      * @throws NoSuchMethodException
      */
-    private static final <T extends KittyModel> KittyColumnSDConfiguration generateAMColumnSDConfiguration(Field f, Class<T> record, KittyColumnMainConfiguration mainConfiguration)
+    private static <M extends KittyModel> KittyColumnSDConfiguration generateAMColumnSDConfiguration(Field f, Class<M> record, KittyColumnMainConfiguration mainConfiguration)
             throws NoSuchMethodException {
-        KITTY_COLUMN_SERIALIZATION columnSD = (KITTY_COLUMN_SERIALIZATION) f.getAnnotation(KITTY_COLUMN_SERIALIZATION.class);
+        KITTY_COLUMN_SERIALIZATION columnSD = f.getAnnotation(KITTY_COLUMN_SERIALIZATION.class);
         //if(!columnSD.useSD()) return null;
         // checking that type affinity of field is ok
-        Type rawDataType = null;
+        Type rawDataType;
         switch (mainConfiguration.columnAffinity) {
             case BLOB:
-                rawDataType = byte[].class;
-                break;
             case NONE:
                 rawDataType = byte[].class;
                 break;
@@ -203,8 +201,8 @@ public class KittyAnnoColumnConfigurationUtil {
                         f.getName(), record.getCanonicalName(), mainConfiguration.columnAffinity.toString()));
         }
         // now we fetching methods names for sd
-        String serializationMethodName = null;
-        String deserializationMethodName = null;
+        String serializationMethodName;
+        String deserializationMethodName;
         if(columnSD.serializationMethodName().length() == 0) {
            serializationMethodName = getDefaultSerializationMethodName(f.getName());
         } else {
@@ -233,15 +231,15 @@ public class KittyAnnoColumnConfigurationUtil {
      * @return
      */
     private static final KittyColumnMainConfiguration generateAMColumnMainConfiguration(Field f) {
-        KITTY_COLUMN column = (KITTY_COLUMN) f.getAnnotation(KITTY_COLUMN.class);
-        String columnName = null;
+        KITTY_COLUMN column = f.getAnnotation(KITTY_COLUMN.class);
+        String columnName;
         if(column.columnName().length() == 0) {
             columnName = generateColumnNameFromModelField(f);
         } else {
             columnName = column.columnName();
         }
         Type columnFieldType = f.getType();
-        TypeAffinities columnAffinity = null;
+        TypeAffinities columnAffinity;
         if(column.columnAffinity() == TypeAffinities.NOT_SET_USE_DEFAULT_MAPPING) {
             columnAffinity = KittyUtils.typeToAffinity(columnFieldType);
         } else {

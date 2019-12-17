@@ -44,7 +44,7 @@ import net.akaish.kitty.orm.pkey.KittyPrimaryKey;
 import net.akaish.kitty.orm.pkey.KittyPrimaryKeyBuilder;
 import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
 import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
-import net.akaish.kitty.orm.query.conditions.SQLiteOperator;
+import net.akaish.kitty.orm.enums.SQLiteOperator;
 import net.akaish.kitty.orm.util.KittyLog;
 import net.akaish.kitty.orm.util.KittySchemaColumnDefinition;
 import net.akaish.kitty.orm.util.KittySchemaColumnDefinitionBuilder;
@@ -335,7 +335,7 @@ public class Lesson1Tab3ExternalDatabases extends LessonBaseFragment implements 
 
             // Printing registry to log (e.g. collection of KittyModels->KittyMappers that would be used)
             database.printRegistryToLog(KittyLog.LOG_LEVEL.E);
-            KittyMapper mapper = database.getMapper(SimpleExampleModel.class);
+            KittyMapper<SimpleExampleModel>  mapper = database.getMapper(SimpleExampleModel.class);
 
             // Counting records in db table and deleting them if table not empty
             if(mapper.countAll() > 0) {

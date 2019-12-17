@@ -43,7 +43,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import static net.akaish.kitty.orm.enums.Keywords.AUTOINCREMENT;
 import static net.akaish.kitty.orm.util.KittyConstants.COMMA;
 import static net.akaish.kitty.orm.util.KittyConstants.DOT;
 import static net.akaish.kitty.orm.util.KittyConstants.LEFT_BKT;

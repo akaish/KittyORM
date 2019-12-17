@@ -42,7 +42,7 @@ import net.akaish.kitty.orm.KittyMapper;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
 import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
-import net.akaish.kitty.orm.query.conditions.SQLiteOperator;
+import net.akaish.kitty.orm.enums.SQLiteOperator;
 import net.akaish.kittyormdemo.KittyTutorialActivity;
 import net.akaish.kittyormdemo.R;
 import net.akaish.kittyormdemo.lessons.adapters.BasicArrayAdapter;

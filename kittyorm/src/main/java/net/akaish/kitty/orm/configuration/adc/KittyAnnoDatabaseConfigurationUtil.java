@@ -27,8 +27,8 @@ package net.akaish.kitty.orm.configuration.adc;
 import android.content.Context;
 import android.util.Log;
 
-import net.akaish.kitty.orm.KittyMapper;
 import net.akaish.kitty.orm.KittyDatabase;
+import net.akaish.kitty.orm.KittyMapper;
 import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
 import net.akaish.kitty.orm.annotations.KITTY_DATABASE_REGISTRY;
@@ -200,7 +200,6 @@ public class KittyAnnoDatabaseConfigurationUtil {
                         .setRecordsConfigurations(tableConfigurations)
                         .setRegistry(generatedRegistry)
                         .setIsKittyDexUtilLoggingEnabled(databaseAnno.isKittyDexUtilLoggingEnabled())
-                        .setReturnNullInsteadEmptyCollection(databaseAnno.returnNullInsteadEmptyCollection())
                         .setExternalDatabaseFilePath(databaseFilePath)
                         .setIsUseExternalDatabase(useExternalDB)
                         .setExternalDatabaseSupportedVersions(databaseAnno.supportedExternalDatabaseVersionNumbers())

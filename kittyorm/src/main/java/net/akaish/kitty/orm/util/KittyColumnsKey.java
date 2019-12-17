@@ -26,7 +26,6 @@ package net.akaish.kitty.orm.util;
 
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

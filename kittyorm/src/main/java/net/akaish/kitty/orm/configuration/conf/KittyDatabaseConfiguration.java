@@ -40,11 +40,11 @@ import static net.akaish.kitty.orm.util.KittyConstants.WHITESPACE;
  * Created by akaish on 13.02.18.
  * @author akaish (Denis Bogomolov)
  */
-public class KittyDatabaseConfiguration<M extends KittyModel> {
+public class KittyDatabaseConfiguration<M extends KittyModel, D extends KittyMapper<M>> {
     /**
      * Registry of model-mapper classes for this databaseClass
      */
-    public final Map<Class<M>, Class<KittyMapper>> registry;
+    public final Map<Class<M>, Class<D>> registry;
 
     /**
      * List of configurations for all models defined to be used with databaseClass
@@ -93,14 +93,6 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
     public final boolean isGenerateRegistryFromPackage;
 
     /**
-     * Defines what KittyMapper would return on fetch methods (findWhere/findAll etc) when
-     * SELECT statement returns no rows. If this flag set to true, than NULL would be
-     * returned of nothing found. If this flag set to false, than empty collection would be returned
-     * if nothing found.
-     */
-    public final boolean returnNullInsteadEmptyCollection;
-
-    /**
      * Defines external filepath that should be used as database file
      */
     public final String databaseFilePath;
@@ -128,8 +120,8 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
                                       int schemaVersion, boolean isLoggingOn, String logTag,
                                       boolean isPragmaON, boolean isProductionOn,
                                       boolean isGenerateRegistryFromPackage,
-                                      String[] mmPackageNames, Map<Class<M>, Class<KittyMapper>> registry,
-                                      boolean isKittyDexUtilLoggingEnabled, boolean returnNullInsteadEmptyCollection,
+                                      String[] mmPackageNames, Map<Class<M>, Class<D>> registry,
+                                      boolean isKittyDexUtilLoggingEnabled,
                                       String databaseFilePath, boolean useExternalFilepath,
                                       int[] externalDatabaseSupportedVersions) {
         this.tableConfigurations = tableConfigurations;
@@ -143,7 +135,6 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
         this.mmPackageNames = mmPackageNames;
         this.registry = registry;
         this.isKittyDexUtilLoggingEnabled = isKittyDexUtilLoggingEnabled;
-        this.returnNullInsteadEmptyCollection = returnNullInsteadEmptyCollection;
         this.databaseFilePath = databaseFilePath;
         this.useExternalFilepath = useExternalFilepath;
         this.externalDatabaseSupportedVersions = externalDatabaseSupportedVersions;
@@ -159,7 +150,6 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
                 .append(" ; isPragmaOn = ").append(isPragmaON)
                 .append(" ; isProductionOn = ").append(isProductionOn)
                 .append(" ; isGenerateRegistryFromPackage = ").append(isGenerateRegistryFromPackage)
-                .append(" ; setReturnNullInsteadEmptyCollection = ").append(returnNullInsteadEmptyCollection)
                 .append(" ; mmPackageNames = ").append(KittyUtils.implodeWithCommaInBKT(mmPackageNames))
                 .append(" ; isKittyDexUtilLoggingEnabled = ").append(isKittyDexUtilLoggingEnabled)
                 .append(" ; databaseFilePath = ").append(databaseFilePath)
@@ -170,10 +160,10 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
     }
 
     private String registryString() {
-        Iterator<Map.Entry<Class<M>, Class<KittyMapper>>> registryIterator = registry.entrySet().iterator();
+        Iterator<Map.Entry<Class<M>, Class<D>>> registryIterator = registry.entrySet().iterator();
         LinkedList<String> registryToPrint = new LinkedList<>();
         while (registryIterator.hasNext()) {
-            Map.Entry<Class<M>, Class<KittyMapper>> registryEntry = registryIterator.next();
+            Map.Entry<Class<M>, Class<D>> registryEntry = registryIterator.next();
             StringBuilder sb = new StringBuilder(64);
             sb.append(registryEntry.getKey().getCanonicalName()).append(" = ").append(registryEntry.getValue().getCanonicalName());
             registryToPrint.addLast(sb.toString());
@@ -185,7 +175,7 @@ public class KittyDatabaseConfiguration<M extends KittyModel> {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
         for(int i : externalDatabaseSupportedVersions) {
-            sb.append(Integer.toString(i)).append(WHITESPACE);
+            sb.append(i).append(WHITESPACE);
         }
         sb.append("]");
         return sb.toString();

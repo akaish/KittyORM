@@ -24,10 +24,10 @@
 
 package net.akaish.kitty.orm.annotations.table;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
 
 import static net.akaish.kitty.orm.util.KittyConstants.ZERO_LENGTH_STRING;
 

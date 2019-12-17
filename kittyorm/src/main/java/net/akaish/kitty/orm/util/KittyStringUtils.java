@@ -33,7 +33,7 @@ public class KittyStringUtils {
      * @param versions
      * @return
      */
-    public static final String versionsArrayString(int[] versions) {
+    public static String versionsArrayString(int[] versions) {
         String[] versionsStrings = new String[versions.length];
         int counter = 0;
         for(int version : versions) {

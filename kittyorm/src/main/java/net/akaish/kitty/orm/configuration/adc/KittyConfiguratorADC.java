@@ -26,8 +26,8 @@ package net.akaish.kitty.orm.configuration.adc;
 
 import android.content.Context;
 
-import net.akaish.kitty.orm.KittyMapper;
 import net.akaish.kitty.orm.KittyDatabase;
+import net.akaish.kitty.orm.KittyMapper;
 import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.configuration.KittyConfigurator;
 import net.akaish.kitty.orm.configuration.conf.KittyDatabaseConfiguration;
@@ -44,8 +44,8 @@ public class KittyConfiguratorADC extends KittyConfigurator {
     protected final Class databaseClass;
 
 
-    public <DB extends KittyDatabase, M extends KittyModel> KittyConfiguratorADC(Context context,
-                                                           Map<Class<M>, Class<KittyMapper>> registry,
+    public <DB extends KittyDatabase, M extends KittyModel, D extends KittyMapper<M>> KittyConfiguratorADC(Context context,
+                                                           Map<Class<M>, Class<D>> registry,
                                                            Class<DB> kittyDatabase, String databaseFilePath,
                                                            int databaseVersion) {
         super(context, registry, databaseFilePath, databaseVersion);

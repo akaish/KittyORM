@@ -35,13 +35,13 @@ import net.akaish.kitty.orm.util.KittyUtils;
 
 import static net.akaish.kitty.orm.util.KittyNamingUtils.getAfterCreateScriptDefaultFilename;
 import static net.akaish.kitty.orm.util.KittyNamingUtils.getAfterMigrateScriptDefaultFilename;
-import static net.akaish.kitty.orm.util.KittyNamingUtils.getSQLiteScriptPath;
 import static net.akaish.kitty.orm.util.KittyNamingUtils.getCreateSchemaDefaultFilename;
 import static net.akaish.kitty.orm.util.KittyNamingUtils.getDefaultAssetDatabaseScriptsPath;
 import static net.akaish.kitty.orm.util.KittyNamingUtils.getDefaultDatabaseMigrationScriptsPath;
 import static net.akaish.kitty.orm.util.KittyNamingUtils.getDefaultDatabaseScriptsPath;
 import static net.akaish.kitty.orm.util.KittyNamingUtils.getDevelopmentDumpsDefaultPath;
 import static net.akaish.kitty.orm.util.KittyNamingUtils.getDropSchemaDefaultFilename;
+import static net.akaish.kitty.orm.util.KittyNamingUtils.getSQLiteScriptPath;
 
 /**
  * Helper class for generating {@link KittyDBHelperConfiguration}

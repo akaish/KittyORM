@@ -24,18 +24,19 @@
 
 package net.akaish.kitty.orm.query.conditions;
 
-import android.util.Log;
-
 import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
+import net.akaish.kitty.orm.enums.SQLiteOperator;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.util.KittyReflectionUtils;
 
-import static net.akaish.kitty.orm.util.KittyConstants.*;
-import static net.akaish.kitty.orm.util.KittyUtils.fieldNameToLowerCaseUnderScore;
-
 import java.lang.reflect.Field;
 import java.util.LinkedList;
+
+import static net.akaish.kitty.orm.util.KittyConstants.EMPTY_STRING;
+import static net.akaish.kitty.orm.util.KittyConstants.QSIGN;
+import static net.akaish.kitty.orm.util.KittyConstants.WHITESPACE;
+import static net.akaish.kitty.orm.util.KittyUtils.fieldNameToLowerCaseUnderScore;
 
 /**
  * @author akaish (Denis Bogomolov)

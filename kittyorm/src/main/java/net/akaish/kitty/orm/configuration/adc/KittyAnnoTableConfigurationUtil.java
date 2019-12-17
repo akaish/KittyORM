@@ -24,14 +24,10 @@
 
 package net.akaish.kitty.orm.configuration.adc;
 
-import android.util.Log;
-
 import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.annotations.column.joins.JOIN_MANY_TO_ONE;
 import net.akaish.kitty.orm.annotations.column.joins.JOIN_ONE_TO_MANY;
 import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
-import net.akaish.kitty.orm.annotations.table.index.INDEX;
-import net.akaish.kitty.orm.annotations.table.index.INDEX_ARRAY;
 import net.akaish.kitty.orm.annotations.table.constraints.CHECK_T;
 import net.akaish.kitty.orm.annotations.table.constraints.CHECK_T_ARRAY;
 import net.akaish.kitty.orm.annotations.table.constraints.FOREIGN_KEY_T;
@@ -39,6 +35,8 @@ import net.akaish.kitty.orm.annotations.table.constraints.FOREIGN_KEY_T_ARRAY;
 import net.akaish.kitty.orm.annotations.table.constraints.PRIMARY_KEY_T;
 import net.akaish.kitty.orm.annotations.table.constraints.UNIQUE_T;
 import net.akaish.kitty.orm.annotations.table.constraints.UNIQUE_T_ARRAY;
+import net.akaish.kitty.orm.annotations.table.index.INDEX;
+import net.akaish.kitty.orm.annotations.table.index.INDEX_ARRAY;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyJoinConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyTableConfiguration;

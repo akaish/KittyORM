@@ -28,9 +28,9 @@ import android.content.Context;
 import android.util.Log;
 
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
+import net.akaish.kitty.orm.query.KittySQLiteQuery;
 import net.akaish.kitty.orm.util.KittyNamingUtils;
 import net.akaish.kitty.orm.util.KittyUtils;
-import net.akaish.kitty.orm.query.KittySQLiteQuery;
 
 import java.io.File;
 import java.io.IOException;

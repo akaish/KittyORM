@@ -27,7 +27,6 @@ package net.akaish.kitty.orm.dumputils.migrations;
 import net.akaish.kitty.orm.query.KittySQLiteQuery;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Migration class

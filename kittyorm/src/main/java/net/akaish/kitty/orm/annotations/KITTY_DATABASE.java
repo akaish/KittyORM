@@ -25,8 +25,8 @@
 package net.akaish.kitty.orm.annotations;
 
 
-import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.KittyMapper;
+import net.akaish.kitty.orm.KittyModel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -110,17 +110,6 @@ public @interface KITTY_DATABASE {
      * @return
      */
     boolean isGenerateRegistryFromPackage() default true;
-
-    /**
-     * Defines what KittyMapper would return on fetch methods (findWhere/findAll etc) when
-     * SELECT statement returns no rows. If this flag set to true, than NULL would be
-     * returned of nothing found. If this flag set to false, than empty collection would be returned
-     * if nothing found.
-     * <br> By default - false (empty collections)
-     * @return
-     */
-    boolean returnNullInsteadEmptyCollection() default false;
-    
 
     /**
      * Package name where schema classes are

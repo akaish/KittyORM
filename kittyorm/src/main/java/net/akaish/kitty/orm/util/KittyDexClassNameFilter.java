@@ -24,8 +24,6 @@
 
 package net.akaish.kitty.orm.util;
 
-import android.util.Log;
-
 /**
  * Class for filtering class names before their initialization by {@link KittyDexUtils}
  * Created by akaish on 16.02.18.

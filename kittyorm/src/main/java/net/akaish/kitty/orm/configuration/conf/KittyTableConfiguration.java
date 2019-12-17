@@ -67,7 +67,7 @@ public class KittyTableConfiguration {
 
 	public final KittyArrayKey defaultColumnsInclusionPatternId;
 
-	public <T extends KittyModel> KittyTableConfiguration(String schemaName, String tableName,
+	public KittyTableConfiguration(String schemaName, String tableName,
 														  boolean isTemporaryTable, boolean isNoRowid,
 														  PrimaryKeyTableConstraint primaryKey,
 														  List<UniqueTableConstraint> uniques,
@@ -77,7 +77,7 @@ public class KittyTableConfiguration {
 														  List<Index> indexes,
 														  LinkedList<KittyJoinConfiguration> joins,
 														  LinkedList<KittyColumnConfiguration> sortedColumns,
-														  Class<T> modelClass, KittyPrimaryKey kittyPrimaryKey,
+														  Class<? extends KittyModel> modelClass, KittyPrimaryKey kittyPrimaryKey,
 														  boolean isCreateIfNotExists,
 														  KittyArrayKey defaultColumnsInclusionPatternId) {
 		this.schemaName = schemaName;

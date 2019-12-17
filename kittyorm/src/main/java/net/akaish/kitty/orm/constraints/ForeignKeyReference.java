@@ -42,11 +42,11 @@ import static net.akaish.kitty.orm.util.KittyUtils.implodeWithCommaInBKT;
 
 public class ForeignKeyReference {
 
-    protected final String foreignTable;
-    protected final String foreignColumns;
-    protected final String onDeleteAction;
-    protected final String onUpdateAction;
-    protected final String deferrableOption;
+    private final String foreignTable;
+    private final String foreignColumns;
+    private final String onDeleteAction;
+    private final String onUpdateAction;
+    private final String deferrableOption;
 
     public ForeignKeyReference(String foreignTableName, String[] foreignColumnNames,
                                OnUpdateDeleteActions onDeleteAction,
@@ -64,16 +64,12 @@ public class ForeignKeyReference {
         this.foreignTable = foreignTableName;
         this.foreignColumns = implodeWithCommaInBKT(foreignColumnNames);
         if(onDelete!=null) {
-            this.onDeleteAction = new StringBuffer(16)
-                    .append(ON_DELETE).append(WHITESPACE)
-                    .append(onDelete).toString();
+            this.onDeleteAction = ON_DELETE.toString() + WHITESPACE + onDelete;
         } else {
             this.onDeleteAction = null;
         }
         if(onUpdate!=null) {
-            this.onUpdateAction = new StringBuffer(16)
-                    .append(ON_UPDATE).append(WHITESPACE)
-                    .append(onUpdate).toString();
+            this.onUpdateAction = ON_UPDATE.toString() + (WHITESPACE) + onUpdate;
         } else {
             this.onUpdateAction = null;
         }
