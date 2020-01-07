@@ -31,14 +31,12 @@ package net.akaish.kitty.orm.query;
 
 public class DeleteQuery extends BaseKittyQuery {
 
-    static final String DELETE = "DELETE * FROM {0}";
-
     public DeleteQuery(String tableName) {
         super(tableName);
     }
 
     @Override
     String getMainClause() {
-        return DELETE;
+        return "DELETE * FROM {0}";
     }
 }

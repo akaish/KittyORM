@@ -44,10 +44,8 @@ public class KittyConfiguratorADC extends KittyConfigurator {
     protected final Class databaseClass;
 
 
-    public <DB extends KittyDatabase, M extends KittyModel, D extends KittyMapper<M>> KittyConfiguratorADC(Context context,
-                                                           Map<Class<M>, Class<D>> registry,
-                                                           Class<DB> kittyDatabase, String databaseFilePath,
-                                                           int databaseVersion) {
+    public KittyConfiguratorADC(Context context, Map<Class<? extends KittyModel>, Class<? extends KittyMapper<? extends KittyModel>>> registry,
+                                Class<? extends KittyDatabase> kittyDatabase, String databaseFilePath, int databaseVersion) {
         super(context, registry, databaseFilePath, databaseVersion);
         this.databaseClass = kittyDatabase;
     }

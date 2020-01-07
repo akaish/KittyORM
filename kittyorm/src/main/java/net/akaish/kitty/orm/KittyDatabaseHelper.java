@@ -134,10 +134,6 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 	private static final String LOG_I_ON_UPDATE_CREATE_APPLYING_AFTER_MIGRATE_DB_IMP_SCRIPT = "onUpdate; applying after migrate script sequence defined at KittyORM database implementation for helper {0} for schema {1} v. {2}";
     private static final String LOG_I_ON_UPDATE_USING_EXTERNAL_DB_EXITING_ON_CREATE = "onUpdate; using external database, skipping onCreate routine: ";
 
-
-	static int JELLY_BEAN_ANDROID_VERSION_CODE = Build.VERSION_CODES.JELLY_BEAN;
-
-
 	protected static final String PRAGMA_ON = "PRAGMA foreign_keys=ON;";
 	protected final KittyDBHelperConfiguration helperConfiguration;
 	protected final KittyDatabaseConfiguration databaseConfiguration;
@@ -363,7 +359,7 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 	 */
 	@TargetApi(16)
 	private void setPragmaKeysAPI16(SQLiteDatabase database, boolean pragmaKeys) {
-		if(Build.VERSION.SDK_INT >= JELLY_BEAN_ANDROID_VERSION_CODE) {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			if(pragmaKeys)
 				log(I, LOG_I_FK_SUPPORT_16, true, null);
 			database.setForeignKeyConstraintsEnabled(pragmaKeys);
@@ -479,13 +475,11 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 				log(I, LOG_I_ON_UPGRADE_USE_CUSTOM_MIGRATOR, true, null);
 				migrator = getCustomMigratorImplementation(database, oldVersion, newVersion);
 				break;
-			case DO_NOTHING:
-				log(I, LOG_I_ON_UPGRADE_NO_ACTION, true, null);
-				return;
 			case USE_SIMPLE_MIGRATIONS:
 				log(I, LOG_I_ON_UPGRADE_USE_SIMPLE_AUTOGEN_MIGRATIONS , true, null);
 				migrator = getSimpleMigrator(oldVersion, newVersion, database);
 				break;
+			case DO_NOTHING:
 			default:
 				log(I, LOG_I_ON_UPGRADE_NO_ACTION, true, null);
 				return;
@@ -765,8 +759,8 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 
 	/**
 	 * Tries to start transaction and end it. If any problem acquired while running transaction
-	 * @param scriptSequence
-	 * @param database
+	 * @param scriptSequence script sequence to execute
+	 * @param database database to execute script sequence on
 	 */
 	protected void runScriptSequenceInTransaction(LinkedList<KittySQLiteQuery> scriptSequence, SQLiteDatabase database) {
 		database.beginTransaction();
@@ -810,23 +804,20 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 	/**
 	 * Returns SQLite script sequence from provided file path if possible or null.
 	 * <br> If log on then on any errors where would be log output.
-	 * @param pathToFiledScript
-	 * @return
+	 * @param filepathToScripts path to file script
+	 * @return list of queries
 	 */
-	protected LinkedList<KittySQLiteQuery> getScriptSequenceFromFileDump(String pathToFiledScript) {
-		if(pathToFiledScript.startsWith(KittyNamingUtils.ASSETS_URI_START)) {
-			KittySQLiteDumpScript dmpScript = getAssetsScript(pathToFiledScript);
+	protected LinkedList<KittySQLiteQuery> getScriptSequenceFromFileDump(String filepathToScripts) {
+		if(filepathToScripts.startsWith(KittyNamingUtils.ASSETS_URI_START)) {
+			KittySQLiteDumpScript dmpScript = getAssetsScript(filepathToScripts);
 			if(dmpScript == null) {
 				return null;
 			}
 			return dmpScript.getSqlScript();
 		} else {
-			File fileToDump = KittyNamingUtils.getScriptFile(pathToFiledScript, context);
+			File fileToDump = KittyNamingUtils.getScriptFile(filepathToScripts, context);
 			if(fileToDump.exists() && fileToDump.isFile() && fileToDump.canRead()) {
-				return (LinkedList<KittySQLiteQuery>) getFileScript(
-						fileToDump.getAbsolutePath(),
-						false
-				).getSqlScript();
+				return getFileScript(fileToDump.getAbsolutePath(), false).getSqlScript();
 			} else {
 				log(W, format(
 						LOG_W_NO_VALID_DUMP_FILE,
@@ -848,8 +839,7 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 	 */
 	protected KittySQLiteDumpScript getAssetsScript(String assetPath) {
 		try {
-			KittySQLiteAssetsFileDumpScript dumpScript = new KittySQLiteAssetsFileDumpScript(assetPath, context);
-			return dumpScript;
+			return new KittySQLiteAssetsFileDumpScript(assetPath, context);
 		} catch (Exception e) {
 			log(W, LOG_W_HELPER_DS_AME, false, e);
 			return null;
@@ -865,8 +855,7 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 	 */
 	protected KittySQLiteDumpScript getFileScript(String fileUriString, boolean newDump) {
 		try {
-			KittySQLiteFileDumpScript dumpScript = new KittySQLiteFileDumpScript(fileUriString, newDump, context);
-			return dumpScript;
+			return new KittySQLiteFileDumpScript(fileUriString, newDump, context);
 		} catch (Exception e) {
 			log(W, LOG_W_HELPER_DS_AME, false, e);
 			return null;
@@ -910,7 +899,7 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 	protected final void setPragmaKeysAPI15AndLower(SQLiteDatabase db, boolean pragmaKeys) {
 		// If API higher than 16, than pragma is set in onConfigure with
 		// db.setForeignKeyConstraintsEnabled(pragmaKeys)
-		if(Build.VERSION.SDK_INT >= JELLY_BEAN_ANDROID_VERSION_CODE)
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 			return;
 		if (!db.isReadOnly() && pragmaKeys) {
 			log(I, LOG_I_FK_SUPPORT_15, true, null);
@@ -925,21 +914,11 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 				this, helperConfiguration.schemaName, helperConfiguration.schemaVersion);
 	}
 
-	// CLONING IMPLEMENTATIONS
-	public final <T extends KittyDatabaseHelper> T clone(Class<T> recordClass) {
-		try {
-			T helper = (T) super.clone();
-			return helper;
-		} catch (CloneNotSupportedException e) {
-			throw new KittyRuntimeException(EXCEPTION_UNABLE_TO_CLONE, e);
-		}
-	}
 
 	@Override
 	public KittyDatabaseHelper clone() {
 		try {
-			KittyDatabaseHelper helper = (KittyDatabaseHelper) super.clone();
-			return helper;
+			return (KittyDatabaseHelper) super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new KittyRuntimeException(EXCEPTION_UNABLE_TO_CLONE, e);
 		}

@@ -365,7 +365,7 @@ public class Lesson5Tab1InitialDatabase extends Lesson5BaseFragment {
                 );
             } else {
                 try {
-                    KittyMapper mapper = getDatabase().getMapper(MigOneModel.class);
+                    KittyMapper<MigOneModel> mapper = getDatabase().getMapper(MigOneModel.class);
                     long recordsCount = mapper.countAll();
                     long affected = mapper.deleteAll();
                     LinkedList<MigOneModel> modelsToInsert = new LinkedList<>();

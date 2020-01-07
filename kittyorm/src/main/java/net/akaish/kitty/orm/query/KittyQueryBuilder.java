@@ -221,12 +221,10 @@ public class KittyQueryBuilder {
             sqlSB.append(KittyUtils.implode(orderColumns, COMMA_SEPARATOR));
             sqlSB.append(WHITESPACE);
             switch(orderByAscDesc) {
-                case ASCENDING:
-                    sqlSB.append(ASCENDING.toString());
-                    break;
                 case DESCENDING:
                     sqlSB.append(DESCENDING.toString());
                     break;
+                case ASCENDING:
                 default:
                     sqlSB.append(ASCENDING.toString());
                     break;
@@ -242,13 +240,13 @@ public class KittyQueryBuilder {
             sqlSB.append(WHITESPACE);
             sqlSB.append(LIMIT);
             sqlSB.append(WHITESPACE);
-            sqlSB.append(Long.toString(limit));
+            sqlSB.append(limit);
         }
         if (isOffset) {
             sqlSB.append(WHITESPACE);
             sqlSB.append(OFFSET);
             sqlSB.append(WHITESPACE);
-            sqlSB.append(Long.toString(offset));
+            sqlSB.append(offset);
         }
         if(isWhereClause) {
             return new KittySQLiteQuery(sqlSB.toString(), whereClause.getValues());

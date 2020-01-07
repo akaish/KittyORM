@@ -27,15 +27,9 @@ package net.akaish.kittyormdemo.sqlite.basicdb;
 import android.content.Context;
 
 import net.akaish.kitty.orm.KittyDatabase;
-import net.akaish.kitty.orm.KittyMMEntry;
-import net.akaish.kitty.orm.KittyMapper;
-import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
 import net.akaish.kitty.orm.annotations.KITTY_DATABASE_REGISTRY;
 import net.akaish.kitty.orm.annotations.KITTY_REGISTRY_PAIR;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static net.akaish.kittyormdemo.sqlite.basicdb.BasicDatabase.LOG_TAG;
 

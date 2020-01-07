@@ -518,6 +518,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public final M findByPKV(Map<String, String> pkv) {
 		SQLiteCondition condition = getSQLiteConditionForPKKeyValues(pkv);
 		if(condition == null) {
@@ -600,6 +601,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("unused")
 	public final M findFirst(String condition, Object... conditionValues) {
 		return findFirst(conditionFromSQLString(condition, conditionValues));
 	}
@@ -611,6 +613,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("unused")
 	public final M findFirst() {
 		return findFirst(null);
 	}
@@ -623,6 +626,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public final M findLast(SQLiteCondition where) {
 		QueryParameters queryParameters = new QueryParameters();
 		queryParameters.setLimit(1l).setOrderByColumns(ROWID).setOrderAscDesc(AscDesc.DESCENDING);
@@ -641,6 +645,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("unused")
 	public final M findLast(String condition, Object... conditionValues) {
 		return findLast(conditionFromSQLString(condition, conditionValues));
 	}
@@ -652,6 +657,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("unused")
 	public final M findLast() {
 		return findLast(null);
 	}
@@ -773,6 +779,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @param conditionValues
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	public final long sum(String sumColumn, QueryParameters qParams, String condition, Object... conditionValues) {
 		if(condition == null)
 			return sumAll(sumColumn, qParams);
@@ -790,6 +797,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @param conditionValues
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	public final long sum(String sumColumn, String condition, Object... conditionValues) {
 		if(condition == null)
 			return sumAll(sumColumn);
@@ -808,6 +816,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public final long sum(String sumColumn, SQLiteCondition where, QueryParameters qParams) {
 		throwExcReadOPWhileInTransaction();
 		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_SUM, tableConfig.tableName);
@@ -834,6 +843,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public final long sum(String sumColumn, SQLiteCondition where) {
 		return sum(sumColumn, where, null);
 	}
@@ -847,6 +857,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public final long sumAll(String sumColumn, QueryParameters qParams) {
 		throwExcReadOPWhileInTransaction();
 		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_SUM, tableConfig.tableName);
@@ -871,6 +882,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @throws KittyRuntimeException if there some errors, if KittyRuntimeException was caused by another exception than
 	 * first exception can be fetched by {@link KittyRuntimeException#getNestedException()}
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public final long sumAll(String sumColumn) {
 		throwExcReadOPWhileInTransaction();
 		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_SUM, tableConfig.tableName);
@@ -1150,6 +1162,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * <br> May throw exceptions related to reflection access to fields wrapped in {@link KittyRuntimeException}.
 	 * @param models list of models to update
 	 */
+	@SuppressWarnings("unused")
 	public final void updateInTransaction(List<M> models) {
 		update(TXM_EXCLUSIVE_MODE, models);
 	}
@@ -1176,7 +1189,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * method would be called.
 	 * @param models list of models to save
 	 */
-	public final  void save(List<M> models) {
+	public final void save(List<M> models) {
 		if(models == null) return;
 		for(M model : models) {
 			save(model);
@@ -1333,6 +1346,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * <br> May throw exceptions related to reflection access to fields wrapped in {@link KittyRuntimeException}.
 	 * @param models list of models to delete
 	 */
+	@SuppressWarnings("unused")
 	public final void deleteInTransaction(List<M> models) {
 		delete(TXM_EXCLUSIVE_MODE, models);
 	}
@@ -1344,6 +1358,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @param pk primary key for generating delete condition.
 	 * @return number of affected rows.
 	 */
+	@SuppressWarnings("unused")
 	public long deleteByPK(KittyPrimaryKey pk) {
 		SQLiteCondition condition = getSQLiteConditionForPK(pk);
 		if(condition == null)
@@ -1359,6 +1374,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @param rowid row id
 	 * @return count of affected rows
 	 */
+	@SuppressWarnings("unused")
 	public long deleteByRowID(Long rowid) {
 		SQLiteCondition condition = getRowIDCondition(rowid);
 		if(condition == null)
@@ -1432,6 +1448,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @param parameters only byte[], String, Long and Double are supported in bindArgs.
 	 * @throws SQLException if the SQL string is invalid
 	 */
+	@SuppressWarnings("unused")
 	public final void executeRawQuery(String querySQL, String... parameters) {
 		logQuery(QE_EXECUTE_RAW_QUERY, new KittySQLiteQuery(querySQL, null));
 		database.execSQL(querySQL, parameters);
@@ -1467,16 +1484,6 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	}
 
 	// CLONING IMPLEMENTATIONS
-
-	/**
-	 * Clones blank model associated with this data mapper
-	 * @param modelClass
-	 * @return
-	 */
-	protected M cloneModel(Class<M> modelClass) {
-		return blankModelInstance.clone(modelClass);
-	}
-
 	/**
 	 * Cloning implementation with generic
 	 * @param recordClass
@@ -1484,8 +1491,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @return
 	 */
 	public <D extends KittyMapper> D clone(Class<D> recordClass) {
-		D record = (D) this.clone();
-		return record;
+		return (D) this.clone();
 	}
 
 	/**

@@ -80,6 +80,7 @@ public class KittyTableConfiguration {
 														  Class<? extends KittyModel> modelClass, KittyPrimaryKey kittyPrimaryKey,
 														  boolean isCreateIfNotExists,
 														  KittyArrayKey defaultColumnsInclusionPatternId) {
+		if(modelClass == null) throw new NullPointerException("No model class present");
 		this.schemaName = schemaName;
 		this.tableName = tableName;
 		this.isTemporaryTable = isTemporaryTable;
