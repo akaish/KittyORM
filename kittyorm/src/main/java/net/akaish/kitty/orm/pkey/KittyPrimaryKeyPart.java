@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,19 +47,11 @@ public class KittyPrimaryKeyPart {
         this.affinity = affinity;
     }
 
-    public boolean isColumnValueGeneratedOnInsert() {
-        return isColumnValueGeneratedOnInsert;
-    }
+    public boolean isColumnValueGeneratedOnInsert() { return isColumnValueGeneratedOnInsert; }
 
-    public String getColumnName() {
-        return columnName;
-    }
+    public String getColumnName() { return columnName; }
 
-    public Field getField() {
-        return field;
-    }
+    public Field getField() { return field; }
 
-    public TypeAffinities getAffinity() {
-        return affinity;
-    }
+    public TypeAffinities getAffinity() { return affinity; }
 }

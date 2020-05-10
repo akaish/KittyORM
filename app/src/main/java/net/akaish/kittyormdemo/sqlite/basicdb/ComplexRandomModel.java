@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import android.net.Uri;
 
 import com.google.gson.GsonBuilder;
 
-import net.akaish.kitty.orm.annotations.KITTY_EXTENDED_CRUD;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_SERIALIZATION;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
+import net.akaish.kitty.orm.annotations.CrudController;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.column.SerializationRules;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
 import net.akaish.kitty.orm.enums.TypeAffinities;
 import net.akaish.kitty.orm.util.KittyUtils;
 import net.akaish.kittyormdemo.gsonmodels.AnimalSounds;
@@ -52,8 +52,8 @@ import java.util.Date;
  * Created by akaish on 29.07.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_TABLE
-@KITTY_EXTENDED_CRUD(extendedCrudController = ComplexRandomMapper.class)
+@KittyTable
+@CrudController(extendedCrudController = ComplexRandomMapper.class)
 public class ComplexRandomModel extends AbstractRandomModel {
 
     public ComplexRandomModel() {
@@ -63,64 +63,64 @@ public class ComplexRandomModel extends AbstractRandomModel {
 
     // Primitives
     // (boolean, int, byte, double, long, short, float)
-    @KITTY_COLUMN(columnOrder = 5)
+    @Column(order = 5)
     public boolean boolF;
 
 
-    @KITTY_COLUMN(columnOrder = 6)
+    @Column(order = 6)
     public byte byteF;
 
-    @KITTY_COLUMN(columnOrder = 7)
+    @Column(order = 7)
     public double doubleF;
 
-    @KITTY_COLUMN(columnOrder = 8)
+    @Column(order = 8)
     public long longF;
 
-    @KITTY_COLUMN(columnOrder = 9)
+    @Column(order = 9)
     public short shortF;
 
-    @KITTY_COLUMN(columnOrder = 10)
+    @Column(order = 10)
     public float floatF;
 
     // Byte array
-    @KITTY_COLUMN(columnOrder = 11)
+    @Column(order = 11)
     public byte[] byteArray;
 
     // String (TEXT) (String, BigDecimal, BigInteger, Enum)
-    @KITTY_COLUMN(columnOrder = 12)
+    @Column(order = 12)
     public String stringF;
 
-    @KITTY_COLUMN(columnOrder = 13)
+    @Column(order = 13)
     public BigDecimal bigDecimalF;
 
-    @KITTY_COLUMN(columnOrder = 14)
+    @Column(order = 14)
     public BigInteger bigIntegerF;
 
-    @KITTY_COLUMN(columnOrder = 15)
+    @Column(order = 15)
     public Uri uriF;
 
-    @KITTY_COLUMN(columnOrder = 16)
+    @Column(order = 16)
     public File fileF;
 
-    @KITTY_COLUMN(columnOrder = 17)
+    @Column(order = 17)
     public Currency currencyF;
 
     // SD
-    @KITTY_COLUMN(
-            columnOrder = 18,
-            columnAffinity = TypeAffinities.TEXT
+    @Column(
+            order = 18,
+            affinity = TypeAffinities.TEXT
     )
-    @KITTY_COLUMN_SERIALIZATION
+    @SerializationRules
     public AnimalSounds stringSDF;
 
-    @KITTY_COLUMN(columnOrder = 19)
+    @Column(order = 19)
     public SomeColours bitmapColour;
 
-    @KITTY_COLUMN(
-            columnOrder = 20,
-            columnAffinity = TypeAffinities.BLOB
+    @Column(
+            order = 20,
+            affinity = TypeAffinities.BLOB
     )
-    @KITTY_COLUMN_SERIALIZATION
+    @SerializationRules
     public Bitmap byteArraySDF;
 
     String stringSDFSerialize() {
@@ -148,34 +148,34 @@ public class ComplexRandomModel extends AbstractRandomModel {
     }
 
     // Primitive wrappers Boolean, Integer, Byte, Double, Short or Float
-    @KITTY_COLUMN(columnOrder = 21)
+    @Column(order = 21)
     public Boolean boolFF;
 
 
-    @KITTY_COLUMN(columnOrder = 22)
+    @Column(order = 22)
     public Byte byteFF;
 
-    @KITTY_COLUMN(columnOrder = 23)
+    @Column(order = 23)
     public Double doubleFF;
 
-    @KITTY_COLUMN(columnOrder = 24)
+    @Column(order = 24)
     public Short shortFF;
 
-    @KITTY_COLUMN(columnOrder = 25)
+    @Column(order = 25)
     public Float floatFF;
 
 
     // Long represented types Long, Date, Calendar, Timestamp
-    @KITTY_COLUMN(columnOrder = 26)
+    @Column(order = 26)
     public Long longFF;
 
-    @KITTY_COLUMN(columnOrder = 27)
+    @Column(order = 27)
     public Date dateF;
 
-    @KITTY_COLUMN(columnOrder = 28)
+    @Column(order = 28)
     public Calendar calendarF;
 
-    @KITTY_COLUMN(columnOrder = 29)
+    @Column(order = 29)
     public Timestamp timestampF;
 
     @Override

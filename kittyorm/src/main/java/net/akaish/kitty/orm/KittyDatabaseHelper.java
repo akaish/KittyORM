@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.util.Log;
 
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_HELPER;
 import net.akaish.kitty.orm.configuration.conf.KittyDBHelperConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyDatabaseConfiguration;
 import net.akaish.kitty.orm.dumputils.migrations.KittyDevDropCreateMigrator;
@@ -59,7 +58,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static java.text.MessageFormat.format;
-import static net.akaish.kitty.orm.query.KittyQueryBuilder.QUERY_TYPE.SELECT_TABLE_NAMES;
+import static net.akaish.kitty.orm.query.KittyQueryBuilder.QueryType.SELECT_TABLE_NAMES;
 import static net.akaish.kitty.orm.util.KittyConstants.EMPTY_STRING;
 import static net.akaish.kitty.orm.util.KittyConstants.TYPE_NAME_COLUMN;
 import static net.akaish.kitty.orm.util.KittyLog.LOG_LEVEL.D;
@@ -73,8 +72,8 @@ import static net.akaish.kitty.orm.util.KittyNamingUtils.getDropSchemaDefaultFil
  * Helper implementation to be used with KittyORM with support of database version migrations and with
  * implementation of cloning interface.
  * <br>
- * <br> <b>(!) There is no need to annotate this class or it's child with {@link KITTY_DATABASE_HELPER} annotation.
- * {@link KITTY_DATABASE_HELPER} annotation should be applied only to implementations of {@link KittyDatabase}. </b>
+ * <br> <b>(!) There is no need to annotate this class or it's child with {@link net.akaish.kitty.orm.annotations.KittyDatabaseHelper} annotation.
+ * {@link net.akaish.kitty.orm.annotations.KittyDatabaseHelper} annotation should be applied only to implementations of {@link KittyDatabase}. </b>
  * @author akaish (Denis Bogomolov)
  */
 public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
@@ -151,8 +150,8 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 	 * created or opened until one of {@link #getWritableDatabase} or
 	 * {@link #getReadableDatabase} is called.
 	 * <br>
-	 * <br> <b>(!) There is no need to annotate this class or it's child with {@link KITTY_DATABASE_HELPER} annotation.
-	 * {@link KITTY_DATABASE_HELPER} annotation should be applied only to implementations of {@link KittyDatabase}. </b>
+	 * <br> <b>(!) There is no need to annotate this class or it's child with {@link net.akaish.kitty.orm.annotations.KittyDatabaseHelper} annotation.
+	 * {@link net.akaish.kitty.orm.annotations.KittyDatabaseHelper} annotation should be applied only to implementations of {@link KittyDatabase}. </b>
 	 *
 	 * @param context Android context.
 	 * @param helperCfg KittyORM helper configuration instance.
@@ -179,8 +178,8 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 	 * created or opened until one of {@link #getWritableDatabase} or
 	 * {@link #getReadableDatabase} is called.
 	 * <br>
-	 * <br> <b>(!) There is no need to annotate this class or it's child with {@link KITTY_DATABASE_HELPER} annotation.
-	 * {@link KITTY_DATABASE_HELPER} annotation should be applied only to implementations of {@link KittyDatabase}. </b>
+	 * <br> <b>(!) There is no need to annotate this class or it's child with {@link net.akaish.kitty.orm.annotations.KittyDatabaseHelper} annotation.
+	 * {@link net.akaish.kitty.orm.annotations.KittyDatabaseHelper} annotation should be applied only to implementations of {@link KittyDatabase}. </b>
 	 *
 	 * @param context Android context.
 	 * @param helperCfg KittyORM helper configuration instance.
@@ -436,7 +435,7 @@ public class KittyDatabaseHelper extends SQLiteOpenHelper implements Cloneable {
 	/**
 	 * Called when the database needs to be upgraded. In this implementation it does following things:
 	 * <br> 1) Checking that oldVersion less or equal newVersion, if false that method would return.
-	 * <br> 2) Based on helper configuration defined in {@link KITTY_DATABASE_HELPER}
+	 * <br> 2) Based on helper configuration defined in {@link net.akaish.kitty.orm.annotations.KittyDatabaseHelper}
 	 * starts upgrading routine. If something failed than {@link KittyRuntimeException} would be thrown.
 	 * <br> So, according to {@link KittyDBHelperConfiguration#onUpgradeBehavior} it would
 	 * try to get simple DropCreate migrator with {@link #getDropCreateVersionMigrator(int, int, SQLiteDatabase)}

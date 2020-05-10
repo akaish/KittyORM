@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,13 +41,11 @@ import android.widget.Toast;
 import net.akaish.kitty.orm.CVUtils;
 import net.akaish.kitty.orm.KittyMapper;
 import net.akaish.kitty.orm.pkey.KittyPrimaryKey;
-import net.akaish.kitty.orm.pkey.KittyPrimaryKeyBuilder;
 import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
 import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
 import net.akaish.kitty.orm.enums.SQLiteOperator;
 import net.akaish.kitty.orm.util.KittyLog;
 import net.akaish.kitty.orm.util.KittySchemaColumnDefinition;
-import net.akaish.kitty.orm.util.KittySchemaColumnDefinitionBuilder;
 import net.akaish.kitty.orm.util.KittySchemaDefinition;
 import net.akaish.kitty.orm.util.KittyUtils;
 import net.akaish.kittyormdemo.KittyTutorialActivity;
@@ -66,8 +64,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static java.text.MessageFormat.format;
-import static net.akaish.kitty.orm.util.KittySchemaColumnDefinition.PRAGMA_TYPES.integer;
-import static net.akaish.kitty.orm.util.KittySchemaColumnDefinition.PRAGMA_TYPES.text;
+import static net.akaish.kitty.orm.util.KittySchemaColumnDefinition.PragmaType.integer;
+import static net.akaish.kitty.orm.util.KittySchemaColumnDefinition.PragmaType.text;
 import static net.akaish.kittyormdemo.lessons.LessonsUriConstants.L1_T3_SCHEMA;
 import static net.akaish.kittyormdemo.lessons.LessonsUriConstants.L1_T3_SOURCE;
 import static net.akaish.kittyormdemo.lessons.LessonsUriConstants.L1_T3_TUTORIAL;
@@ -94,9 +92,9 @@ public class Lesson1Tab3ExternalDatabases extends LessonBaseFragment implements 
         if(database == null) {
             KittySchemaDefinition expectedSchema  = new KittySchemaDefinition();
             SparseArray<KittySchemaColumnDefinition> siEx = new SparseArray<>();
-            KittySchemaColumnDefinition siExID = new KittySchemaColumnDefinitionBuilder().setName("id").setPk().setNotNull().setType(integer).build();
-            KittySchemaColumnDefinition siExRanInt = new KittySchemaColumnDefinitionBuilder().setName("random_integer").setType(integer).build();
-            KittySchemaColumnDefinition siExFN = new KittySchemaColumnDefinitionBuilder().setName("first_name").setType(text).build();
+            KittySchemaColumnDefinition siExID = new KittySchemaColumnDefinition.Builder().setName("id").setPk().setNotNull().setType(integer).build();
+            KittySchemaColumnDefinition siExRanInt = new KittySchemaColumnDefinition.Builder().setName("random_integer").setType(integer).build();
+            KittySchemaColumnDefinition siExFN = new KittySchemaColumnDefinition.Builder().setName("first_name").setType(text).build();
             siEx.put(0,siExID);
             siEx.put(1,siExRanInt);
             siEx.put(2,siExFN);
@@ -425,7 +423,7 @@ public class Lesson1Tab3ExternalDatabases extends LessonBaseFragment implements 
             findOperationId++;
             // find with KittyPrimaryKey
             addActionListItem(format(format(getString(R.string._l1_t3_retrieving), "mapper.findByPK", "KittyPrimaryKey [ id = "+marinaFromTableRowid.id, findOperationId)));
-            KittyPrimaryKey pk = new KittyPrimaryKeyBuilder()
+            KittyPrimaryKey pk = new KittyPrimaryKey.Builder()
                     .addKeyColumnValue("id", marinaFromTableRowid.id.toString())
                     .build();
             SimpleExampleModel marinaFromTableKPK = mapper.findByPK(pk);

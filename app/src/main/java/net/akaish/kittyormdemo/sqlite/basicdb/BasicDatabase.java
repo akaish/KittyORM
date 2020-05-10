@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,9 @@ package net.akaish.kittyormdemo.sqlite.basicdb;
 
 import android.content.Context;
 
-import net.akaish.kitty.orm.KittyDatabase;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_REGISTRY;
-import net.akaish.kitty.orm.annotations.KITTY_REGISTRY_PAIR;
+import net.akaish.kitty.orm.annotations.KittyDatabase;
+import net.akaish.kitty.orm.annotations.KittyDatabaseRegistry;
+import net.akaish.kitty.orm.annotations.RegistryPair;
 
 import static net.akaish.kittyormdemo.sqlite.basicdb.BasicDatabase.LOG_TAG;
 
@@ -37,34 +36,28 @@ import static net.akaish.kittyormdemo.sqlite.basicdb.BasicDatabase.LOG_TAG;
  * Created by akaish on 29.07.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_DATABASE(
-        databaseName = "basic_database",
-        domainPackageNames = {"net.akaish.kittyormdemo.sqlite.basicdb"},
+@KittyDatabase(
+        name = "basic_database",
         logTag = LOG_TAG,
         isLoggingOn = true,
         isProductionOn = true,
         isPragmaOn = true
 )
-@KITTY_DATABASE_REGISTRY(
-        domainModels = {
-                ComplexRandomModel.class,
-                IndexesAndConstraintsModel.class,
-                RandomModel.class
-        },
+@KittyDatabaseRegistry(
         domainPairs = {
-                @KITTY_REGISTRY_PAIR(model = ComplexRandomModel.class, mapper = ComplexRandomMapper.class),
-                @KITTY_REGISTRY_PAIR(model = IndexesAndConstraintsModel.class),
-                @KITTY_REGISTRY_PAIR(model = RandomModel.class, mapper = RandomMapper.class)
+                @RegistryPair(model = ComplexRandomModel.class, mapper = ComplexRandomMapper.class),
+                @RegistryPair(model = IndexesAndConstraintsModel.class),
+                @RegistryPair(model = RandomModel.class, mapper = RandomMapper.class)
         }
 )
-public class BasicDatabase extends KittyDatabase {
+public class BasicDatabase extends net.akaish.kitty.orm.KittyDatabase {
 
     public static final String LOG_TAG = "BASIC DB DEMO";
 
     /**
      * KittyORM main database class that represents bootstrap and holder for all related with database
      * components.
-     * <br> See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.
+     * <br> See {@link net.akaish.kitty.orm.KittyDatabase#KittyDatabase(Context, String)} for more info.
      *
      * @param ctx
      */

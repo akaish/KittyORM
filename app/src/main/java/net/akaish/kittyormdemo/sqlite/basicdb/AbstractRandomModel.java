@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 package net.akaish.kittyormdemo.sqlite.basicdb;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
+import net.akaish.kitty.orm.annotations.column.Column;
 import net.akaish.kitty.orm.enums.TypeAffinities;
 import net.akaish.kittyormdemo.sqlite.misc.Animals;
 
@@ -38,32 +38,32 @@ public abstract class AbstractRandomModel extends KittyModel {
     public static final String RND_INTEGER_CNAME = "rnd_int_custom_column_name";
     public static final String RND_ANIMAL_CNAME = "rndanimal";
 
-    @KITTY_COLUMN(
+    @Column(
             isIPK = true,
-            columnOrder = 0
+            order = 0
     )
     public Long id;
 
-    @KITTY_COLUMN(
-            columnOrder = 1
+    @Column(
+            order = 1
     )
     public int randomInt;
 
-    @KITTY_COLUMN(
-            columnOrder = 2,
-            columnName = RND_INTEGER_CNAME
+    @Column(
+            order = 2,
+            name = RND_INTEGER_CNAME
     )
     public Integer randomInteger;
 
-    @KITTY_COLUMN(
-            columnOrder = 3,
-            columnName = RND_ANIMAL_CNAME
+    @Column(
+            order = 3,
+            name = RND_ANIMAL_CNAME
     )
     public Animals randomAnimal;
 
-    @KITTY_COLUMN(
-            columnOrder = 4,
-            columnAffinity = TypeAffinities.TEXT
+    @Column(
+            order = 4,
+            affinity = TypeAffinities.TEXT
     )
     public String randomAnimalName;
 }

@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -160,8 +161,6 @@ public class KittyReflectionUtils {
 		return NULL;
 	}
 
-	private static final String KITTY_RNTE_TO_STRING_NOT_DEFINED = "There is no default mapping to SQLite string defined for java type {0} (KittyORM, KittyReflectionUtils.getSQLiteStringRepresentation(Object object))!";
-
 	public static String getSQLiteStringRepresentation(Object object) {
 		if(object == null) return NULL;
 		Class objClass = object.getClass();
@@ -200,15 +199,35 @@ public class KittyReflectionUtils {
 		} else if (Currency.class.equals(objClass)) {
 			return ((Currency) object).getCurrencyCode();
 		}
-		throw new KittyRuntimeException(format(KITTY_RNTE_TO_STRING_NOT_DEFINED, objClass.getCanonicalName()));
+		throw new KittyRuntimeException(format("There is no default mapping to SQLite string defined for java type {0} (KittyORM, KittyReflectionUtils.getSQLiteStringRepresentation(Object object))!",
+				objClass.getCanonicalName()));
+	}
+
+	/**
+	 * Returns true if parameter class is regular class,
+	 * otherwise - false
+	 * @param cls class to check
+	 * @return true when parameter class is regular class else false
+	 */
+	public static boolean isRegularClass(Class cls) {
+		if (cls.isEnum()) return false;
+		if (cls.isAnnotation()) return false;
+		if (Modifier.isAbstract(cls.getModifiers())) return false;
+		if (cls.isInterface()) return false;
+		if (cls.isArray()) return false;
+		if (cls.isLocalClass()) return false;
+		if (cls.isMemberClass()) return false;
+		if (cls.isAnonymousClass()) return false;
+		if (cls.isPrimitive()) return false;
+		return true;
 	}
 
 	/**
 	 * Returns accessible field of object
-	 * @param obj
-	 * @param fieldName
-	 * @return
-	 * @throws NoSuchFieldException
+	 * @param obj object that contains target field
+	 * @param fieldName object's field name to make it accessible
+	 * @return accessible field of object
+	 * @throws NoSuchFieldException if no field found
 	 */
 	public static Field getField(Object obj, String fieldName) throws NoSuchFieldException {
 		Field field = obj.getClass().getField(fieldName);

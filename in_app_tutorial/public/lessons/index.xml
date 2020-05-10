@@ -8,7 +8,7 @@
     <language>en-us</language>
     <lastBuildDate>Thu, 15 Nov 2018 06:50:21 +0300</lastBuildDate>
     
-	<atom:link href="file:///android_asset/inapptut/lessons/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="file:///android_asset/inapptut/lessons/tableIndex.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -398,7 +398,7 @@ KittyORM is licensed under the Apache License, Version 2.0. To view a copy of th
       <pubDate>Fri, 17 Aug 2018 06:50:21 +0300</pubDate>
       
       <guid>file:///android_asset/inapptut/lessons/l1_code/</guid>
-      <description>Database, model, supporting classes  Click to view SimpleDatabase.class 1package net.akaish.kittyormdemo.sqlite.introductiondb; 2 3import android.content.Context; 4 5import net.akaish.kitty.orm.KittyDatabase; 6import net.akaish.kitty.orm.annotations.KITTY_DATABASE; 7 8/** 9* Created by akaish on 09.08.18. 10*/ 11@KITTY_DATABASE( 12 isLoggingOn = true, 13 isProductionOn = false, 14 domainPackageNames = {&amp;#34;net.akaish.kittyormdemo.sqlite.introductiondb&amp;#34;} 15) 16public class SimpleDatabase extends KittyDatabase { 17 /** 18* KittyORM main database class that represents bootstrap and holder for all related with database 19* components. 20* &amp;lt;br&amp;gt; See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.</description>
+      <description>Database, model, supporting classes  Click to view SimpleDatabase.class 1package net.akaish.kittyormdemo.sqlite.introductiondb; 2 3import android.content.Context; 4 5import net.akaish.kitty.orm.KittyDatabase; 6import net.akaish.kitty.orm.annotations.KittyDatabase; 7 8/** 9* Created by akaish on 09.08.18. 10*/ 11@KITTY_DATABASE( 12 isLoggingOn = true, 13 isProductionOn = false, 14 domainPackageNames = {&amp;#34;net.akaish.kittyormdemo.sqlite.introductiondb&amp;#34;} 15) 16public class SimpleDatabase extends KittyDatabase { 17 /** 18* KittyORM main database class that represents bootstrap and holder for all related with database 19* components. 20* &amp;lt;br&amp;gt; See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.</description>
     </item>
     
     <item>

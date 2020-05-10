@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,31 +26,27 @@ package net.akaish.kittyormdemo.sqlite.external;
 
 import android.content.Context;
 
-import net.akaish.kitty.orm.KittyDatabase;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
-import net.akaish.kitty.orm.util.KittySchemaColumnDefinition;
+import net.akaish.kitty.orm.annotations.KittyDatabase;
 import net.akaish.kitty.orm.util.KittySchemaDefinition;
 
 /**
  * Created by akaish on 09.08.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_DATABASE(
+@KittyDatabase(
         isLoggingOn = true,
         isProductionOn = false,
-        isKittyDexUtilLoggingEnabled = false,
-        domainPackageNames = {"net.akaish.kittyormdemo.sqlite.external"},
         useExternalDatabase = true,
         supportedExternalDatabaseVersionNumbers = {1, 2, 3, 4, 5}
 )
-public class SimpleDatabase extends KittyDatabase {
+public class SimpleDatabase extends net.akaish.kitty.orm.KittyDatabase {
 
 
 
     /**
      * KittyORM main database class that represents bootstrap and holder for all related with database
      * components.
-     * <br> See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.
+     * <br> See {@link net.akaish.kitty.orm.KittyDatabase#KittyDatabase(Context, String)} for more info.
      *
      * @param ctx
      */

@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,42 +24,41 @@
 
 package net.akaish.kittyormdemo.sqlite.migrations.migv2;
 
-import net.akaish.kitty.orm.annotations.FOREIGN_KEY_REFERENCE;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.constraints.FOREIGN_KEY;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
+import net.akaish.kitty.orm.annotations.ForeignKeyReference;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.column.constraints.ForeignKey;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.table.index.INDEX;
-import net.akaish.kitty.orm.annotations.table.index.INDEX_ENTRY;
+import net.akaish.kitty.orm.annotations.table.index.TableIndex;
+import net.akaish.kitty.orm.annotations.table.index.TableIndexEntree;
 import net.akaish.kitty.orm.enums.AscDesc;
 import net.akaish.kitty.orm.enums.OnUpdateDeleteActions;
-import net.akaish.kitty.orm.indexes.Index;
 import net.akaish.kittyormdemo.sqlite.misc.Animals;
 
 /**
  * Created by akaish on 03.10.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_TABLE(
-        tableName = "mig_two"
+@KittyTable(
+        name = "mig_two"
 )
-@INDEX(
-        indexName = "m2_sa_index",
-        indexColumns = {@INDEX_ENTRY(columnName = "some_animal", sortingOrder = AscDesc.DESCENDING)}
+@TableIndex(
+        name = "m2_sa_index",
+        columns = {@TableIndexEntree(name = "some_animal", sortingOrder = AscDesc.DESCENDING)}
 )
 public class MigTwoModel extends KittyModel {
 
-    @KITTY_COLUMN(
-            columnOrder = 0,
+    @Column(
+            order = 0,
             isIPK = true
     )
     public Long id;
 
-    @KITTY_COLUMN(
-            columnOrder = 1
+    @Column(
+            order = 1
     )
-    @FOREIGN_KEY(
-            reference = @FOREIGN_KEY_REFERENCE(
+    @ForeignKey(
+            reference = @ForeignKeyReference(
                     foreignTableName = "mig_one",
                     foreignTableColumns = {"id"},
                     onUpdate = OnUpdateDeleteActions.CASCADE,
@@ -68,8 +67,8 @@ public class MigTwoModel extends KittyModel {
     )
     public Long migOneReference;
 
-    @KITTY_COLUMN(
-            columnOrder = 2
+    @Column(
+            order = 2
     )
     public Animals someAnimal;
 

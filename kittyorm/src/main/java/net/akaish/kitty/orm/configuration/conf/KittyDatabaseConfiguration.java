@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,21 +76,10 @@ public class KittyDatabaseConfiguration<M extends KittyModel, D extends KittyMap
      */
     public final boolean isPragmaON;
 
-    public final boolean isKittyDexUtilLoggingEnabled;
-
     /**
      * Production on (usage of predefined SQL dumps for creating\\upgrading\\dropping tables in databaseClass) flag
      */
     public final boolean isProductionOn;
-
-    /**
-     * Flag, when true and there is no predefined registry in databaseClass class, registry would be automatically created from
-     * application's model classes located in defined packages
-     *
-     * <br> If false and no registry exists than registry would be automatically created from all application's model classes
-     * <br> If registry is defined manually in databaseClass class than this flag would be ignored
-     */
-    public final boolean isGenerateRegistryFromPackage;
 
     /**
      * Defines external filepath that should be used as database file
@@ -111,17 +100,10 @@ public class KittyDatabaseConfiguration<M extends KittyModel, D extends KittyMap
       */
     public final int[] externalDatabaseSupportedVersions;
 
-    /**
-     * Package names where model classes are located
-     */
-    public final String[] mmPackageNames;
 
     public KittyDatabaseConfiguration(List<KittyTableConfiguration> tableConfigurations, String schemaName,
                                       int schemaVersion, boolean isLoggingOn, String logTag,
-                                      boolean isPragmaON, boolean isProductionOn,
-                                      boolean isGenerateRegistryFromPackage,
-                                      String[] mmPackageNames, Map<Class<M>, Class<D>> registry,
-                                      boolean isKittyDexUtilLoggingEnabled,
+                                      boolean isPragmaON, boolean isProductionOn, Map<Class<M>, Class<D>> registry,
                                       String databaseFilePath, boolean useExternalFilepath,
                                       int[] externalDatabaseSupportedVersions) {
         this.tableConfigurations = tableConfigurations;
@@ -131,17 +113,13 @@ public class KittyDatabaseConfiguration<M extends KittyModel, D extends KittyMap
         this.logTag = logTag;
         this.isPragmaON = isPragmaON;
         this.isProductionOn = isProductionOn;
-        this.isGenerateRegistryFromPackage = isGenerateRegistryFromPackage;
-        this.mmPackageNames = mmPackageNames;
         this.registry = registry;
-        this.isKittyDexUtilLoggingEnabled = isKittyDexUtilLoggingEnabled;
         this.databaseFilePath = databaseFilePath;
         this.useExternalFilepath = useExternalFilepath;
         this.externalDatabaseSupportedVersions = externalDatabaseSupportedVersions;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         StringBuilder sb = new StringBuilder(128);
         sb.append("[ schemaName = ").append(schemaName)
                 .append(" ; schemaVersion = ").append(schemaVersion)
@@ -149,9 +127,6 @@ public class KittyDatabaseConfiguration<M extends KittyModel, D extends KittyMap
                 .append(" ; logTag = ").append(logTag)
                 .append(" ; isPragmaOn = ").append(isPragmaON)
                 .append(" ; isProductionOn = ").append(isProductionOn)
-                .append(" ; isGenerateRegistryFromPackage = ").append(isGenerateRegistryFromPackage)
-                .append(" ; mmPackageNames = ").append(KittyUtils.implodeWithCommaInBKT(mmPackageNames))
-                .append(" ; isKittyDexUtilLoggingEnabled = ").append(isKittyDexUtilLoggingEnabled)
                 .append(" ; databaseFilePath = ").append(databaseFilePath)
                 .append(" ; useExternalFilePath = ").append(useExternalFilepath)
                 .append(" ; externalDatabaseSupportedVersions : ").append(supportedExternalDatabaseVersionNumbersString())
@@ -179,5 +154,102 @@ public class KittyDatabaseConfiguration<M extends KittyModel, D extends KittyMap
         }
         sb.append("]");
         return sb.toString();
+    }
+
+    public static class Builder<M extends KittyModel, D extends KittyMapper<M>> {
+
+        private List<KittyTableConfiguration> recordsConfigurations;
+        private String databaseName;
+        private int databaseVersion;
+        private boolean isLoggingOn;
+        private String logTag;
+        private boolean isPragmaON;
+        private boolean isProductionOn;
+        private boolean isGenerateRegistryFromPackage;
+        private String[] mmPackageNames;
+        private Map<Class<M>, Class<D>> registry;
+        private boolean isKittyDexUtilLoggingEnabled;
+
+        private String externalDatabasePath;
+        private boolean useExternalDatabase;
+        private int[] externalSupportedDatabaseVersions;
+
+        public Builder setRecordsConfigurations(List<KittyTableConfiguration> recordsConfigurations) {
+            this.recordsConfigurations = recordsConfigurations;
+            return this;
+        }
+
+        public Builder setDatabaseName(String databaseName) {
+            this.databaseName = databaseName;
+            return this;
+        }
+
+        public Builder setDatabaseVersion(int databaseVersion) {
+            this.databaseVersion = databaseVersion;
+            return this;
+        }
+
+        public Builder setIsLoggingOn(boolean isLoggingOn) {
+            this.isLoggingOn = isLoggingOn;
+            return this;
+        }
+
+        public Builder setLogTag(String logTag) {
+            this.logTag = logTag;
+            return this;
+        }
+
+        public Builder setIsPragmaON(boolean isPragmaON) {
+            this.isPragmaON = isPragmaON;
+            return this;
+        }
+
+        public Builder setIsProductionOn(boolean isProductionOn) {
+            this.isProductionOn = isProductionOn;
+            return this;
+        }
+
+        public Builder setIsGenerateRegistryFromPackage(boolean isGenerateRegistryFromPackage) {
+            this.isGenerateRegistryFromPackage = isGenerateRegistryFromPackage;
+            return this;
+        }
+
+        public Builder setMmPackageNames(String[] mmPackageNames) {
+            this.mmPackageNames = mmPackageNames;
+            return this;
+        }
+
+        public Builder setRegistry(Map<Class<M>, Class<D>> registry) {
+            this.registry = registry;
+            return this;
+        }
+
+        public Builder setIsKittyDexUtilLoggingEnabled(boolean isKittyDexUtilLoggingEnabled) {
+            this.isKittyDexUtilLoggingEnabled = isKittyDexUtilLoggingEnabled;
+            return this;
+        }
+
+        public Builder setExternalDatabaseFilePath(String externalDatabaseFilePath) {
+            this.externalDatabasePath = externalDatabaseFilePath;
+            return this;
+        }
+
+        public Builder setIsUseExternalDatabase(boolean isUseExternalDatabase) {
+            this.useExternalDatabase = isUseExternalDatabase;
+            return this;
+        }
+
+        public Builder setExternalDatabaseSupportedVersions(int[] externalDatabaseSupportedVersions) {
+            this.externalSupportedDatabaseVersions = externalDatabaseSupportedVersions;
+            return this;
+        }
+
+        public KittyDatabaseConfiguration build() {
+            return new KittyDatabaseConfiguration(
+                    recordsConfigurations, databaseName, databaseVersion, isLoggingOn, logTag,
+                    isPragmaON, isProductionOn, registry, externalDatabasePath,
+                    useExternalDatabase, externalSupportedDatabaseVersions
+            );
+        }
     }
 }

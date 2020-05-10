@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.constraints.column;
 
-import net.akaish.kitty.orm.annotations.column.constraints.FOREIGN_KEY;
+import net.akaish.kitty.orm.annotations.column.constraints.ForeignKey;
 import net.akaish.kitty.orm.constraints.ForeignKeyReference;
 
 /**
@@ -41,7 +41,7 @@ public class ForeignKeyColumnConstraint {
         this.foreignKeyReference = foreignKeyReference;
     }
 
-    public ForeignKeyColumnConstraint(FOREIGN_KEY fkrAnnotation) {
+    public ForeignKeyColumnConstraint(ForeignKey fkrAnnotation) {
         this(new ForeignKeyReference(fkrAnnotation.reference()));
     }
 

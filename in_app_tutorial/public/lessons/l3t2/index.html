@@ -38,7 +38,7 @@
 
 <h2 id="defining-data-constraints-and-indexes-with-kittyorm">Defining data constraints and indexes with KittyORM</h2>
 
-<p>KittyORM supports indexes and constraints declaration by using annotations. Right now KittyORM offers you functionality to define seven supported by SQLite constraints without any need to define them in raw SQL code. Also in such way you can define table indexes. KittyORM is capable to define database schema with nearly all features that are supported by SQLite (<a href="https://sqlite.org/lang_createtable.html">SQL As Understood By SQLite</a>) with usage only of annotations. In demo you can play with form for creating and inserting entity that declares all constraints and index.</p>
+<p>KittyORM supports indexes and constraints declaration by using annotations. Right now KittyORM offers you functionality to define seven supported by SQLite constraints without any need to define them in raw SQL code. Also in such way you can define table indexes. KittyORM is capable to define database schema with nearly all features that are supported by SQLite (<a href="https://sqlite.org/lang_createtable.html">SQL As Understood By SQLite</a>) with usage only of annotations. In demo you can play with form for creating and inserting entity that declares all constraints and tableIndex.</p>
 
 <h3 id="table-of-contents">Table of contents</h3>
 
@@ -241,7 +241,7 @@ At <code>@FOREIGN_KEY_REFERENCE</code> annotation you have to specify reference 
 
 <h3 id="indexes-declaration">Indexes declaration</h3>
 
-<p>In KittyORM indexes declarations stored at same POJO classes that are used for schema generation. To declare an index just annotate model implementation with columns that would be indexed with <code>@INDEX</code> annotation and set <code>@INDEX.indexColumns</code> with array of those indexed columns or in case when there is only one indexed column for one index declaration just annotate corresponding nodel implementation field with <code>@ONE_COLUMN_INDEX</code>. Example:</p>
+<p>In KittyORM indexes declarations stored at same POJO classes that are used for schema generation. To declare an tableIndex just annotate model implementation with columns that would be indexed with <code>@INDEX</code> annotation and set <code>@INDEX.indexColumns</code> with array of those indexed columns or in case when there is only one indexed column for one tableIndex declaration just annotate corresponding nodel implementation field with <code>@ONE_COLUMN_INDEX</code>. Example:</p>
 
 <ol>
 <li><p>Index declaration with <code>@INDEX</code> annotation:
@@ -256,7 +256,7 @@ At <code>@FOREIGN_KEY_REFERENCE</code> annotation you have to specify reference 
 <span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
 <span class="ln">10</span>        <span class="o">)</span>
 <span class="ln">11</span><span class="o">)</span>
-<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span> <span class="c1">// index declaration
+<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span> <span class="c1">// tableIndex declaration
 </span><span class="ln">13</span><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
 <span class="ln">14</span>    <span class="o">...</span>
 <span class="ln">15</span>
@@ -289,8 +289,8 @@ At <code>@FOREIGN_KEY_REFERENCE</code> annotation you have to specify reference 
 <span class="ln">16</span><span class="o">}</span></code></pre></div></p></li>
 </ol>
 
-<p>For both <code>@INDEX</code> and <code>@ONE_COLUMN_INDEX</code> index declaration you can specify index uniqueness (<code>@INDEX.unique</code> and <code>@ONE_COLUMN_INDEX.unique</code> fields), <code>IF NOT EXISTS</code> flag (<code>@INDEX.ifNotExists</code> and <code>@ONE_COLUMN_INDEX.ifNotExists</code> fields), where expression (<code>@INDEX.whereExpression</code> and <code>@ONE_COLUMN_INDEX.whereExpression</code> fields) and index name (<code>@INDEX.indexName</code> and <code>@ONE_COLUMN_INDEX.indexName</code> fields).<br />
-If you need more than one index declaration with more than one indexed columns than annotate model implementation with <code>@INDEX_ARRAY</code> annotation and define your indexes there.</p>
+<p>For both <code>@INDEX</code> and <code>@ONE_COLUMN_INDEX</code> tableIndex declaration you can specify tableIndex uniqueness (<code>@INDEX.unique</code> and <code>@ONE_COLUMN_INDEX.unique</code> fields), <code>IF NOT EXISTS</code> flag (<code>@INDEX.ifNotExists</code> and <code>@ONE_COLUMN_INDEX.ifNotExists</code> fields), where expression (<code>@INDEX.whereExpression</code> and <code>@ONE_COLUMN_INDEX.whereExpression</code> fields) and tableIndex name (<code>@INDEX.indexName</code> and <code>@ONE_COLUMN_INDEX.indexName</code> fields).<br />
+If you need more than one tableIndex declaration with more than one indexed columns than annotate model implementation with <code>@INDEX_ARRAY</code> annotation and define your indexes there.</p>
 
 <p><a href="#table-of-contents">Back to table of contents ^</a></p>
 

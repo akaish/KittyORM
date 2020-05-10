@@ -45,7 +45,7 @@
 <span class="ln"> 3</span><span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
 <span class="ln"> 4</span>
 <span class="ln"> 5</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.KittyDatabase</span><span class="o">;</span>
-<span class="ln"> 6</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.KITTY_DATABASE</span><span class="o">;</span>
+<span class="ln"> 6</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.KittyDatabase</span><span class="o">;</span>
 <span class="ln"> 7</span>
 <span class="ln"> 8</span><span class="cm">/**
 </span><span class="ln"> 9</span><span class="cm"> * Created by akaish on 09.08.18.
@@ -74,8 +74,8 @@
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="kn">package</span> <span class="nn">net.akaish.kittyormdemo.sqlite.introductiondb</span><span class="o">;</span>
 <span class="ln"> 2</span>
 <span class="ln"> 3</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.KittyModel</span><span class="o">;</span>
-<span class="ln"> 4</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.column.KITTY_COLUMN</span><span class="o">;</span>
-<span class="ln"> 5</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.table.KITTY_TABLE</span><span class="o">;</span>
+<span class="ln"> 4</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.column.Column</span><span class="o">;</span>
+<span class="ln"> 5</span><span class="kn">import</span> <span class="nn">net.akaish.kitty.orm.annotations.table.KittyTable</span><span class="o">;</span>
 <span class="ln"> 6</span>
 <span class="ln"> 7</span><span class="nd">@KITTY_TABLE</span>
 <span class="ln"> 8</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleExampleModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>

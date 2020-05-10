@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.constraints.column;
 
-import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
+import net.akaish.kitty.orm.annotations.column.constraints.NotNull;
 import net.akaish.kitty.orm.enums.ConflictClauses;
 
 import static net.akaish.kitty.orm.enums.Keywords.NOT;
@@ -49,7 +49,7 @@ public class NotNullColumnConstraint {
         }
     }
 
-    public NotNullColumnConstraint(NOT_NULL nnAnnotation) {
+    public NotNullColumnConstraint(NotNull nnAnnotation) {
         this(nnAnnotation.onConflict());
     }
 

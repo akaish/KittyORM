@@ -81,7 +81,7 @@ package net.akaish.kittyormdemo.sqlite.introductiondb;
 import android.content.Context;
 
 import net.akaish.kitty.orm.KittyDatabase;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
+import net.akaish.kitty.orm.annotations.KittyDatabase;
 
 @KITTY_DATABASE(
         domainPackageNames = {"net.akaish.kittyormdemo.sqlite.introductiondb"}
@@ -100,8 +100,8 @@ public class SimpleDatabase extends KittyDatabase {
 package net.akaish.kittyormdemo.sqlite.introductiondb;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
 
 @KITTY_TABLE
 public class SimpleExampleModel extends KittyModel {

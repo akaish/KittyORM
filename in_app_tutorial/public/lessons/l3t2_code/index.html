@@ -166,7 +166,7 @@
 </details></p></li>
 
 <li><p><details>
-<summary>Click to view index declaration examples: </summary>
+<summary>Click to view tableIndex declaration examples: </summary>
 <div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="ln"> 1</span><span class="nd">@KITTY_TABLE</span><span class="o">(</span><span class="n">tableName</span> <span class="o">=</span> <span class="s">&#34;cai&#34;</span><span class="o">)</span>
 <span class="ln"> 2</span><span class="nd">@FOREIGN_KEY_T</span><span class="o">(</span>
 <span class="ln"> 3</span>        <span class="n">name</span> <span class="o">=</span> <span class="s">&#34;CAI_FK&#34;</span><span class="o">,</span>
@@ -178,7 +178,7 @@
 <span class="ln"> 9</span>                <span class="n">onDelete</span> <span class="o">=</span> <span class="n">OnUpdateDeleteActions</span><span class="o">.</span><span class="na">CASCADE</span>
 <span class="ln">10</span>        <span class="o">)</span>
 <span class="ln">11</span><span class="o">)</span>
-<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span> <span class="c1">// index declaration
+<span class="ln">12</span><span class="nd">@INDEX</span><span class="o">(</span><span class="n">indexColumns</span> <span class="o">=</span> <span class="o">{</span><span class="s">&#34;creation_date&#34;</span><span class="o">})</span> <span class="c1">// tableIndex declaration
 </span><span class="ln">13</span><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IndexesAndConstraintsModel</span> <span class="kd">extends</span> <span class="n">KittyModel</span> <span class="o">{</span>
 <span class="ln">14</span>    <span class="o">...</span>
 <span class="ln">15</span>

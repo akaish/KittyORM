@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import net.akaish.kitty.orm.enums.TypeAffinities;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -111,5 +112,48 @@ public class KittyPrimaryKey {
             }
         }
         return false;
+    }
+
+    public static class Builder {
+        private HashMap<String, String> primaryKeyColumnValues = new HashMap<>();
+        private HashMap<String, KittyPrimaryKeyPart> primaryKeyColumnKeyParts = new HashMap<>();
+        private String databaseName;
+        private String tableName;
+        private Class<? extends KittyModel> modelClass;
+
+        public Builder addKeyColumnValue(String pkeyColumn, String pkeyValue) {
+            primaryKeyColumnValues.put(pkeyColumn, pkeyValue);
+            return this;
+        }
+
+        public Builder addPKeyPart(String pkeyColumnName, KittyPrimaryKeyPart pkeyPart) {
+            primaryKeyColumnKeyParts.put(pkeyColumnName, pkeyPart);
+            return this;
+        }
+
+        public Builder setDatabaseName(String databaseName) {
+            this.databaseName = databaseName;
+            return this;
+        }
+
+        public Builder setTableName(String tableName) {
+            this.tableName = tableName;
+            return this;
+        }
+
+        public Builder setModelClass(Class<? extends KittyModel> modelClass) {
+            this.modelClass = modelClass;
+            return this;
+        }
+
+        public KittyPrimaryKey build() {
+            return new KittyPrimaryKey(
+                    primaryKeyColumnValues,
+                    primaryKeyColumnKeyParts,
+                    tableName,
+                    databaseName,
+                    modelClass
+            );
+        }
     }
 }

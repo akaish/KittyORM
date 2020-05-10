@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,17 +49,12 @@ public enum TypeAffinities {
 
     private final String sqlText;
 
-    TypeAffinities(String sqlTextRep) {
-        sqlText = sqlTextRep;
-    }
+    TypeAffinities(String sqlTextRep) { sqlText = sqlTextRep; }
 
     public boolean equalsName(String sqlText) {
         // (otherName == null) check is not needed because name.equals(null) returns false
         return this.sqlText.equals(sqlText);
     }
 
-    @Override
-    public String toString() {
-        return this.sqlText;
-    }
+    @Override public String toString() { return this.sqlText; }
 }

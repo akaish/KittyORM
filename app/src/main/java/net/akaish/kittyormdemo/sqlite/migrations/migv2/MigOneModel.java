@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,11 +28,11 @@ package net.akaish.kittyormdemo.sqlite.migrations.migv2;
  * Created by akaish on 03.10.18.
  */
 
-import net.akaish.kitty.orm.annotations.column.ONE_COLUMN_INDEX;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.constraints.DEFAULT;
-import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.column.SingleColumnIndex;
+import net.akaish.kitty.orm.annotations.column.constraints.Default;
+import net.akaish.kitty.orm.annotations.column.constraints.NotNull;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
 import net.akaish.kitty.orm.KittyModel;
 import net.akaish.kitty.orm.enums.LiteralValues;
 
@@ -42,26 +42,26 @@ import java.sql.Timestamp;
  * Created by akaish on 03.10.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_TABLE(
-        tableName = "mig_one"
+@KittyTable(
+        name = "mig_one"
 )
 public class MigOneModel extends KittyModel {
-    @KITTY_COLUMN(
-            columnOrder = 0,
+    @Column(
+            order = 0,
             isIPK = true)
     public Long id;
 
-    @KITTY_COLUMN(columnOrder = 1)
-    @NOT_NULL
-    @DEFAULT(predefinedLiteralValue = LiteralValues.CURRENT_DATE)
+    @Column(order = 1)
+    @NotNull
+    @Default(predefinedLiteralValue = LiteralValues.CURRENT_DATE)
     public String creationDate;
 
-    @KITTY_COLUMN(columnOrder = 2)
-    @DEFAULT(signedInteger = 228)
-    @ONE_COLUMN_INDEX(indexName = "m1_di_index")
+    @Column(order = 2)
+    @Default(signedInteger = 228)
+    @SingleColumnIndex(name = "m1_di_index")
     public Integer defaultInteger;
 
-    @KITTY_COLUMN(columnOrder = 3)
+    @Column(order = 3)
     public Timestamp currentTimestamp;
 
     public String toString() {

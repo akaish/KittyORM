@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ package net.akaish.kitty.orm;
 import android.content.ContentValues;
 import android.net.Uri;
 
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
+import net.akaish.kitty.orm.annotations.column.Column;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyTableConfiguration;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
@@ -66,7 +66,7 @@ public class CVUtils {
     /**
      * Generates {@link ContentValues} instance from provided instance of {@link KittyModel} with usage
      * of {@link KittyTableConfiguration} configuration. Also may throw some exceptions related with reflection access to
-     * field of provided model and {@link KittyRuntimeException} if there are some errors with {@link KITTY_COLUMN} implementation.
+     * field of provided model and {@link KittyRuntimeException} if there are some errors with {@link Column} implementation.
      *
      * @param model instance of {@link KittyModel}
      * @param table table configuration
@@ -88,13 +88,10 @@ public class CVUtils {
             throws IllegalAccessException, IllegalArgumentException, NoSuchFieldException,
             NoSuchMethodException, InvocationTargetException {
         ContentValues values = new ContentValues();
-        Iterator<KittyColumnConfiguration> iterator = table.sortedColumns.iterator();
-        while (iterator.hasNext()) {
-            KittyColumnConfiguration column = iterator.next();
-            if(skipInclusionsExclusions(names, skipOrInclude, column)) continue;
+        for (KittyColumnConfiguration column : table.sortedColumns) {
+            if (skipInclusionsExclusions(names, skipOrInclude, column)) continue;
             if (column.sdConfiguration != null) {
                 values = putSDToCV(model, values, column);
-                continue;
             } else {
                 Class<?> fieldType = column.mainConfiguration.columnField.getType();
                 Field columnField = column.mainConfiguration.columnField;
@@ -105,7 +102,7 @@ public class CVUtils {
                     values = setLongToCV(fieldType, values, model, columnField, column);
                 } else if (isStringRepresentedType(fieldType)) {
                     values = setStringsToCV(fieldType, values, model, columnField, column);
-                } else if (isDefaultTypeRepresentedType(fieldType)){
+                } else if (isDefaultTypeRepresentedType(fieldType)) {
                     values = setDefTypesToCV(fieldType, values, model, columnField, column);
                 } else {
                     throw new KittyRuntimeException(MessageFormat.format(AME_NO_SD_MCV,

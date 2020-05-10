@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,6 @@ public class KittySQLiteAssetsFileDumpScript extends KittySQLiteDumpScript {
 
         try {
             LinkedList<String> sqlScript = KittyUtils.readFileFromAssetsToLinkedList(ctx, (String) params[0]);
-            if (sqlScript == null) return null;
             if (sqlScript.size() == 0) return null;
             LinkedList<KittySQLiteQuery> outQueries = new LinkedList<>();
             Iterator<String> queryIterator = sqlScript.iterator();

@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 package net.akaish.kitty.orm.query.conditions;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
+import net.akaish.kitty.orm.annotations.column.Column;
 import net.akaish.kitty.orm.enums.SQLiteOperator;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import net.akaish.kitty.orm.util.KittyReflectionUtils;
@@ -67,10 +67,10 @@ public class SQLiteConditionBuilder {
 	}
 	
 	/**
-	 * Adds column name associated with fieldName via {@link KITTY_COLUMN} annotation
+	 * Adds column name associated with fieldName via {@link Column} annotation
 	 * May throw {@link KittyRuntimeException}, which is just runtime exception,
 	 * if provided fieldName doesn't exists in provided modelClass or if
-	 * provided fieldName doesn't described with {@link KITTY_COLUMN} annotation
+	 * provided fieldName doesn't described with {@link Column} annotation
 	 * @param fieldName
 	 * @param modelClass
 	 * @return
@@ -80,12 +80,12 @@ public class SQLiteConditionBuilder {
 		try {
 			Field field = modelClass.getField(fieldName);
 			field.setAccessible(true);
-			if(!field.isAnnotationPresent(KITTY_COLUMN.class)) {
+			if(!field.isAnnotationPresent(Column.class)) {
 				throw new KittyRuntimeException("There is no KITTY_COLUMN annotation present for field with name "
 						+fieldName+" at modelClass class "+modelClass.getCanonicalName());
 			}
 			if(condition.length()!=0) condition.append(WHITESPACE);
-			String columnName = field.getAnnotation(KITTY_COLUMN.class).columnName();
+			String columnName = field.getAnnotation(Column.class).name();
 			if(columnName.equals(EMPTY_STRING))
 				columnName = fieldNameToLowerCaseUnderScore(fieldName);
 			condition.append(columnName);
@@ -148,7 +148,7 @@ public class SQLiteConditionBuilder {
 	
 	/**
 	 * Adds column name to condition (e.g. ), if you want to use Java variables described
-	 * with {@link KITTY_COLUMN}, use {@link SQLiteConditionBuilder#addField(String, Class)} instead
+	 * with {@link Column}, use {@link SQLiteConditionBuilder#addField(String, Class)} instead
 	 * @param columnName
 	 * @return
 	 */
@@ -344,7 +344,6 @@ public class SQLiteConditionBuilder {
 			StringBuilder rebuildCondition = new StringBuilder();
 			for(String part : parts) {
 				String trimmedPart = part.trim();
-				if(trimmedPart == null) continue;
 				if(trimmedPart.equals(WHSP_STR)) continue;
 				if(trimmedPart.equals(EMPTY_STRING)) continue;
 				if(rebuildCondition.length() > 0) rebuildCondition.append(WHITESPACE);
@@ -356,11 +355,11 @@ public class SQLiteConditionBuilder {
 					try {
 						Field field = modelClass.getField(fieldName);
 						field.setAccessible(true);
-						if(!field.isAnnotationPresent(KITTY_COLUMN.class)) {
+						if(!field.isAnnotationPresent(Column.class)) {
 							throw new KittyRuntimeException("There is no KITTY_COLUMN annotation present for field with name "
 									+fieldName+" at modelClass class "+modelClass.getCanonicalName());
 						}
-						String columnName = field.getAnnotation(KITTY_COLUMN.class).columnName();
+						String columnName = field.getAnnotation(Column.class).name();
 						if(columnName.equals(EMPTY_STRING)) {
 							columnName = fieldNameToLowerCaseUnderScore(fieldName);
 						}

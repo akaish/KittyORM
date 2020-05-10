@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,6 @@ public class KittyColumnMainConfiguration {
     public final TypeAffinities columnAffinity;
     public final Field columnField;
     public final boolean isIPK;
-    public final boolean autoincrement;
 
     public final DefaultColumnConstraint defaultConstraint;
     public final CheckColumnConstraint checkConstraint;
@@ -67,8 +66,7 @@ public class KittyColumnMainConfiguration {
                                         UniqueColumnConstraint uniqueColumnConstraint,
                                         CollationColumnConstraint collationColumnConstraint,
                                         PrimaryKeyColumnConstraint primaryKeyColumnConstraint,
-                                        ForeignKeyColumnConstraint foreignKeyColumnConstraint,
-                                        boolean autoincrement) {
+                                        ForeignKeyColumnConstraint foreignKeyColumnConstraint) {
         this.columnName = columnName;
         this.columnAffinity = columnAffinity;
         this.columnField = columnField;
@@ -82,6 +80,5 @@ public class KittyColumnMainConfiguration {
         this.collationColumnConstraint = collationColumnConstraint;
         this.primaryKeyColumnConstraint = primaryKeyColumnConstraint;
         this.foreignKeyColumnConstraint = foreignKeyColumnConstraint;
-        this.autoincrement = autoincrement;
     }
 }

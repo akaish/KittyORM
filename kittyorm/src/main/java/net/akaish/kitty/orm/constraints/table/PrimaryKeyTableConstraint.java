@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.constraints.table;
 
-import net.akaish.kitty.orm.annotations.table.constraints.PRIMARY_KEY_T;
+import net.akaish.kitty.orm.annotations.table.constraints.TablePrimaryKey;
 import net.akaish.kitty.orm.enums.ConflictClauses;
 import net.akaish.kitty.orm.enums.Keywords;
 
@@ -49,7 +49,7 @@ public class PrimaryKeyTableConstraint extends TableConstraint {
             onConflict = conflictClauses.toString();
     }
 
-    public PrimaryKeyTableConstraint(PRIMARY_KEY_T pkTAnnotation) {
+    public PrimaryKeyTableConstraint(TablePrimaryKey pkTAnnotation) {
         this(pkTAnnotation.name().length() == 0 ? null : pkTAnnotation.name(), pkTAnnotation.onConflict(), pkTAnnotation.columns());
     }
 

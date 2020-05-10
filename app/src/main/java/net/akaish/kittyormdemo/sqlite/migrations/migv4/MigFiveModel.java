@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,44 +25,43 @@
 package net.akaish.kittyormdemo.sqlite.migrations.migv4;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.constraints.DEFAULT;
-import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
-import net.akaish.kitty.orm.annotations.column.constraints.PRIMARY_KEY;
-import net.akaish.kitty.orm.annotations.column.constraints.UNIQUE;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
-import net.akaish.kitty.orm.annotations.table.constraints.PRIMARY_KEY_T;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.column.constraints.Default;
+import net.akaish.kitty.orm.annotations.column.constraints.NotNull;
+import net.akaish.kitty.orm.annotations.column.constraints.Unique;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
+import net.akaish.kitty.orm.annotations.table.constraints.TablePrimaryKey;
 
 /**
  * Created by akaish on 30.10.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_TABLE(tableName = "mig_five_test_complex_pk")
-@PRIMARY_KEY_T(
+@KittyTable(name = "mig_five_test_complex_pk")
+@TablePrimaryKey(
         name = "ff_complex_pk",
         columns = {"ipk", "ipk_str"}
 )
 public class MigFiveModel extends KittyModel {
 
-    @KITTY_COLUMN(
-            columnOrder = 0,
+    @Column(
+            order = 0,
             isValueGeneratedOnInsert = true
     )
-    @NOT_NULL
+    @NotNull
     public Long ipk;
 
-    @KITTY_COLUMN(
-            columnOrder = 1,
+    @Column(
+            order = 1,
             isValueGeneratedOnInsert = false,
-            columnName = "ipk_str"
+            name = "ipk_str"
     )
-    @UNIQUE
+    @Unique
     public String ipkUniqueString;
 
-    @KITTY_COLUMN(
-            columnOrder = 2
+    @Column(
+            order = 2
     )
-    @DEFAULT(literalValue = "'Default string'")
+    @Default(literalValue = "'Default string'")
     public String someStr;
 
     public String toString() {

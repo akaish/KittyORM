@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,9 @@ package net.akaish.kittyormdemo.sqlite.migrations.migv4;
 import com.google.gson.GsonBuilder;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.FOREIGN_KEY_REFERENCE;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_SERIALIZATION;
-import net.akaish.kitty.orm.annotations.column.constraints.FOREIGN_KEY;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
-import net.akaish.kitty.orm.enums.OnUpdateDeleteActions;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.column.SerializationRules;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
 import net.akaish.kitty.orm.enums.TypeAffinities;
 import net.akaish.kittyormdemo.gsonmodels.AnimalSounds;
 import net.akaish.kittyormdemo.sqlite.misc.Animals;
@@ -42,30 +39,30 @@ import net.akaish.kittyormdemo.sqlite.misc.Animals;
  * @author akaish (Denis Bogomolov)
  */
 
-@KITTY_TABLE(
-        tableName = "mig_two"
+@KittyTable(
+        name = "mig_two"
 )
 public class MigTwoModel extends KittyModel {
 
-    @KITTY_COLUMN(
-            columnOrder = 0,
+    @Column(
+            order = 0,
             isIPK = true
     )
     public Long id;
 
-    @KITTY_COLUMN(
-            columnOrder = 1
+    @Column(
+            order = 1
     )
     public Long migOneReference;
 
-    @KITTY_COLUMN(columnOrder = 2)
+    @Column(order = 2)
     public Animals someAnimal;
 
-    @KITTY_COLUMN(
-            columnOrder = 3,
-            columnAffinity = TypeAffinities.TEXT
+    @Column(
+            order = 3,
+            affinity = TypeAffinities.TEXT
     )
-    @KITTY_COLUMN_SERIALIZATION
+    @SerializationRules
     public AnimalSounds someAnimalSound;
 
     String someAnimalSoundSerialize() {

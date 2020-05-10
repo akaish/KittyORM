@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.constraints.column;
 
-import net.akaish.kitty.orm.annotations.column.constraints.CHECK;
+import net.akaish.kitty.orm.annotations.column.constraints.Check;
 import net.akaish.kitty.orm.enums.Keywords;
 
 import static net.akaish.kitty.orm.util.KittyConstants.LEFT_BKT;
@@ -44,7 +44,7 @@ public class CheckColumnConstraint {
         this.checkExpression = checkExpression;
     }
 
-    public CheckColumnConstraint(CHECK checkAnnotation) {
+    public CheckColumnConstraint(Check checkAnnotation) {
         this.checkExpression = checkAnnotation.checkExpression();
     }
 

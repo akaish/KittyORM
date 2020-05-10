@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,28 +25,28 @@
 package net.akaish.kittyormdemo.sqlite.introductiondb;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
 
 /**
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_TABLE
+@KittyTable
 public class SimpleExampleModel extends KittyModel {
     public SimpleExampleModel() {
         super();
     }
 
-    @KITTY_COLUMN(
+    @Column(
             isIPK = true,
-            columnOrder = 0
+            order = 0
     )
     public Long id;
 
-    @KITTY_COLUMN(columnOrder = 1)
+    @Column(order = 1)
     public int randomInteger;
 
-    @KITTY_COLUMN(columnOrder = 2)
+    @Column(order = 2)
     public String firstName;
 
     @Override

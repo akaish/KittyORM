@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,18 +25,18 @@
 package net.akaish.kittyormdemo.sqlite.basicdb;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.FOREIGN_KEY_REFERENCE;
-import net.akaish.kitty.orm.annotations.column.ONE_COLUMN_INDEX;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.constraints.CHECK;
-import net.akaish.kitty.orm.annotations.column.constraints.DEFAULT;
-import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
-import net.akaish.kitty.orm.annotations.column.constraints.PRIMARY_KEY;
-import net.akaish.kitty.orm.annotations.column.constraints.UNIQUE;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
-import net.akaish.kitty.orm.annotations.table.constraints.FOREIGN_KEY_T;
-import net.akaish.kitty.orm.annotations.table.index.INDEX;
-import net.akaish.kitty.orm.annotations.table.index.INDEX_ENTRY;
+import net.akaish.kitty.orm.annotations.ForeignKeyReference;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.column.SingleColumnIndex;
+import net.akaish.kitty.orm.annotations.column.constraints.Check;
+import net.akaish.kitty.orm.annotations.column.constraints.Default;
+import net.akaish.kitty.orm.annotations.column.constraints.NotNull;
+import net.akaish.kitty.orm.annotations.column.constraints.PrimaryKey;
+import net.akaish.kitty.orm.annotations.column.constraints.Unique;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
+import net.akaish.kitty.orm.annotations.table.constraints.TableForeignKey;
+import net.akaish.kitty.orm.annotations.table.index.TableIndex;
+import net.akaish.kitty.orm.annotations.table.index.TableIndexEntree;
 import net.akaish.kitty.orm.enums.LiteralValues;
 import net.akaish.kitty.orm.enums.OnUpdateDeleteActions;
 import net.akaish.kittyormdemo.sqlite.misc.Animals;
@@ -47,53 +47,53 @@ import java.sql.Timestamp;
  * Created by akaish on 25.08.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_TABLE(tableName = "cai")
-@FOREIGN_KEY_T(
+@KittyTable(name = "cai")
+@TableForeignKey(
         name = "CAI_FK",
         columns = {IndexesAndConstraintsModel.RANDOM_ID_CNAME},
-        reference = @FOREIGN_KEY_REFERENCE(
+        reference = @ForeignKeyReference(
                 foreignTableName = "random",
                 foreignTableColumns = {"id"},
                 onUpdate = OnUpdateDeleteActions.CASCADE,
                 onDelete = OnUpdateDeleteActions.CASCADE
         )
 )
-@INDEX(indexColumns = {@INDEX_ENTRY(columnName = "creation_date")})
+@TableIndex(columns = {@TableIndexEntree(name = "creation_date")})
 public class IndexesAndConstraintsModel extends KittyModel {
     static final String RANDOM_ID_CNAME = "rnd_id";
 
-    @KITTY_COLUMN(columnOrder = 0)
-    @PRIMARY_KEY
-    @NOT_NULL
+    @Column(order = 0)
+    @PrimaryKey
+    @NotNull
     public Long id;
 
-    @KITTY_COLUMN(columnOrder = 1)
-    @NOT_NULL
-    @UNIQUE
+    @Column(order = 1)
+    @NotNull
+    @Unique
     public Long rndId;
 
-    @KITTY_COLUMN(columnOrder = 2)
-    @CHECK(checkExpression = "animal IN (\"CAT\", \"TIGER\", \"LION\")") // only cats allowed to this party
+    @Column(order = 2)
+    @Check(checkExpression = "animal IN (\"CAT\", \"TIGER\", \"LION\")") // only cats allowed to this party
     public Animals animal;
 
-    @KITTY_COLUMN(columnOrder = 3)
-    @DEFAULT(signedInteger = 28) // You can choose for options for default declaration, if nothing set than 0 value would be used
-    @NOT_NULL
+    @Column(order = 3)
+    @Default(signedInteger = 28) // You can choose for options for default declaration, if nothing set than 0 value would be used
+    @NotNull
     public Integer defaultNumber;
 
-    @KITTY_COLUMN(columnOrder = 4)
-    @DEFAULT(
+    @Column(order = 4)
+    @Default(
             predefinedLiteralValue = LiteralValues.CURRENT_DATE
     )
-    @NOT_NULL
+    @NotNull
     public String creationDate;
 
-    @KITTY_COLUMN(columnOrder = 5)
-    @DEFAULT(
+    @Column(order = 5)
+    @Default(
             predefinedLiteralValue = LiteralValues.CURRENT_TIMESTAMP
     )
-    @ONE_COLUMN_INDEX(unique = true, indexName = "IAC_unique_index_creation_timestamp")
-    @NOT_NULL
+    @SingleColumnIndex(unique = true, name = "IAC_unique_index_creation_timestamp")
+    @NotNull
     public Timestamp creationTmstmp;
 
     @Override

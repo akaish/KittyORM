@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.constraints.column;
 
-import net.akaish.kitty.orm.annotations.column.constraints.DEFAULT;
+import net.akaish.kitty.orm.annotations.column.constraints.Default;
 import net.akaish.kitty.orm.enums.Keywords;
 import net.akaish.kitty.orm.enums.LiteralValues;
 
@@ -50,22 +50,22 @@ public class DefaultColumnConstraint {
     /**
      * <br> Configurator would parse this annotation in following order:
      *
-     * <br>Fetching {@link DEFAULT#expression()}, if not set (default value) than
+     * <br>Fetching {@link Default#expression()}, if not set (default value) than
      * next step, otherwise creating DEFAULT constraint with this expression.
      *
-     * <br>Fetching {@link DEFAULT#literalValue()}, if not set (default value)
+     * <br>Fetching {@link Default#literalValue()}, if not set (default value)
      * than next step, otherwise creating DEFAULT constraint with this value.
      *
-     * <br>Fetching {@link DEFAULT#predefinedLiteralValue()}, if not set
+     * <br>Fetching {@link Default#predefinedLiteralValue()}, if not set
      * (default value) than next step, otherwise using one of predefined literals such as TRUE or
      * CURRENT_DATE defined in {@link LiteralValues}.
      *
-     * <br>Fetching {@link DEFAULT#signedInteger()}, if not set than would be
+     * <br>Fetching {@link Default#signedInteger()}, if not set than would be
      * created DEFAULT constraint with value 0 (DEFAULT 0)
      *
      * @param defaultAnnotation annotation to process
      */
-    public DefaultColumnConstraint(DEFAULT defaultAnnotation) {
+    public DefaultColumnConstraint(Default defaultAnnotation) {
         if(defaultAnnotation.expression().length() != 0) {
             isExpression = true;
             defaultText = defaultAnnotation.expression();

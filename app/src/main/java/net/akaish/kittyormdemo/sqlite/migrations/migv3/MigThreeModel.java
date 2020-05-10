@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,29 +25,29 @@
 package net.akaish.kittyormdemo.sqlite.migrations.migv3;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.constraints.DEFAULT;
-import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.column.constraints.Default;
+import net.akaish.kitty.orm.annotations.column.constraints.NotNull;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
 
 /**
  * Created by akaish on 06.10.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_TABLE(tableName = "mig_three")
+@KittyTable(name = "mig_three")
 public class MigThreeModel extends KittyModel {
 
-    @KITTY_COLUMN(
-            columnOrder = 0,
+    @Column(
+            order = 0,
             isIPK = true
     )
     public Long id;
 
-    @KITTY_COLUMN(
-            columnOrder = 1
+    @Column(
+            order = 1
     )
-    @NOT_NULL
-    @DEFAULT(
+    @NotNull
+    @Default(
             literalValue = "\'Something random\'"
     )
     public String someValue;

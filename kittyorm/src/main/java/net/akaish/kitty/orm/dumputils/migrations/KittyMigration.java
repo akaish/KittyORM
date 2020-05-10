@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,27 +51,15 @@ public class KittyMigration {
         this.databaseName = databaseName;
     }
 
-    public String getDatabaseName() {
-        return databaseName;
-    }
+    public String getDatabaseName() { return databaseName; }
 
-    public int getMinVersionLower() {
-        return minVersionLower;
-    }
+    public int getMinVersionLower() { return minVersionLower; }
 
-    public int getMinVersionUpper() {
-        return minVersionUpper;
-    }
+    public int getMinVersionUpper() { return minVersionUpper; }
 
-    public int getMaxVersionLower() {
-        return maxVersionLower;
-    }
+    public int getMaxVersionLower() { return maxVersionLower; }
 
-    public int getMaxVersionUpper() {
-        return maxVersionUpper;
-    }
+    public int getMaxVersionUpper() { return maxVersionUpper; }
 
-    public LinkedList<KittySQLiteQuery> getMigrationScript() {
-        return migrationScript;
-    }
+    public LinkedList<KittySQLiteQuery> getMigrationScript() { return migrationScript; }
 }

@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@
 
 package net.akaish.kitty.orm.constraints;
 
-import net.akaish.kitty.orm.annotations.FOREIGN_KEY_REFERENCE;
 import net.akaish.kitty.orm.enums.DeferrableOptions;
 import net.akaish.kitty.orm.enums.OnUpdateDeleteActions;
 
@@ -76,7 +75,7 @@ public class ForeignKeyReference {
         this.deferrableOption = deferrable;
     }
 
-    public ForeignKeyReference(FOREIGN_KEY_REFERENCE fkrAnnotation) {
+    public ForeignKeyReference(net.akaish.kitty.orm.annotations.ForeignKeyReference fkrAnnotation) {
         this(fkrAnnotation.foreignTableName(),
                 fkrAnnotation.foreignTableColumns(),
                 fkrAnnotation.onDelete(),

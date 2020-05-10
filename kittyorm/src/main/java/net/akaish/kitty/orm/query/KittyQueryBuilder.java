@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,19 +74,19 @@ public class KittyQueryBuilder {
     public final static int SB_SQL_SIZE = 256;
     private final int sbSize;
 
-    public enum QUERY_TYPE {
+    public enum QueryType {
         DELETE, SELECT, SELECT_COUNT, SELECT_SUM, SELECT_TABLE_NAMES
     }
 
-    private final QUERY_TYPE queryType;
+    private final QueryType queryType;
     private final BaseKittyQuery query;
     private final String tableName;
 
-    public KittyQueryBuilder(QUERY_TYPE queryType, String tableName) {
+    public KittyQueryBuilder(QueryType queryType, String tableName) {
         this(queryType, tableName, SB_SQL_SIZE);
     }
 
-    public KittyQueryBuilder(QUERY_TYPE queryType, String tableName, int sbSize) {
+    public KittyQueryBuilder(QueryType queryType, String tableName, int sbSize) {
         this.sbSize = sbSize;
         this.tableName = tableName;
         this.queryType = queryType;
@@ -112,7 +112,7 @@ public class KittyQueryBuilder {
     }
 
     /**
-     * Sets sum column name for {@link SelectCountQuery} : {@link QUERY_TYPE#SELECT_SUM} (only). Values set via this method in other
+     * Sets sum column name for {@link SelectCountQuery} : {@link QueryType#SELECT_SUM} (only). Values set via this method in other
      * queries would be ignored.
      * @param sumColumn column on which sum operation should be performed.
      * @return
@@ -123,7 +123,7 @@ public class KittyQueryBuilder {
     }
 
     /**
-     * Sets schema name for {@link SelectTableNamesQuery} : {@link QUERY_TYPE#SELECT_TABLE_NAMES} (only). Values set via this method in
+     * Sets schema name for {@link SelectTableNamesQuery} : {@link QueryType#SELECT_TABLE_NAMES} (only). Values set via this method in
      * other queries would be ignored.
      * @param schemaName schema name from what should table names to be retrieved.
      * @return

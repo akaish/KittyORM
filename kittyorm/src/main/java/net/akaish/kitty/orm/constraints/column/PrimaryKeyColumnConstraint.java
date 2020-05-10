@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.constraints.column;
 
-import net.akaish.kitty.orm.annotations.column.constraints.PRIMARY_KEY;
+import net.akaish.kitty.orm.annotations.column.constraints.PrimaryKey;
 import net.akaish.kitty.orm.enums.AscDesc;
 import net.akaish.kitty.orm.enums.ConflictClauses;
 import net.akaish.kitty.orm.enums.Keywords;
@@ -63,7 +63,7 @@ public class PrimaryKeyColumnConstraint {
             this.autoincrement = AUTOINCREMENT.toString();
     }
 
-    public PrimaryKeyColumnConstraint(PRIMARY_KEY pkAnnotation) {
+    public PrimaryKeyColumnConstraint(PrimaryKey pkAnnotation) {
         this(pkAnnotation.orderAscDesc(), pkAnnotation.onConflictAction(), pkAnnotation.autoincrement());
     }
 

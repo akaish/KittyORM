@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019 Denis Bogomolov (akaish)
+ *  Copyright (c) 2019-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@
 
 package net.akaish.kitty.orm.util;
 
+import static net.akaish.kitty.orm.util.KittySchemaColumnDefinition.PragmaType.integer;
+
 /**
  * Model for checking schema
  * Created by akaish on 1.6.19.
@@ -31,45 +33,62 @@ package net.akaish.kitty.orm.util;
  */
 public class KittySchemaColumnDefinition {
 
-    public enum PRAGMA_TYPES {
-        text, integer, real, blob
-    }
+    public enum PragmaType { text, integer, real, blob }
 
     final String name;
-    final PRAGMA_TYPES type;
+    final PragmaType type;
     final int notNull;
     final int pk;
 
     boolean checked = false;
 
-    KittySchemaColumnDefinition(String name, PRAGMA_TYPES type, int notNull, int pk) {
+    KittySchemaColumnDefinition(String name, PragmaType type, int notNull, int pk) {
         this.name = name;
         this.type = type;
         this.notNull = notNull;
         this.pk = pk;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
-    public PRAGMA_TYPES getType() {
-        return type;
-    }
+    public PragmaType getType() { return type; }
 
-    public int getNotNull() {
-        return notNull;
-    }
+    public int getNotNull() { return notNull; }
 
-    public int getPk() {
-        return pk;
-    }
+    public int getPk() { return pk; }
 
-    public boolean isChecked() {
-        return checked;
-    }
+    public boolean isChecked() { return checked; }
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
+    public void setChecked(boolean checked) { this.checked = checked; }
+
+    public static class Builder {
+        private String name;
+        private KittySchemaColumnDefinition.PragmaType type = integer;
+        private int notNull = 0;
+        private int pk = 0;
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setType(KittySchemaColumnDefinition.PragmaType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder setNotNull() {
+            this.notNull = 1;
+            return this;
+        }
+
+        public Builder setPk() {
+            this.pk = 1;
+            return this;
+        }
+
+        public KittySchemaColumnDefinition build() {
+            return new KittySchemaColumnDefinition(name, type, notNull, pk);
+        }
     }
 }

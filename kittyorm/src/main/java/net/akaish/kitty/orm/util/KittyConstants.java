@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,10 +54,6 @@ public class KittyConstants {
     public static final String OFFSET = "OFFSET";
     public static final String NULL = "NULL";
 
-
-
-
-
     // STRING SECTION MISC
     public static final String MODEL_END = "Model";
     public static final String RECORD_END = "Record";
@@ -71,32 +67,5 @@ public class KittyConstants {
     public static final String DEFAULT_MODEL_MAPPER_IMPLEMENTATIONS_PACKAGE = "net.akaish.kittyimp.schema";
 
     public static final String ZERO_LENGTH_STRING = "";
-
-    /**
-     * This stuff is for avoiding cases for field declaration such as x STRING DEFAULT ''
-     */
-    @Deprecated
-    public static final String AMFIELD_VALUE_NOT_SET ="DTv67GJhsjajdb&8990923989udf*u\\\\yiujh777JUYT&^jyt9*UGH*&";
-
-    @Deprecated
-    public static final String INDEX = "INDEX";
-
-    @Deprecated
-    public static final String UNIQUE_INDEX = "UNIQUE INDEX";
-
-    @Deprecated
-    public static final String INDEX_NAME_PART = "index";
-
-    @Deprecated
-    public final static String FIELD_DEFAULT_PATTERN = " DEFAULT {0} ";
-
-    @Deprecated
-    public final static String FIELD_CHECK_PATTERN = " CHECK ({0}) ";
-
-    @Deprecated
-    public static final String ASCENDING = "ASC";
-
-    @Deprecated
-    public static final String DESCENDING = "DESC";
 
 }

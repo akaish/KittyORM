@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm;
 
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_ACCEPTED_VALUES;
+import net.akaish.kitty.orm.annotations.column.AcceptValues;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.exceptions.KittyRestrictedValueException;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
@@ -32,7 +32,7 @@ import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
 import java.util.Arrays;
 
 /**
- * Class for checking accepted values defined in {@link KITTY_COLUMN_ACCEPTED_VALUES}
+ * Class for checking accepted values defined in {@link AcceptValues}
  * Created by akaish on 03.04.18.
  * @author akaish (Denis Bogomolov)
  */
@@ -48,7 +48,7 @@ class AVUtils {
     private final static String R_STRING_V = "AMField.acceptedValuesFloat()";
 
     /**
-     * Checks if provided stringValue suites constraint described in {@link KITTY_COLUMN_ACCEPTED_VALUES#acceptedValuesInt()} and throws
+     * Checks if provided stringValue suites constraint described in {@link AcceptValues#integers()} and throws
      * {@link KittyRuntimeException} if this value is restricted one.
      * @param value String value to check
      * @param column column configuration
@@ -56,7 +56,7 @@ class AVUtils {
      */
     static void checkStringValue(String value, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
-        if(column.avConfiguration != null && value == null)
+        if(value == null)
             throw new KittyRestrictedValueException(R_STRING_V, modelClass, column.mainConfiguration.columnName);
         if(column.avConfiguration.acceptedValuesString.length!=0)
             if(!Arrays.asList(column.avConfiguration.acceptedValuesString).contains(value))
@@ -64,7 +64,7 @@ class AVUtils {
     }
 
     /**
-     * Checks if provided intValue suites constraint described in {@link KITTY_COLUMN_ACCEPTED_VALUES#acceptedValuesInt()} and throws
+     * Checks if provided intValue suites constraint described in {@link AcceptValues#integers()} and throws
      * {@link KittyRuntimeException} if this value is restricted one.
      * @param intValue int value to check
      * @param column column configuration
@@ -72,7 +72,7 @@ class AVUtils {
      */
     static void checkIntValue(Integer intValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
-        if(column.avConfiguration != null && intValue == null)
+        if(intValue == null)
             throw new KittyRestrictedValueException(R_INT_V, modelClass, column.mainConfiguration.columnName);
         if(column.avConfiguration.acceptedValuesInt.length!=0) {
             for(int i : column.avConfiguration.acceptedValuesInt)
@@ -85,7 +85,7 @@ class AVUtils {
     }
 
     /**
-     * Checks if provided byteValue suites constraint described in {@link KITTY_COLUMN_ACCEPTED_VALUES#acceptedValuesByte()} and throws
+     * Checks if provided byteValue suites constraint described in {@link AcceptValues#bytes()} and throws
      * {@link KittyRuntimeException} if this value is restricted one.
      * @param byteValue byte value to check
      * @param column column configuration
@@ -106,13 +106,13 @@ class AVUtils {
     }
 
     /**
-     * Checks if provided doubleValue suites constraint described in {@link KITTY_COLUMN_ACCEPTED_VALUES#acceptedValuesDouble()} and throws
+     * Checks if provided doubleValue suites constraint described in {@link AcceptValues#doubles()} and throws
      * {@link KittyRuntimeException} if this value is restricted one.
      * @param doubleValue double value to check
      * @param column column configuration
      * @param modelClass modelClass class for generating exception info
      */
-    static final void checkDoubleValue(Double doubleValue, KittyColumnConfiguration column, Class modelClass) {
+    static void checkDoubleValue(Double doubleValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
         if(doubleValue == null)
             throw new KittyRestrictedValueException(R_DOUBLE_V, modelClass, column.mainConfiguration.columnName);
@@ -127,13 +127,13 @@ class AVUtils {
     }
 
     /**
-     * Checks if provided doubleValue suites constraint described in {@link KITTY_COLUMN_ACCEPTED_VALUES#acceptedValuesLong()} and throws
+     * Checks if provided doubleValue suites constraint described in {@link AcceptValues#longs()} and throws
      * {@link KittyRuntimeException} if this value is restricted one.
      * @param longValue long value to check
      * @param column column configuration
      * @param modelClass modelClass class for generating exception info
      */
-    static final void checkLongValue(Long longValue, KittyColumnConfiguration column, Class modelClass) {
+    static void checkLongValue(Long longValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
         if(longValue == null)
             throw new KittyRestrictedValueException(R_LONG_V, modelClass, column.mainConfiguration.columnName);
@@ -148,13 +148,13 @@ class AVUtils {
     }
 
     /**
-     * Checks if provided shortValue suites constraint described in {@link KITTY_COLUMN_ACCEPTED_VALUES#acceptedValuesShort()} and throws
+     * Checks if provided shortValue suites constraint described in {@link AcceptValues#shorts()} and throws
      * {@link KittyRuntimeException} if this value is restricted one.
      * @param shortValue short value to check
      * @param column column configuration
      * @param modelClass modelClass class for generating exception info
      */
-    static final void checkShortValue(Short shortValue, KittyColumnConfiguration column, Class modelClass) {
+    static void checkShortValue(Short shortValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
         if(shortValue == null)
             throw new KittyRestrictedValueException(R_LONG_V, modelClass, column.mainConfiguration.columnName);
@@ -169,13 +169,13 @@ class AVUtils {
     }
 
     /**
-     * Checks if provided floatValue suites constraint described in {@link KITTY_COLUMN_ACCEPTED_VALUES#acceptedValuesFloat()} and throws
+     * Checks if provided floatValue suites constraint described in {@link AcceptValues#floats()} and throws
      * {@link KittyRuntimeException} if this value is restricted one.
      * @param floatValue float value to check
      * @param column column configuration
      * @param modelClass modelClass class for generating exception info
      */
-    static final void checkFloatValue(Float floatValue, KittyColumnConfiguration column, Class modelClass) {
+    static void checkFloatValue(Float floatValue, KittyColumnConfiguration column, Class modelClass) {
         if(column.avConfiguration == null) return;
         if(floatValue == null)
             throw new KittyRestrictedValueException(R_FLOAT_V, modelClass, column.mainConfiguration.columnName);

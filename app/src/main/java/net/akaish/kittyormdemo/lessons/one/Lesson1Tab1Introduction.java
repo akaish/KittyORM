@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,16 +25,12 @@
 package net.akaish.kittyormdemo.lessons.one;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import net.akaish.kittyormdemo.KittyTutorialActivity;
-import net.akaish.kittyormdemo.LessonDetailActivity;
 import net.akaish.kittyormdemo.R;
 import net.akaish.kittyormdemo.lessons.InAppTutorialSitePathHelper;
 import net.akaish.kittyormdemo.lessons.LessonBaseFragment;

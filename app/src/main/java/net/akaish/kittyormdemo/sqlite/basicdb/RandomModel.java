@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,22 +24,22 @@
 
 package net.akaish.kittyormdemo.sqlite.basicdb;
 
-import net.akaish.kitty.orm.annotations.KITTY_EXTENDED_CRUD;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
-import net.akaish.kitty.orm.annotations.table.index.INDEX;
-import net.akaish.kitty.orm.annotations.table.index.INDEX_ENTRY;
+import net.akaish.kitty.orm.annotations.CrudController;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
+import net.akaish.kitty.orm.annotations.table.index.TableIndex;
+import net.akaish.kitty.orm.annotations.table.index.TableIndexEntree;
 import net.akaish.kitty.orm.enums.AscDesc;
 
 /**
  * Created by akaish on 29.07.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_TABLE
-@KITTY_EXTENDED_CRUD(extendedCrudController = RandomMapper.class)
-@INDEX(
-        indexName = "random_animal_index",
-        indexColumns = {@INDEX_ENTRY(columnName = AbstractRandomModel.RND_ANIMAL_CNAME, sortingOrder = AscDesc.ASCENDING)}
+@KittyTable
+@CrudController(extendedCrudController = RandomMapper.class)
+@TableIndex(
+        name = "random_animal_index",
+        columns = {@TableIndexEntree(name = AbstractRandomModel.RND_ANIMAL_CNAME, sortingOrder = AscDesc.ASCENDING)}
 )
 public class RandomModel extends AbstractRandomModel {
 
@@ -48,7 +48,7 @@ public class RandomModel extends AbstractRandomModel {
         super();
     }
 
-    @KITTY_COLUMN(columnOrder = 5)
+    @Column(order = 5)
     public String randomAnimalSays;
 
     @Override

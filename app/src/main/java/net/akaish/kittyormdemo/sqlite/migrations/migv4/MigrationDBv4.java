@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,12 @@ package net.akaish.kittyormdemo.sqlite.migrations.migv4;
 
 import android.content.Context;
 
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
-import net.akaish.kitty.orm.KittyDatabase;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_HELPER;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_REGISTRY;
+import net.akaish.kitty.orm.annotations.KittyDatabase;
+import net.akaish.kitty.orm.annotations.KittyDatabaseHelper;
+import net.akaish.kitty.orm.annotations.KittyDatabaseRegistry;
+import net.akaish.kitty.orm.annotations.RegistryPair;
 import net.akaish.kitty.orm.dumputils.scripts.KittySQLiteDumpScript;
 import net.akaish.kitty.orm.query.KittySQLiteQuery;
-import net.akaish.kitty.orm.util.KittyNamingUtils;
 
 import java.util.LinkedList;
 
@@ -40,32 +39,29 @@ import java.util.LinkedList;
  * Created by akaish on 03.10.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_DATABASE(
+@KittyDatabase(
         isLoggingOn = false,
         isProductionOn = true,
-        isKittyDexUtilLoggingEnabled = false,
-        databaseName = "mig",
-        domainPackageNames = {"net.akaish.kittyormdemo.sqlite.migrations.migv4"},
-        databaseVersion = 4,
+        name = "mig",
+        version = 4,
         logTag = MigrationDBv4.LTAG
 )
-@KITTY_DATABASE_REGISTRY(
-        domainModels = {
-                net.akaish.kittyormdemo.sqlite.migrations.migv4.MigTwoModel.class,
-                net.akaish.kittyormdemo.sqlite.migrations.migv4.MigThreeModel.class,
-                net.akaish.kittyormdemo.sqlite.migrations.migv4.MigFourModel.class
-                //net.akaish.kittyormdemo.sqlite.migrations.migv4.MigFiveModel.class
+@KittyDatabaseRegistry(
+        domainPairs = {
+                @RegistryPair(model = net.akaish.kittyormdemo.sqlite.migrations.migv4.MigTwoModel.class),
+                @RegistryPair(model = net.akaish.kittyormdemo.sqlite.migrations.migv4.MigThreeModel.class),
+                @RegistryPair(model = net.akaish.kittyormdemo.sqlite.migrations.migv4.MigFourModel.class)
         }
 )
-@KITTY_DATABASE_HELPER(
-        onUpgradeBehavior = KITTY_DATABASE_HELPER.UpgradeBehavior.USE_FILE_MIGRATIONS
+@KittyDatabaseHelper(
+        onUpgradeBehavior = KittyDatabaseHelper.UpgradeBehavior.USE_FILE_MIGRATIONS
 //        migrationScriptsPath = KittyNamingUtils.INTERNAL_MEM_URI_START + "kittysqliteorm/mig/version_migrations",
 //        createScriptPath =  KittyNamingUtils.INTERNAL_MEM_URI_START + "kittysqliteorm/mig/mig-v-4-create.sql",
 //        dropScriptPath = KittyNamingUtils.INTERNAL_MEM_URI_START + "kittysqliteorm/mig/mig-v-4-drop.sql",
 //        afterMigrateScriptPath = KittyNamingUtils.INTERNAL_MEM_URI_START + "kittysqliteorm/mig/mig-v-4-after_create.sql",
 //        afterCreateScriptPath = KittyNamingUtils.INTERNAL_MEM_URI_START + "kittysqliteorm/mig/mig-v-4-after_migrate.sql"
 )
-public class MigrationDBv4 extends KittyDatabase {
+public class MigrationDBv4 extends net.akaish.kitty.orm.KittyDatabase {
 
     public static final String LTAG = "MIGv4";
 

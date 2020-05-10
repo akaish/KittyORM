@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import android.content.Context;
 import net.akaish.kitty.orm.CVUtils;
 import net.akaish.kitty.orm.KittyMapper;
 import net.akaish.kitty.orm.pkey.KittyPrimaryKey;
-import net.akaish.kitty.orm.pkey.KittyPrimaryKeyBuilder;
 import net.akaish.kitty.orm.query.conditions.SQLiteCondition;
 import net.akaish.kitty.orm.query.conditions.SQLiteConditionBuilder;
 import net.akaish.kitty.orm.enums.SQLiteOperator;
@@ -134,7 +133,7 @@ public class GettingStartedTutorialCode {
 
         findOperationId++;
         // find with KittyPrimaryKey
-        KittyPrimaryKey pk = new KittyPrimaryKeyBuilder()
+        KittyPrimaryKey pk = new KittyPrimaryKey.Builder()
                 .addKeyColumnValue("id", marinaFromTableRowid.id.toString())
                 .build();
         SimpleExampleModel marinaFromTableKPK = mapper.findByPK(pk);

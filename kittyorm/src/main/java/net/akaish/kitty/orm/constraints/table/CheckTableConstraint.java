@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.constraints.table;
 
-import net.akaish.kitty.orm.annotations.table.constraints.CHECK_T;
+import net.akaish.kitty.orm.annotations.table.constraints.CheckEntree;
 import net.akaish.kitty.orm.enums.Keywords;
 
 import static net.akaish.kitty.orm.util.KittyConstants.LEFT_BKT;
@@ -45,7 +45,7 @@ public class CheckTableConstraint extends TableConstraint {
         this.checkExpression = checkExpression;
     }
 
-    public CheckTableConstraint(CHECK_T checkTAnnotation) {
+    public CheckTableConstraint(CheckEntree checkTAnnotation) {
         this(checkTAnnotation.name().length() == 0 ? null : checkTAnnotation.name(), checkTAnnotation.checkExpression());
     }
 

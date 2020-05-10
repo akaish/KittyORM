@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,8 @@ package net.akaish.kitty.orm.configuration.adc;
 import android.content.Context;
 
 import net.akaish.kitty.orm.KittyDatabase;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_HELPER;
+import net.akaish.kitty.orm.annotations.KittyDatabaseHelper;
 import net.akaish.kitty.orm.configuration.conf.KittyDBHelperConfiguration;
-import net.akaish.kitty.orm.configuration.conf.KittyDBHelperConfigurationBuilder;
 import net.akaish.kitty.orm.configuration.conf.KittyDatabaseConfiguration;
 import net.akaish.kitty.orm.util.KittyUtils;
 
@@ -52,7 +51,7 @@ public class KittyAnnoDBHelperConfigurationUtil {
 
     public static final <T extends KittyDatabase> KittyDBHelperConfiguration getDBHelperConfiguration(
             KittyDatabaseConfiguration databaseConfiguration, Class<T> kittyDatabaseClass, Context ctx) {
-        KittyDBHelperConfigurationBuilder dbhb = new KittyDBHelperConfigurationBuilder();
+        KittyDBHelperConfiguration.Builder dbhb = new KittyDBHelperConfiguration.Builder();
         dbhb.setDatabaseName(databaseConfiguration.schemaName)
                 .setDatabaseVersion(databaseConfiguration.schemaVersion)
                 .setLogOn(databaseConfiguration.isLoggingOn)
@@ -60,7 +59,7 @@ public class KittyAnnoDBHelperConfigurationUtil {
                 .setPragmaOn(databaseConfiguration.isPragmaON)
                 .setProductionOn(databaseConfiguration.isProductionOn);
 
-        KITTY_DATABASE_HELPER.UpgradeBehavior onUpgradeBehavior = KITTY_DATABASE_HELPER.UpgradeBehavior.DROP_AND_CREATE;
+        KittyDatabaseHelper.UpgradeBehavior onUpgradeBehavior = KittyDatabaseHelper.UpgradeBehavior.DROP_AND_CREATE;
         String DMMUpdateScriptsPath = null;
         String createSchemaScriptPath = null;
         String dropSchemaScriptPath = null;
@@ -70,8 +69,8 @@ public class KittyAnnoDBHelperConfigurationUtil {
 
         boolean scriptsInAssets = true;
 
-        if(kittyDatabaseClass.isAnnotationPresent(KITTY_DATABASE_HELPER.class)) {
-            KITTY_DATABASE_HELPER dbhAnno = kittyDatabaseClass.getAnnotation(KITTY_DATABASE_HELPER.class);
+        if(kittyDatabaseClass.isAnnotationPresent(KittyDatabaseHelper.class)) {
+            KittyDatabaseHelper dbhAnno = kittyDatabaseClass.getAnnotation(KittyDatabaseHelper.class);
             onUpgradeBehavior = dbhAnno.onUpgradeBehavior();
             DMMUpdateScriptsPath = dbhAnno.migrationScriptsPath().length() == 0 ? null : dbhAnno.migrationScriptsPath();
             createSchemaScriptPath = dbhAnno.createScriptPath().length() == 0 ? null : dbhAnno.createScriptPath();
@@ -94,7 +93,7 @@ public class KittyAnnoDBHelperConfigurationUtil {
         else
             databaseScriptsRoot = getDefaultAssetDatabaseScriptsPath(schemaName);
 
-        if(onUpgradeBehavior.equals(KITTY_DATABASE_HELPER.UpgradeBehavior.USE_FILE_MIGRATIONS)) {
+        if(onUpgradeBehavior.equals(KittyDatabaseHelper.UpgradeBehavior.USE_FILE_MIGRATIONS)) {
             if(DMMUpdateScriptsPath == null)
                 DMMUpdateScriptsPath = getDefaultDatabaseMigrationScriptsPath(ctx, schemaName, scriptsInAssets);
         }
@@ -132,6 +131,6 @@ public class KittyAnnoDBHelperConfigurationUtil {
                 .setAfterCreateScriptPath(afterCreateScriptPath)
                 .setAfterMigrateScriptPath(afterMigrateScriptPath);
 
-        return dbhb.createAMDBHelperConfiguration();
+        return dbhb.build();
     }
 }

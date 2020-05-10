@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.SparseArray;
 
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
+import net.akaish.kitty.orm.annotations.column.Column;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyTableConfiguration;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
@@ -79,13 +79,13 @@ public class KittyModelCVFactory<M extends KittyModel> {
         rowid = rowidOn;
     }
 
-    private int callNumber = 0;
+
 
     /**
      * Sets fields of provided instance of {@link KittyModel} (modelClass) with values from provided {@link Cursor} according to
-     * provided with this instance's {@link KITTY_COLUMN} annotations data wrapped into {@link KittyColumnConfiguration} instance.
+     * provided with this instance's {@link Column} annotations data wrapped into {@link KittyColumnConfiguration} instance.
      * Also may throw some exceptions related with reflection access to
-     * field of provided modelClass and {@link KittyRuntimeException} if there are some errors with {@link KITTY_COLUMN} implementation.
+     * field of provided modelClass and {@link KittyRuntimeException} if there are some errors with {@link Column} implementation.
      *
      * @param cursor cursor to read
      * @param model blank modelClass to fill
@@ -101,7 +101,6 @@ public class KittyModelCVFactory<M extends KittyModel> {
             NoSuchMethodException {
         Iterator<KittyColumnConfiguration> iterator = tableConfiguration.sortedColumns.iterator();
         resetIndexesOnRowidSupportChange(rowidOn);
-        callNumber++;
         if (rowid) {
             model.setRowID(cursor.getLong(ROWID_INDEX));
         }
@@ -110,7 +109,6 @@ public class KittyModelCVFactory<M extends KittyModel> {
             int columnIndex = getColumnIndex(cursor, column.mainConfiguration.columnName);
             if (column.sdConfiguration != null) {
                 model = putSDFromCursorToModel(column, model, cursor, columnIndex);
-                continue;
             } else {
                 Field columnField = column.mainConfiguration.columnField;
                 columnField.setAccessible(true);

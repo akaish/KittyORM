@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@
 
 package net.akaish.kitty.orm.indexes;
 
-import net.akaish.kitty.orm.annotations.column.ONE_COLUMN_INDEX;
-import net.akaish.kitty.orm.annotations.table.index.INDEX;
-import net.akaish.kitty.orm.annotations.table.index.INDEX_ENTRY;
+import net.akaish.kitty.orm.annotations.column.SingleColumnIndex;
+import net.akaish.kitty.orm.annotations.table.index.TableIndex;
+import net.akaish.kitty.orm.annotations.table.index.TableIndexEntree;
 import net.akaish.kitty.orm.enums.AscDesc;
 import net.akaish.kitty.orm.enums.Keywords;
 import net.akaish.kitty.orm.exceptions.KittyRuntimeException;
@@ -81,20 +81,20 @@ public class Index {
             throw new KittyRuntimeException(MessageFormat.format(AME_INDEX_BAD_COLUMNS, this.indexName, schemaName, tableName));
     }
 
-    public Index(INDEX index, String schemaName, String tableName) {
-        this(index.unique(), index.ifNotExists(), schemaName, index.indexName().length() == 0 ? null : index.indexName(),
-                tableName, annoToObject(index.indexColumns()), index.whereExpression().length() == 0 ? null : index.whereExpression());
+    public Index(TableIndex tableIndex, String schemaName, String tableName) {
+        this(tableIndex.unique(), tableIndex.ifNotExists(), schemaName, tableIndex.name().length() == 0 ? null : tableIndex.name(),
+                tableName, annoToObject(tableIndex.columns()), tableIndex.whereExpression().length() == 0 ? null : tableIndex.whereExpression());
     }
 
-    public Index(ONE_COLUMN_INDEX index, String indexColumn, String schemaName, String tableName) {
-        this(index.unique(), index.ifNotExists(), schemaName, index.indexName().length() == 0 ? null : index.indexName(),
-                tableName, new IndexEntry[]{new IndexEntry(indexColumn, index.indexOrder())}, index.whereExpression().length() == 0 ? null : index.whereExpression());
+    public Index(SingleColumnIndex index, String indexColumn, String schemaName, String tableName) {
+        this(index.unique(), index.ifNotExists(), schemaName, index.name().length() == 0 ? null : index.name(),
+                tableName, new IndexEntry[]{new IndexEntry(indexColumn, index.order())}, index.whereExpression().length() == 0 ? null : index.whereExpression());
     }
 
-    private final static IndexEntry[] annoToObject(INDEX_ENTRY[] indexColumns) {
+    private final static IndexEntry[] annoToObject(TableIndexEntree[] indexColumns) {
         IndexEntry[] out = new IndexEntry[indexColumns.length];
         for(int i = 0; i < out.length; i++)
-            out[i] = new IndexEntry(indexColumns[i].columnName(), indexColumns[i].sortingOrder());
+            out[i] = new IndexEntry(indexColumns[i].name(), indexColumns[i].sortingOrder());
         return out;
     }
 
@@ -126,8 +126,8 @@ public class Index {
             this.sortingOrder = sortingOrder;
         }
 
-        IndexEntry(INDEX_ENTRY indexEntry) {
-            this.columnName = indexEntry.columnName();
+        IndexEntry(TableIndexEntree indexEntry) {
+            this.columnName = indexEntry.name();
             this.sortingOrder = indexEntry.sortingOrder();
         }
 

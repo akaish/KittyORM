@@ -165,7 +165,7 @@ public class IndexesAndConstraintsModel extends KittyModel {
 
 8. 
 <details> 
-  <summary>Click to view index declaration examples: </summary>
+  <summary>Click to view tableIndex declaration examples: </summary>
 {{< highlight java "linenos=inline, linenostart=1">}}
 @KITTY_TABLE(tableName = "cai")
 @FOREIGN_KEY_T(
@@ -178,7 +178,7 @@ public class IndexesAndConstraintsModel extends KittyModel {
                 onDelete = OnUpdateDeleteActions.CASCADE
         )
 )
-@INDEX(indexColumns = {"creation_date"}) // index declaration
+@INDEX(indexColumns = {"creation_date"}) // tableIndex declaration
 public class IndexesAndConstraintsModel extends KittyModel {
     ...
 

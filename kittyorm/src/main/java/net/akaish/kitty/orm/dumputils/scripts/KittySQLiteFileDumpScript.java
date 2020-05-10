@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,11 +61,6 @@ public class KittySQLiteFileDumpScript extends KittySQLiteDumpScript {
 
     protected final Context ctx;
 
-    private static String IE_UNABLE_TO_SAVE = "Unable to save sql dump to File {0}, see exception details!";
-    private static String IE_UNABLE_TO_READ = "Unable to read sql dump from File {0}, see exception details!";
-    private static String IA_WRONG_AMOUNT_OF_PARAMETERS = "Wrong amount of parameters passed into #readFromDump(Object... parameters), 3 objects are expected!";
-    private static String IA_WRONG_PARAMETERS_TYPES = "Wrong parameter types passed into into #readFromDump(Object... parameters), [0] = File [1] = boolean [2] = Context are expected!";
-
     public KittySQLiteFileDumpScript(String dumpLocationUri, boolean newDump, Context ctx) {
         super(dumpLocationUri, newDump, ctx);
         this.dumpLocationUri = dumpLocationUri;
@@ -106,6 +101,7 @@ public class KittySQLiteFileDumpScript extends KittySQLiteDumpScript {
         try {
             KittyUtils.writeStringsToFile(KittyNamingUtils.getScriptFile(dumpLocationUri, ctx), toWrite, false, true);
         } catch (IOException e) {
+            String IE_UNABLE_TO_SAVE = "Unable to save sql dump to File {0}, see exception details!";
             throw new KittyRuntimeException(MessageFormat.format(IE_UNABLE_TO_SAVE, dumpLocationUri), e);
         }
     }
@@ -122,6 +118,7 @@ public class KittySQLiteFileDumpScript extends KittySQLiteDumpScript {
      */
     @Override
     public LinkedList<KittySQLiteQuery> readFromDump(Object... params) {
+        String IA_WRONG_AMOUNT_OF_PARAMETERS = "Wrong amount of parameters passed into #readFromDump(Object... parameters), 3 objects are expected!";
         if(params.length!=3)
             throw new IllegalArgumentException(IA_WRONG_AMOUNT_OF_PARAMETERS);
         if(!(params[1] instanceof Boolean)
@@ -129,22 +126,23 @@ public class KittySQLiteFileDumpScript extends KittySQLiteDumpScript {
             if(!(params[1] instanceof Boolean)) Log.e("!!!!!!!", "!!!!!!!!");
             if (!(params[0] instanceof String)) Log.e("11111111111111111111", "1111111111111111111");
             if (!(params[2] instanceof Context)) Log.e("@@@@@@@@@@@@@", "@@@@@@@@@@@@@@@@@@@@@@");
+            String IA_WRONG_PARAMETERS_TYPES = "Wrong parameter types passed into into #readFromDump(Object... parameters), [0] = File [1] = boolean [2] = Context are expected!";
             throw new IllegalArgumentException(IA_WRONG_PARAMETERS_TYPES);
         }
         if(((boolean)params[1])) {
             return null;
         } else {
             File scriptFilepath =  KittyNamingUtils.getScriptFile((String) params[0], (Context) params[2]);
+            String IE_UNABLE_TO_READ = "Unable to read sql dump from File {0}, see exception details!";
             try {
                 LinkedList<String> sqlScript = KittyUtils.readFileToLinkedList(scriptFilepath);
                 if (sqlScript == null) return null;
                 if (sqlScript.size() == 0) return null;
                 LinkedList<KittySQLiteQuery> outQueries = new LinkedList<>();
-                Iterator<String> queryIterator = sqlScript.iterator();
-                while (queryIterator.hasNext()) {
-                    String query = queryIterator.next().trim();
-                    if(query.startsWith(SQL_COMMENT_START)) continue; // skip comments
-                    if(query.trim().equals(EMPTY_STRING)) continue; // skip empty strings
+                for (String s : sqlScript) {
+                    String query = s.trim();
+                    if (query.startsWith(SQL_COMMENT_START)) continue; // skip comments
+                    if (query.trim().equals(EMPTY_STRING)) continue; // skip empty strings
                     outQueries.add(new KittySQLiteQuery(query, null));
                 }
                 return outQueries;

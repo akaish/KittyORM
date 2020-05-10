@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.constraints.table;
 
-import net.akaish.kitty.orm.annotations.table.constraints.FOREIGN_KEY_T;
+import net.akaish.kitty.orm.annotations.table.constraints.TableForeignKey;
 import net.akaish.kitty.orm.constraints.ForeignKeyReference;
 import net.akaish.kitty.orm.enums.Keywords;
 import net.akaish.kitty.orm.util.KittyUtils;
@@ -45,7 +45,7 @@ public class ForeignKeyTableConstraint extends TableConstraint {
         this.foreignKeyReference = foreignKeyReference;
     }
 
-    public ForeignKeyTableConstraint(FOREIGN_KEY_T fkTAnnotation) {
+    public ForeignKeyTableConstraint(TableForeignKey fkTAnnotation) {
         this(fkTAnnotation.name().length() == 0 ? null : fkTAnnotation.name(), new ForeignKeyReference(fkTAnnotation.reference()), fkTAnnotation.columns());
     }
 

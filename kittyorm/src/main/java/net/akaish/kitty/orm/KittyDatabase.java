@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 import android.util.SparseArray;
 
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
 import net.akaish.kitty.orm.configuration.KittyConfigurator;
 import net.akaish.kitty.orm.configuration.adc.KittyAnnoDBHelperConfigurationUtil;
 import net.akaish.kitty.orm.configuration.adc.KittyConfiguratorADC;
@@ -64,8 +63,8 @@ import static net.akaish.kitty.orm.util.KittyLog.kLog;
 
 /**
  * Abstract class to be used with KittyKitty sqlite
- * Child must be annotated with {@link KITTY_DATABASE} annotation.
- * Also it can be annotated with {@link net.akaish.kitty.orm.annotations.KITTY_DATABASE_HELPER} annotation.
+ * Child must be annotated with {@link net.akaish.kitty.orm.annotations.KittyDatabase} annotation.
+ * Also it can be annotated with {@link net.akaish.kitty.orm.annotations.KittyDatabaseHelper} annotation.
  * @author akaish (Denis Bogomolov)
  */
 public abstract class  KittyDatabase {
@@ -181,10 +180,10 @@ public abstract class  KittyDatabase {
     protected KittyDatabase(Context ctx, String databasePassword, String databaseFilepath, KittySchemaDefinition expectedDefinition) {
         databaseFilePath = databaseFilepath;
         // Checking that implementation has KDB annotation and setting logging options
-        KITTY_DATABASE kAnno;
+        net.akaish.kitty.orm.annotations.KittyDatabase kAnno;
         this.expectedDefinition = expectedDefinition;
-        if(getClass().isAnnotationPresent(KITTY_DATABASE.class)) {
-            kAnno = getClass().getAnnotation(KITTY_DATABASE.class);
+        if(getClass().isAnnotationPresent(net.akaish.kitty.orm.annotations.KittyDatabase.class)) {
+            kAnno = getClass().getAnnotation(net.akaish.kitty.orm.annotations.KittyDatabase.class);
             logOn = kAnno.isLoggingOn();
             logTag = kAnno.logTag();
         } else {
@@ -283,9 +282,9 @@ public abstract class  KittyDatabase {
      * @param databaseFilepath filepath to database (absolute)
      * @return external database version (PRAGMA.user_version)
      * @throws  KittyUnableToOpenDatabaseException if unable to open DB
-     * @throws  KittyExternalDBHasNotSupportedUserVersionException if fetched version not listed in {@link KITTY_DATABASE#supportedExternalDatabaseVersionNumbers()}
+     * @throws  KittyExternalDBHasNotSupportedUserVersionException if fetched version not listed in {@link net.akaish.kitty.orm.annotations.KittyDatabase#supportedExternalDatabaseVersionNumbers()}
      */
-    protected final int getExternalDatabaseVersion(KITTY_DATABASE anno, String databaseFilepath) {
+    protected final int getExternalDatabaseVersion(net.akaish.kitty.orm.annotations.KittyDatabase anno, String databaseFilepath) {
         int version = getDatabaseVersion(databaseFilepath);
         Log.i(anno.logTag(), format("[KittyBootstrap] Requested database [{0}] has version {1}!", databaseFilepath, version));
         if(anno.supportedExternalDatabaseVersionNumbers().length > 0) {

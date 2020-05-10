@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.constraints.column;
 
-import net.akaish.kitty.orm.annotations.column.constraints.COLLATE;
+import net.akaish.kitty.orm.annotations.column.constraints.Collate;
 import net.akaish.kitty.orm.enums.BuiltInCollations;
 import net.akaish.kitty.orm.enums.Keywords;
 
@@ -43,12 +43,11 @@ public class CollationColumnConstraint {
         this.collationFunctionName = collation.toString();
     }
 
-    public CollationColumnConstraint(COLLATE collationAnnotation) {
+    public CollationColumnConstraint(Collate collationAnnotation) {
         this.collationFunctionName = collationAnnotation.collation().toString();
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return new StringBuffer(32).append(Keywords.COLLATE)
                 .append(WHITESPACE).append(collationFunctionName).toString();
     }

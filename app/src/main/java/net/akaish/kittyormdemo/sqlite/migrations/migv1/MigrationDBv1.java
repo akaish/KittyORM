@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,26 +26,27 @@ package net.akaish.kittyormdemo.sqlite.migrations.migv1;
 
 import android.content.Context;
 
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
-import net.akaish.kitty.orm.KittyDatabase;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_REGISTRY;
+import net.akaish.kitty.orm.annotations.KittyDatabase;
+import net.akaish.kitty.orm.annotations.KittyDatabaseRegistry;
+import net.akaish.kitty.orm.annotations.RegistryPair;
 
 /**
  * Created by akaish on 03.10.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_DATABASE(
+@KittyDatabase(
         isLoggingOn = true,
         isProductionOn = false,
-        databaseName = "mig",
-        databaseVersion = 1,
-        logTag = MigrationDBv1.LTAG,
-        domainPackageNames = {"net.akaish.kittyormdemo.sqlite.migrations.migv1"}
+        name = "mig",
+        version = 1,
+        logTag = MigrationDBv1.LTAG
 )
-@KITTY_DATABASE_REGISTRY(
-        domainModels = {net.akaish.kittyormdemo.sqlite.migrations.migv1.MigOneModel.class}
+@KittyDatabaseRegistry(
+        domainPairs = {
+                @RegistryPair(model = net.akaish.kittyormdemo.sqlite.migrations.migv1.MigOneModel.class)
+        }
 )
-public class MigrationDBv1 extends KittyDatabase {
+public class MigrationDBv1 extends net.akaish.kitty.orm.KittyDatabase {
 
     public static final String LTAG = "MIGv1";
 

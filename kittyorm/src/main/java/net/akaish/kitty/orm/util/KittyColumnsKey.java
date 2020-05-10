@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,13 +37,13 @@ import java.util.List;
 
 public final class KittyColumnsKey {
 
-    final static int BITS = 32;
+    private final static int BITS = 32;
 
-    public final static KittyArrayKey generateKittyArrayKey(LinkedList<KittyColumnConfiguration> columns, List<String> fieldExclusions) {
+    public static KittyArrayKey generateKittyArrayKey(LinkedList<KittyColumnConfiguration> columns, List<String> fieldExclusions) {
         return new KittyArrayKey(generateArrayKey(columns, fieldExclusions));
     }
 
-    public static final int[] generateArrayKey(LinkedList<KittyColumnConfiguration> columns, List<String> fieldExclusions) {
+    public static int[] generateArrayKey(LinkedList<KittyColumnConfiguration> columns, List<String> fieldExclusions) {
         if(fieldExclusions == null) {
             return defaultArrayKey(columns.size());
         } else {
@@ -72,12 +72,12 @@ public final class KittyColumnsKey {
         }
     }
 
-    private final static int arrayKeySize(int columnsAmount) {
+    private static int arrayKeySize(int columnsAmount) {
         int arrayKeySize = columnsAmount / BITS;
         return  (columnsAmount % BITS) > 0 ? arrayKeySize + 1 : arrayKeySize;
     }
 
-    private final static int[] defaultArrayKey(int columnsAmount) {
+    private static int[] defaultArrayKey(int columnsAmount) {
         final int arrayKeySize = arrayKeySize(columnsAmount);
         int counter = 0; int position = 0; int key = 0;
         int[] arrayKey = new int[arrayKeySize];

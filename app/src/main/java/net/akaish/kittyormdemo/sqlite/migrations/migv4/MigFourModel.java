@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@
 package net.akaish.kittyormdemo.sqlite.migrations.migv4;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.FOREIGN_KEY_REFERENCE;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.constraints.DEFAULT;
-import net.akaish.kitty.orm.annotations.column.constraints.FOREIGN_KEY;
-import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
+import net.akaish.kitty.orm.annotations.ForeignKeyReference;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.column.constraints.Default;
+import net.akaish.kitty.orm.annotations.column.constraints.ForeignKey;
+import net.akaish.kitty.orm.annotations.column.constraints.NotNull;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
 import net.akaish.kitty.orm.enums.LiteralValues;
 
 import java.util.Date;
@@ -39,37 +39,37 @@ import java.util.Date;
  * Created by akaish on 06.10.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_TABLE(tableName = "mig_four")
+@KittyTable(name = "mig_four")
 public class MigFourModel extends KittyModel {
 
-    @KITTY_COLUMN(
-            columnOrder = 0,
+    @Column(
+            order = 0,
             isIPK = true)
     public Long id;
 
-    @KITTY_COLUMN(columnOrder = 1)
-    @FOREIGN_KEY(
-            reference = @FOREIGN_KEY_REFERENCE(
+    @Column(order = 1)
+    @ForeignKey(
+            reference = @ForeignKeyReference(
                     foreignTableName = "mig_three",
                     foreignTableColumns = {"id"}
             )
     )
-    @NOT_NULL
+    @NotNull
     public Long migThreeReference;
 
-    @KITTY_COLUMN(columnOrder = 2)
-    @FOREIGN_KEY(
-            reference = @FOREIGN_KEY_REFERENCE(
+    @Column(order = 2)
+    @ForeignKey(
+            reference = @ForeignKeyReference(
                     foreignTableName = "mig_two",
                     foreignTableColumns = {"id"}
             )
     )
-    @NOT_NULL
+    @NotNull
     public Long migTwoReference;
 
-    @KITTY_COLUMN(columnOrder = 3)
-    @NOT_NULL
-    @DEFAULT(
+    @Column(order = 3)
+    @NotNull
+    @Default(
             predefinedLiteralValue = LiteralValues.CURRENT_DATE
     )
     public Date creationDate;

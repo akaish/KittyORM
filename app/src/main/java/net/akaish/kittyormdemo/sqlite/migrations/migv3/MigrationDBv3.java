@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,35 +26,33 @@ package net.akaish.kittyormdemo.sqlite.migrations.migv3;
 
 import android.content.Context;
 
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
-import net.akaish.kitty.orm.KittyDatabase;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_HELPER;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_REGISTRY;
+import net.akaish.kitty.orm.annotations.KittyDatabase;
+import net.akaish.kitty.orm.annotations.KittyDatabaseHelper;
+import net.akaish.kitty.orm.annotations.KittyDatabaseRegistry;
+import net.akaish.kitty.orm.annotations.RegistryPair;
 
 /**
  * Created by akaish on 03.10.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_DATABASE(
+@KittyDatabase(
         isLoggingOn = true,
         isProductionOn = false,
-        isKittyDexUtilLoggingEnabled = false,
         logTag = MigrationDBv3.LTAG,
-        databaseName = "mig",
-        databaseVersion = 3,
-        domainPackageNames = {"net.akaish.kittyormdemo.sqlite.migrations.migv3"}
+        name = "mig",
+        version = 3
 )
-@KITTY_DATABASE_REGISTRY(
-        domainModels = {
-                net.akaish.kittyormdemo.sqlite.migrations.migv3.MigOneModel.class,
-                net.akaish.kittyormdemo.sqlite.migrations.migv3.MigTwoModel.class,
-                net.akaish.kittyormdemo.sqlite.migrations.migv3.MigThreeModel.class
+@KittyDatabaseRegistry(
+        domainPairs = {
+                @RegistryPair(model = net.akaish.kittyormdemo.sqlite.migrations.migv3.MigOneModel.class),
+                @RegistryPair(model = net.akaish.kittyormdemo.sqlite.migrations.migv3.MigTwoModel.class),
+                @RegistryPair(model = net.akaish.kittyormdemo.sqlite.migrations.migv3.MigThreeModel.class)
         }
 )
-@KITTY_DATABASE_HELPER(
-        onUpgradeBehavior = KITTY_DATABASE_HELPER.UpgradeBehavior.USE_SIMPLE_MIGRATIONS
+@KittyDatabaseHelper(
+        onUpgradeBehavior = KittyDatabaseHelper.UpgradeBehavior.USE_SIMPLE_MIGRATIONS
 )
-public class MigrationDBv3 extends KittyDatabase {
+public class MigrationDBv3 extends net.akaish.kitty.orm.KittyDatabase {
 
     public static final String LTAG = "MIGv3";
     /**

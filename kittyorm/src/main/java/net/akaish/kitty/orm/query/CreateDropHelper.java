@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 
 package net.akaish.kitty.orm.query;
 
-import net.akaish.kitty.orm.annotations.table.KITTY_TABLE;
+import net.akaish.kitty.orm.annotations.table.KittyTable;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnMainConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyDatabaseConfiguration;
@@ -187,7 +187,7 @@ public class CreateDropHelper {
     /**
      * Generates create statement for table described in provided configuration.
      * {@link KittyRuntimeException} would be thrown if provided configuration is not configuration of schema model.
-     * @param ifNotExistsFlag IF NOT EXISTS flag, overrides same setting defined in {@link KITTY_TABLE}, set null if no override needed
+     * @param ifNotExistsFlag IF NOT EXISTS flag, overrides same setting defined in {@link KittyTable}, set null if no override needed
      * @param conf table configuration
      * @param skipSchemaName skips {SCHEMA_NAME}. at creation statement
      * @return

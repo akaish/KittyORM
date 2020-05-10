@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2019 Denis Bogomolov (akaish)
+ *  Copyright (c) 2019-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,5 @@ public class KittySchemaDefinition {
         return definitions.get(name);
     }
 
-    public Set<String> getExpectedTableNames() {
-        return definitions.keySet();
-    }
+    public Set<String> getExpectedTableNames() { return definitions.keySet(); }
 }

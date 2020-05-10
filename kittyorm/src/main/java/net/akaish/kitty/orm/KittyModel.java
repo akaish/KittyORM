@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,6 @@ import java.util.Map;
  */
 public abstract class KittyModel implements Cloneable {
 
-    public static final String EXCEPTION_UNABLE_TO_CLONE = "Unable to clone model class, see exception details!";
-
     public Long rowid;
     final ArrayList<String> exclusions = new ArrayList<>();
 
@@ -65,20 +63,18 @@ public abstract class KittyModel implements Cloneable {
     // CLONING IMPLEMENTATIONS
     public <T extends KittyModel> T clone(Class<T> recordClass) {
         try {
-            T record = (T) super.clone();
-            return record;
+            return (T) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new KittyRuntimeException(EXCEPTION_UNABLE_TO_CLONE, e);
+            throw new KittyRuntimeException("Unable to clone model class, see exception details!", e);
         }
     }
 
     @Override
     public KittyModel clone() {
         try {
-            KittyModel record = (KittyModel) super.clone();
-            return record;
+            return (KittyModel) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new KittyRuntimeException(EXCEPTION_UNABLE_TO_CLONE, e);
+            throw new KittyRuntimeException("Unable to clone model class, see exception details!", e);
         }
     }
 
@@ -104,9 +100,7 @@ public abstract class KittyModel implements Cloneable {
      * <br>
      * @return
      */
-    public String toLogString() {
-        return null;
-    }
+    public String toLogString() { return null; }
 
     /**
      * Sets field exclusion for setting it explicitly
@@ -114,9 +108,7 @@ public abstract class KittyModel implements Cloneable {
      * <br> or for fields that are parts of PK that should be generated automatically by trigger
      * @param fieldName
      */
-    public final void setFieldExclusion(String fieldName) {
-        exclusions.add(fieldName);
-    }
+    public final void setFieldExclusion(String fieldName) { exclusions.add(fieldName); }
 
     /**
      * Sets field exclusions for setting it explicitly
@@ -125,8 +117,7 @@ public abstract class KittyModel implements Cloneable {
      * @param fieldNames
      */
     public final void setFieldExclusions(String... fieldNames) {
-        for(String fieldName : fieldNames)
-            setFieldExclusion(fieldName);
+        for(String fieldName : fieldNames) setFieldExclusion(fieldName);
     }
 
 }

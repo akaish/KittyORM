@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,33 +26,32 @@ package net.akaish.kittyormdemo.sqlite.migrations.migv2;
 
 import android.content.Context;
 
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE;
-import net.akaish.kitty.orm.KittyDatabase;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_HELPER;
-import net.akaish.kitty.orm.annotations.KITTY_DATABASE_REGISTRY;
+import net.akaish.kitty.orm.annotations.KittyDatabase;
+import net.akaish.kitty.orm.annotations.KittyDatabaseHelper;
+import net.akaish.kitty.orm.annotations.KittyDatabaseRegistry;
+import net.akaish.kitty.orm.annotations.RegistryPair;
 
 /**
  * Created by akaish on 03.10.18.
  * @author akaish (Denis Bogomolov)
  */
-@KITTY_DATABASE(
+@KittyDatabase(
         isLoggingOn = true,
         isProductionOn = false,
-        databaseName = "mig",
-        databaseVersion = 2,
-        logTag = MigrationDBv2.LTAG,
-        domainPackageNames = {"net.akaish.kittyormdemo.sqlite.migrations.migv2"}
+        name = "mig",
+        version = 2,
+        logTag = MigrationDBv2.LTAG
 )
-@KITTY_DATABASE_REGISTRY(
-        domainModels = {
-                net.akaish.kittyormdemo.sqlite.migrations.migv2.MigOneModel.class,
-                net.akaish.kittyormdemo.sqlite.migrations.migv2.MigTwoModel.class
+@KittyDatabaseRegistry(
+        domainPairs = {
+                @RegistryPair(model = net.akaish.kittyormdemo.sqlite.migrations.migv2.MigOneModel.class),
+                @RegistryPair(model = net.akaish.kittyormdemo.sqlite.migrations.migv2.MigTwoModel.class)
         }
 )
-@KITTY_DATABASE_HELPER(
-        onUpgradeBehavior = KITTY_DATABASE_HELPER.UpgradeBehavior.DROP_AND_CREATE
+@KittyDatabaseHelper(
+        onUpgradeBehavior = KittyDatabaseHelper.UpgradeBehavior.DROP_AND_CREATE
 )
-public class MigrationDBv2 extends KittyDatabase {
+public class MigrationDBv2 extends net.akaish.kitty.orm.KittyDatabase {
 
     public static final String LTAG = "MIGv2";
 

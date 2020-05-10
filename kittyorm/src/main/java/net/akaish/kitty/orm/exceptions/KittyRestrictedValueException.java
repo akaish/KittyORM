@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@
 
 package net.akaish.kitty.orm.exceptions;
 
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_ACCEPTED_VALUES;
+import net.akaish.kitty.orm.annotations.column.AcceptValues;
 
 import static net.akaish.kitty.orm.util.KittyConstants.DOT;
 
 /**
  * Runtime exception that should be thrown if provided data not in defined by
- * {@link KITTY_COLUMN_ACCEPTED_VALUES#acceptedValuesByte()} (or other) values
+ * {@link AcceptValues#bytes()} (or other) values
  * Created by akaish on 07.02.18.
  * @author akaish (Denis Bogomolov)
  */

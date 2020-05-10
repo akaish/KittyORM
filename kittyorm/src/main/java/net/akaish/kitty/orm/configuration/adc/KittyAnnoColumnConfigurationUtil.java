@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,17 +25,17 @@
 package net.akaish.kitty.orm.configuration.adc;
 
 import net.akaish.kitty.orm.KittyModel;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_ACCEPTED_VALUES;
-import net.akaish.kitty.orm.annotations.column.KITTY_COLUMN_SERIALIZATION;
-import net.akaish.kitty.orm.annotations.column.ONE_COLUMN_INDEX;
-import net.akaish.kitty.orm.annotations.column.constraints.CHECK;
-import net.akaish.kitty.orm.annotations.column.constraints.COLLATE;
-import net.akaish.kitty.orm.annotations.column.constraints.DEFAULT;
-import net.akaish.kitty.orm.annotations.column.constraints.FOREIGN_KEY;
-import net.akaish.kitty.orm.annotations.column.constraints.NOT_NULL;
-import net.akaish.kitty.orm.annotations.column.constraints.PRIMARY_KEY;
-import net.akaish.kitty.orm.annotations.column.constraints.UNIQUE;
+import net.akaish.kitty.orm.annotations.column.AcceptValues;
+import net.akaish.kitty.orm.annotations.column.Column;
+import net.akaish.kitty.orm.annotations.column.SerializationRules;
+import net.akaish.kitty.orm.annotations.column.SingleColumnIndex;
+import net.akaish.kitty.orm.annotations.column.constraints.Check;
+import net.akaish.kitty.orm.annotations.column.constraints.Collate;
+import net.akaish.kitty.orm.annotations.column.constraints.Default;
+import net.akaish.kitty.orm.annotations.column.constraints.ForeignKey;
+import net.akaish.kitty.orm.annotations.column.constraints.NotNull;
+import net.akaish.kitty.orm.annotations.column.constraints.PrimaryKey;
+import net.akaish.kitty.orm.annotations.column.constraints.Unique;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnAcceptedValuesConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnMainConfiguration;
@@ -72,7 +72,7 @@ public class KittyAnnoColumnConfigurationUtil {
 
     /**
      * Returns KittyColumnConfiguration for provided field of modelClass
-     * Returns null, if field not annotated with at least {@link KITTY_COLUMN}
+     * Returns null, if field not annotated with at least {@link Column}
      * @param field
      * @param record
      * @param <M>
@@ -82,19 +82,19 @@ public class KittyAnnoColumnConfigurationUtil {
     public static <M extends KittyModel> KittyColumnConfiguration generateAMColumnConfiguration(Field field, Class<M> record, String schemaName, String tableName)
             throws NoSuchMethodException {
         // Fetching main configuration, if no KITTY_COLUMN annotation present - return null
-        if(field.isAnnotationPresent(KITTY_COLUMN.class)) {
+        if(field.isAnnotationPresent(Column.class)) {
             KittyColumnMainConfiguration main = generateAMColumnMainConfiguration(field);
             KittyColumnSDConfiguration sd = null;
-            if(field.isAnnotationPresent(KITTY_COLUMN_SERIALIZATION.class)) {
+            if(field.isAnnotationPresent(SerializationRules.class)) {
                 sd = generateAMColumnSDConfiguration(field, record, main);
             }
             KittyColumnAcceptedValuesConfiguration av = null;
-            if(field.isAnnotationPresent(KITTY_COLUMN_ACCEPTED_VALUES.class)) {
+            if(field.isAnnotationPresent(AcceptValues.class)) {
                 av = generateAMColumnAcceptedValuesConfiguration(field);
             }
             Index columnIndex = null;
-            if(field.isAnnotationPresent(ONE_COLUMN_INDEX.class)) {
-                columnIndex =  new Index(field.getAnnotation(ONE_COLUMN_INDEX.class), main.columnName, schemaName, tableName);
+            if(field.isAnnotationPresent(SingleColumnIndex.class)) {
+                columnIndex =  new Index(field.getAnnotation(SingleColumnIndex.class), main.columnName, schemaName, tableName);
             }
             return new KittyColumnConfiguration(main, av, sd, columnIndex);
         } else {
@@ -103,7 +103,7 @@ public class KittyAnnoColumnConfigurationUtil {
     }
 
     /**
-     * Generates accepted values configuration from input field with {@link KITTY_COLUMN_ACCEPTED_VALUES} annotation
+     * Generates accepted values configuration from input field with {@link AcceptValues} annotation
      * Throws NullPointerException when field not annotated with KITTY_COLUMN_ACCEPTED_VALUES annotation
      * Also, returns null if annotation has no accepted values or those values have another primitive type
      * than field
@@ -111,51 +111,51 @@ public class KittyAnnoColumnConfigurationUtil {
      * @return
      */
     private static KittyColumnAcceptedValuesConfiguration generateAMColumnAcceptedValuesConfiguration(Field f) {
-        KITTY_COLUMN_ACCEPTED_VALUES avAnnotation = f.getAnnotation(KITTY_COLUMN_ACCEPTED_VALUES.class);
+        AcceptValues avAnnotation = f.getAnnotation(AcceptValues.class);
         boolean anySet = false;
         Type fType = f.getType();
         int[] avInt = null; byte[] avByte = null; long[] avLong = null; short[] avShort = null;
         float[] avFloat = null; double[] avDouble = null; String[] avString = null;
         while(!anySet) {
             if (fType.getClass().equals(int.class) || fType.getClass().equals(Integer.class))
-                if (avAnnotation.acceptedValuesInt().length > 0) {
-                    avInt = avAnnotation.acceptedValuesInt();
+                if (avAnnotation.integers().length > 0) {
+                    avInt = avAnnotation.integers();
                     anySet = true;
                     break;
                 }
             if(fType.getClass().equals(byte.class) || fType.getClass().equals(Byte.class))
-                if (avAnnotation.acceptedValuesByte().length > 0) {
-                    avByte = avAnnotation.acceptedValuesByte();
+                if (avAnnotation.bytes().length > 0) {
+                    avByte = avAnnotation.bytes();
                     anySet = true;
                     break;
                 }
             if(fType.getClass().equals(long.class) || fType.getClass().equals(Long.class))
-                if(avAnnotation.acceptedValuesLong().length > 0) {
-                    avLong = avAnnotation.acceptedValuesLong();
+                if(avAnnotation.longs().length > 0) {
+                    avLong = avAnnotation.longs();
                     anySet = true;
                     break;
                 }
             if(fType.getClass().equals(short.class) || fType.getClass().equals(Short.class))
-                if(avAnnotation.acceptedValuesShort().length > 0) {
-                    avShort = avAnnotation.acceptedValuesShort();
+                if(avAnnotation.shorts().length > 0) {
+                    avShort = avAnnotation.shorts();
                     anySet = true;
                     break;
                 }
             if(fType.getClass().equals(float.class) || fType.getClass().equals(Float.class))
-                if(avAnnotation.acceptedValuesFloat().length > 0) {
-                    avFloat = avAnnotation.acceptedValuesFloat();
+                if(avAnnotation.floats().length > 0) {
+                    avFloat = avAnnotation.floats();
                     anySet = true;
                     break;
                 }
             if(fType.getClass().equals(double.class) || fType.getClass().equals(Double.class))
-                if(avAnnotation.acceptedValuesDouble().length > 0) {
-                    avDouble = avAnnotation.acceptedValuesDouble();
+                if(avAnnotation.doubles().length > 0) {
+                    avDouble = avAnnotation.doubles();
                     anySet = true;
                     break;
                 }
             if(fType.getClass().equals(String.class)) {
-                if(avAnnotation.acceptedValuesString().length > 0) {
-                    avString = avAnnotation.acceptedValuesString();
+                if(avAnnotation.strings().length > 0) {
+                    avString = avAnnotation.strings();
                     anySet = true;
                     break;
                 }
@@ -170,7 +170,7 @@ public class KittyAnnoColumnConfigurationUtil {
     private static final String AM_EXC_PATTERN_BAD_AFFINITY_FOR_SD = "Unable to generate SD for field {0} of class {1} cause only BLOB, NONE and TEXT affinities are allowed ({2} affinity found!)";
 
     /**
-     * Returns instance of SD configuration for input field, annotated with {@link KITTY_COLUMN_SERIALIZATION}.
+     * Returns instance of SD configuration for input field, annotated with {@link SerializationRules}.
      * {@link NullPointerException} would be thrown if field not annotated with KITTY_COLUMN_SERIALIZATION annotation
      * Also {@link KittyRuntimeException} would be thrown if SD cannot be applied
      * for the field due to fact that field's affinity not {@link TypeAffinities#BLOB},
@@ -184,7 +184,7 @@ public class KittyAnnoColumnConfigurationUtil {
      */
     private static <M extends KittyModel> KittyColumnSDConfiguration generateAMColumnSDConfiguration(Field f, Class<M> record, KittyColumnMainConfiguration mainConfiguration)
             throws NoSuchMethodException {
-        KITTY_COLUMN_SERIALIZATION columnSD = f.getAnnotation(KITTY_COLUMN_SERIALIZATION.class);
+        SerializationRules columnSD = f.getAnnotation(SerializationRules.class);
         //if(!columnSD.useSD()) return null;
         // checking that type affinity of field is ok
         Type rawDataType;
@@ -224,26 +224,26 @@ public class KittyAnnoColumnConfigurationUtil {
     }
 
     /**
-     * Returns instance of {@link KittyColumnMainConfiguration} built based on {@link KITTY_COLUMN}
+     * Returns instance of {@link KittyColumnMainConfiguration} built based on {@link Column}
      * annotated field f. NullPointer would be thrown if no field not annotated with KITTY_COLUMN
      * annotation.
      * @param f
      * @return
      */
     private static final KittyColumnMainConfiguration generateAMColumnMainConfiguration(Field f) {
-        KITTY_COLUMN column = f.getAnnotation(KITTY_COLUMN.class);
+        Column column = f.getAnnotation(Column.class);
         String columnName;
-        if(column.columnName().length() == 0) {
+        if(column.name().length() == 0) {
             columnName = generateColumnNameFromModelField(f);
         } else {
-            columnName = column.columnName();
+            columnName = column.name();
         }
         Type columnFieldType = f.getType();
         TypeAffinities columnAffinity;
-        if(column.columnAffinity() == TypeAffinities.NOT_SET_USE_DEFAULT_MAPPING) {
+        if(column.affinity() == TypeAffinities.NOT_SET_USE_DEFAULT_MAPPING) {
             columnAffinity = KittyUtils.typeToAffinity(columnFieldType);
         } else {
-            columnAffinity = column.columnAffinity();
+            columnAffinity = column.affinity();
         }
 
         boolean isSimpleIndex = column.isIPK();
@@ -257,21 +257,21 @@ public class KittyAnnoColumnConfigurationUtil {
         PrimaryKeyColumnConstraint primaryKeyColumnConstraint = null;
         ForeignKeyColumnConstraint foreignKeyColumnConstraint = null;
 
-        if (f.isAnnotationPresent(NOT_NULL.class))
-            notNullColumnConstraint = new NotNullColumnConstraint(f.getAnnotation(NOT_NULL.class));
+        if (f.isAnnotationPresent(NotNull.class))
+            notNullColumnConstraint = new NotNullColumnConstraint(f.getAnnotation(NotNull.class));
         if(!isSimpleIndex) {
-            if (f.isAnnotationPresent(CHECK.class))
-                checkConstraint = new CheckColumnConstraint(f.getAnnotation(CHECK.class));
-            if (f.isAnnotationPresent(DEFAULT.class))
-                defaultConstraint = new DefaultColumnConstraint(f.getAnnotation(DEFAULT.class));
-            if (f.isAnnotationPresent(PRIMARY_KEY.class))
-                primaryKeyColumnConstraint = new PrimaryKeyColumnConstraint(f.getAnnotation(PRIMARY_KEY.class));
-            if (f.isAnnotationPresent(UNIQUE.class))
-                uniqueColumnConstraint = new UniqueColumnConstraint(f.getAnnotation(UNIQUE.class));
-            if (f.isAnnotationPresent(COLLATE.class))
-                collationColumnConstraint = new CollationColumnConstraint(f.getAnnotation(COLLATE.class));
-            if(f.isAnnotationPresent(FOREIGN_KEY.class))
-                foreignKeyColumnConstraint = new ForeignKeyColumnConstraint(f.getAnnotation(FOREIGN_KEY.class));
+            if (f.isAnnotationPresent(Check.class))
+                checkConstraint = new CheckColumnConstraint(f.getAnnotation(Check.class));
+            if (f.isAnnotationPresent(Default.class))
+                defaultConstraint = new DefaultColumnConstraint(f.getAnnotation(Default.class));
+            if (f.isAnnotationPresent(PrimaryKey.class))
+                primaryKeyColumnConstraint = new PrimaryKeyColumnConstraint(f.getAnnotation(PrimaryKey.class));
+            if (f.isAnnotationPresent(Unique.class))
+                uniqueColumnConstraint = new UniqueColumnConstraint(f.getAnnotation(Unique.class));
+            if (f.isAnnotationPresent(Collate.class))
+                collationColumnConstraint = new CollationColumnConstraint(f.getAnnotation(Collate.class));
+            if(f.isAnnotationPresent(ForeignKey.class))
+                foreignKeyColumnConstraint = new ForeignKeyColumnConstraint(f.getAnnotation(ForeignKey.class));
         } else {
             if(notNullColumnConstraint == null)
                 notNullColumnConstraint = new NotNullColumnConstraint(ConflictClauses.CONFLICT_CLAUSE_NOT_SET);
@@ -291,14 +291,13 @@ public class KittyAnnoColumnConfigurationUtil {
                 defaultConstraint,
                 isSimpleIndex,
                 checkConstraint,
-                column.columnOrder(),
+                column.order(),
                 column.isValueGeneratedOnInsert(),
                 notNullColumnConstraint,
                 uniqueColumnConstraint,
                 collationColumnConstraint,
                 primaryKeyColumnConstraint,
-                foreignKeyColumnConstraint,
-                false // So we do not need this flag
+                foreignKeyColumnConstraint
         );
     }
 }

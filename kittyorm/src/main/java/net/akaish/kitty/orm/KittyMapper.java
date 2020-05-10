@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
 import android.util.Log;
 
+import net.akaish.kitty.orm.annotations.column.Column;
 import net.akaish.kitty.orm.configuration.conf.KittyColumnConfiguration;
 import net.akaish.kitty.orm.configuration.conf.KittyTableConfiguration;
 import net.akaish.kitty.orm.enums.AscDesc;
@@ -106,7 +107,6 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	static private String DEL_MNAME_DELETE = "KittyMapper.delete(model)";
 	static private String DEL_MNAME_DELETEPK = "KittyMapper.deleteByPK(pk)";
 	static private String DEL_MNAME_DELETEIPK = "KittyMapper.deleteByIPK(id)";
-	static private String DEL_MNAME_DELETE_ROWID = "KittyMapper.deleteByRowID(rowid)";
 	static private String AME_DEL_UNABLE_TO_CREATE_CONDITION = "{0} : unable to create delete condition for {1}!";
 
 	/**
@@ -405,7 +405,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 */
 	public final List<M> findWhere(SQLiteCondition where, QueryParameters qParams) {
 		throwExcReadOPWhileInTransaction();
-		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT, tableConfig.tableName);
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QueryType.SELECT, tableConfig.tableName);
 		qb.setQueryParameters(qParams)
 				.setWhereClause(where)
 				.setRowIDSupport(rowidOn);
@@ -447,7 +447,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 */
 	public final List<M> findAll() {
 		throwExcReadOPWhileInTransaction();
-		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT, tableConfig.tableName);
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QueryType.SELECT, tableConfig.tableName);
 		qb.setRowIDSupport(rowidOn);
 		KittySQLiteQuery query = qb.buildSQLQuery();
 		return findWithRawQuery(rowidOn, query);
@@ -674,7 +674,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 */
 	public final long countWhere(SQLiteCondition where, QueryParameters qParams) {
 		throwExcReadOPWhileInTransaction();
-		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_COUNT, tableConfig.tableName);
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QueryType.SELECT_COUNT, tableConfig.tableName);
 		qb.setQueryParameters(qParams)
 				.setWhereClause(where);
 		KittySQLiteQuery query = qb.buildSQLQuery();
@@ -756,7 +756,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 */
 	public final long countAll() {
 		throwExcReadOPWhileInTransaction();
-		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_COUNT, tableConfig.tableName);
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QueryType.SELECT_COUNT, tableConfig.tableName);
 		KittySQLiteQuery query = qb.buildSQLQuery();
 		logQuery(QE_COUNT, query);
 		Cursor cursor = database.rawQuery(query.getSql(), query.getConditionValues());
@@ -819,7 +819,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	@SuppressWarnings("WeakerAccess")
 	public final long sum(String sumColumn, SQLiteCondition where, QueryParameters qParams) {
 		throwExcReadOPWhileInTransaction();
-		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_SUM, tableConfig.tableName);
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QueryType.SELECT_SUM, tableConfig.tableName);
 		qb.setSumColumn(sumColumn)
 				.setWhereClause(where)
 				.setQueryParameters(qParams);
@@ -860,7 +860,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	@SuppressWarnings("WeakerAccess")
 	public final long sumAll(String sumColumn, QueryParameters qParams) {
 		throwExcReadOPWhileInTransaction();
-		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_SUM, tableConfig.tableName);
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QueryType.SELECT_SUM, tableConfig.tableName);
 		qb.setSumColumn(sumColumn)
 				.setQueryParameters(qParams);
 		KittySQLiteQuery query = qb.buildSQLQuery();
@@ -885,7 +885,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	@SuppressWarnings("WeakerAccess")
 	public final long sumAll(String sumColumn) {
 		throwExcReadOPWhileInTransaction();
-		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QUERY_TYPE.SELECT_SUM, tableConfig.tableName);
+		KittyQueryBuilder qb = new KittyQueryBuilder(KittyQueryBuilder.QueryType.SELECT_SUM, tableConfig.tableName);
 		qb.setSumColumn(sumColumn);
 		KittySQLiteQuery query = qb.buildSQLQuery();
 		logQuery(QE_SUM, query);
@@ -993,7 +993,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * Update records from database with values from provided model that suits provided condition.
 	 * <br> This method would generate an update statement that would be applied to all record in database that
 	 * suits provided condition. By default would be an attempt to update all database records with values
-	 * from all model fields annotated with {@link net.akaish.kitty.orm.annotations.column.KITTY_COLUMN}.
+	 * from all model fields annotated with {@link Column}.
 	 * <br> If no condition available (condition parameter is NULL) then update operation would be applied to
 	 * <b>ALL</b> records in database
 	 * <br>
@@ -1080,7 +1080,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 			if (model.getRowID() != null) {
 				condition = getRowIDCondition(model.getRowID());
 			} else {
-				condition = getPKCondition(model, condition);
+				condition = getPKCondition(model, null);
 			}
 		}
 		if(condition == null)
@@ -1379,7 +1379,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 		SQLiteCondition condition = getRowIDCondition(rowid);
 		if(condition == null)
 			throw new KittyRuntimeException(format(AME_DEL_UNABLE_TO_CREATE_CONDITION,
-					DEL_MNAME_DELETE_ROWID, tableConfig.modelClass.getCanonicalName()));
+					"KittyMapper.deleteByRowID(rowid)", tableConfig.modelClass.getCanonicalName()));
 		return deleteWhere(condition);
 	}
 
@@ -1398,7 +1398,6 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 		return deleteWhere(condition);
 	}
 
-	protected static final String QE_FIND_WITH_RAW_QUERY = "KittyMapper#findWithRawQuery(boolean rowIdSupport, KittySQLiteQuery query)";
 
 	/**
 	 * Tries to fetch data from database table with provided query and wrap it into collection of models.
@@ -1407,7 +1406,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @return collection of models or null if nothing found and returnNullNotEmptyCollection is on
 	 */
 	public final List<M> findWithRawQuery(boolean rowIdSupport, KittySQLiteQuery query) {
-		logQuery(QE_FIND_WITH_RAW_QUERY, query);
+		logQuery("KittyMapper#findWithRawQuery(boolean rowIdSupport, KittySQLiteQuery query)", query);
 		Cursor cursor = database.rawQuery(query.getSql(), query.getConditionValues());
 
 		if (cursor == null)
@@ -1763,11 +1762,8 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 * @return string like '( key1 = value1 ; key2 = value2 )' or '( )' depends on pkv
 	 */
 	protected final String pkvMapToString(Map<String, String> pkv) {
+		if(pkv == null || pkv.isEmpty()) return "( )";
 		StringBuffer sb = new StringBuffer(128);
-		if(pkv == null)
-			return sb.append(LEFT_BKT).append(WHITESPACE).append(RIGHT_BKT).toString();
-		if(pkv.size() == 0)
-			return sb.append(LEFT_BKT).append(WHITESPACE).append(RIGHT_BKT).toString();
 		sb.append(LEFT_BKT).append(WHITESPACE);
 		int counter = 0;
 		for(Map.Entry<String, String>  kv : pkv.entrySet()) {
@@ -1795,7 +1791,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 	 */
 	protected final SQLiteCondition conditionFromSQLString(String condition, Object... params) {
 		// Getting str collection for parameters
-		LinkedList<String> conditionArgs = new LinkedList<String>();
+		LinkedList<String> conditionArgs = new LinkedList<>();
 		if(params != null) {
 			for (int i = 0; i < params.length; i++) {
 				conditionArgs.addLast(KittyReflectionUtils.getSQLiteStringRepresentation(params[i]));
@@ -1815,7 +1811,6 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 			StringBuilder rebuildCondition = new StringBuilder();
 			for(String part : parts) {
 				String trimmedPart = part.trim();
-				if(trimmedPart == null) continue;
 				if(trimmedPart.equals(WHSP_STR)) continue;
 				if(trimmedPart.equals(EMPTY_STRING)) continue;
 				if(rebuildCondition.length() > 0) rebuildCondition.append(WHITESPACE);
@@ -1825,8 +1820,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 					KittyColumnConfiguration cf = getColumnByFieldName(fieldName);
 					if(cf == null)
 						throw new KittyRuntimeException(
-								format(
-										KITTY_EXCEPTION_TEXT_NO_ASS_CLN_FOR_FN,
+								format(KITTY_EXCEPTION_TEXT_NO_ASS_CLN_FOR_FN,
 										fieldName,
 										this.getClass().getCanonicalName(),
 										this.blankModelInstance.getClass().getCanonicalName()
@@ -1839,7 +1833,7 @@ public class KittyMapper<M extends KittyModel> implements Cloneable {
 			}
 			return new SQLiteCondition(rebuildCondition.toString(), arguments);
 		}
-		return new SQLiteCondition(condition.toString(), arguments);
+		return new SQLiteCondition(condition, arguments);
 	}
 
 	/**

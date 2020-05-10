@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,13 +43,6 @@ import java.text.MessageFormat;
  */
 public class KittyORMVersionFileDumpMigrator extends KittyORMVersionMigrator {
 
-    private static String IA_EXCEPTION_NOT_DIRECTORY_OR_DOES_NOT_EXISTS = "File object {0} for databaseClass {1} used in KittyORMVersionFileDumpMigrator is not a directory or doesn't exist!";
-    private static String IA_EXCEPTION_DIRECTORY_NO_PERMISSION_TO_LIST_FILES = "File object {0} for databaseClass {1} used in KittyORMVersionFileDumpMigrator has no access to list nested files!";
-    private static String IA_EXCEPTION_BAD_MIGRATION_PARAMETERS = "KittyORMVersionFileDumpMigrator needs migrationsParameters to be an array with at least one value at [0] index that is a String or a File instance with path to directory with file migration scripts (schema: {0}, old schema version: {1}, new schema version {2})!";
-
-    private static String IOE_ERROR_ON_ASSETS_SP = "KittyORMVersionFileDumpMigrator#setParameters(Object[] factoryParameters,  Object[] migrationsParameters) IOException caught, see nested exception for details!";
-    private static String IOE_ERROR_ON_ASSETS_SM = "KittyORMVersionFileDumpMigrator#setMigrations(Object... migrationsParameters) IOException caught, see nested exception for details!";
-
     private File sqlMigrationsRoot;
 
     String assetsRootUriString;
@@ -61,7 +54,9 @@ public class KittyORMVersionFileDumpMigrator extends KittyORMVersionMigrator {
     }
 
     protected void setParameters(Object[] factoryParameters,  Object[] migrationsParameters) {
-        String IAMessage = MessageFormat.format(IA_EXCEPTION_BAD_MIGRATION_PARAMETERS, schemaName, Integer.toString(oldVersion), Integer.toString(currentVersion));
+        String IAMessage = MessageFormat.format(
+                "KittyORMVersionFileDumpMigrator needs migrationsParameters to be an array with at least one value at [0] index that is a String or a File instance with path to directory with file migration scripts (schema: {0}, old schema version: {1}, new schema version {2})!",
+                schemaName, Integer.toString(oldVersion), Integer.toString(currentVersion));
         if(migrationsParameters == null) throw new IllegalArgumentException(IAMessage);
         if(migrationsParameters.length == 0) throw new IllegalArgumentException(IAMessage);
         if(migrationsParameters[0] instanceof String) {
@@ -76,23 +71,26 @@ public class KittyORMVersionFileDumpMigrator extends KittyORMVersionMigrator {
         }
         if(sqlMigrationsRoot != null) {
             if (!sqlMigrationsRoot.isDirectory())
-                throw new IllegalArgumentException(MessageFormat.format(IA_EXCEPTION_NOT_DIRECTORY_OR_DOES_NOT_EXISTS, sqlMigrationsRoot.getAbsolutePath(), schemaName));
+                throw new IllegalArgumentException(MessageFormat.format(
+                        "File object {0} for databaseClass {1} used in KittyORMVersionFileDumpMigrator is not a directory or doesn't exist!",
+                        sqlMigrationsRoot.getAbsolutePath(), schemaName));
             try {
                 sqlMigrationsRoot.listFiles();
             } catch (SecurityException se) {
-                throw new IllegalArgumentException(MessageFormat.format(IA_EXCEPTION_DIRECTORY_NO_PERMISSION_TO_LIST_FILES, sqlMigrationsRoot.getAbsolutePath(), schemaName));
+                throw new IllegalArgumentException(MessageFormat.format(
+                        "File object {0} for databaseClass {1} used in KittyORMVersionFileDumpMigrator has no access to list nested files!",
+                        sqlMigrationsRoot.getAbsolutePath(), schemaName));
             }
         } else if(assetsRootUriString != null){
             try {
                 context.getAssets().list(assetsRootUriString.replace(KittyNamingUtils.ASSETS_URI_START, ""));
             } catch (IOException e) {
-                throw new KittyRuntimeException(IOE_ERROR_ON_ASSETS_SP, e);
+                throw new KittyRuntimeException("KittyORMVersionFileDumpMigrator#setParameters() IOException caught, see nested exception for details!", e);
             }
         }
     }
 
-    @Override
-    protected KittyMigrationFactory getMigrationFactory(Object... factoryParameters) {
+    @Override protected KittyMigrationFactory getMigrationFactory(Object... factoryParameters) {
         KittyMigrationFactory fileMigrationFactory = new KittyFileMigrationFactory(context, schemaName, logTag, logOn);
         fileMigrationFactory.setVersionFilter(oldVersion, currentVersion);
         return fileMigrationFactory;
@@ -103,8 +101,7 @@ public class KittyORMVersionFileDumpMigrator extends KittyORMVersionMigrator {
      * <br> I don't know, seems to be chaos call to increase entropy. Refactor it in future.
      * @param migrationsParameters
      */
-    @Override
-    protected void setMigrations(Object... migrationsParameters) {
+    @Override protected void setMigrations(Object... migrationsParameters) {
         if(sqlMigrationsRoot != null) {
             File[] filesInMigrationsDir = sqlMigrationsRoot.listFiles();
             for (File mFile : filesInMigrationsDir) {
@@ -123,8 +120,8 @@ public class KittyORMVersionFileDumpMigrator extends KittyORMVersionMigrator {
                     if (migration != null)
                         migrations.add(migration);
                 }
-            } catch (IOException e) {
-                throw new KittyRuntimeException(IOE_ERROR_ON_ASSETS_SM, e);
+            } catch (Exception e) {
+                throw new KittyRuntimeException("KittyORMVersionFileDumpMigrator#setMigrations(Object... migrationsParameters) Exception caught, see nested exception for details!", e);
             }
         }
     }

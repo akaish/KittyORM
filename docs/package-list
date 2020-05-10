@@ -5,7 +5,7 @@ net.akaish.kitty.orm.annotations.column.constraints
 net.akaish.kitty.orm.annotations.column.joins
 net.akaish.kitty.orm.annotations.table
 net.akaish.kitty.orm.annotations.table.constraints
-net.akaish.kitty.orm.annotations.table.index
+net.akaish.kitty.orm.annotations.table.tableIndex
 net.akaish.kitty.orm.configuration
 net.akaish.kitty.orm.configuration.adc
 net.akaish.kitty.orm.configuration.conf

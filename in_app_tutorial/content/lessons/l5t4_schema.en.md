@@ -48,7 +48,7 @@ INSERT INTO mig_three (id, new_sv_name) SELECT id, some_value FROM mig_three_old
 
 DROP TABLE IF EXISTS mig_three_old_t;
 
--- add index on M3.random_long
+-- add tableIndex on M3.random_long
 CREATE INDEX IF NOT EXISTS m3_rnd_long ON mig_three (random_long);
 {{< /highlight >}} 
 ### AfterCreate script for database `mig` version `4`

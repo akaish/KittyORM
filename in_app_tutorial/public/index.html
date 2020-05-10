@@ -23,7 +23,7 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="file:///android_asset/inapptut/index.xml" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
+  <link href="file:///android_asset/inapptut/tableIndex.xml" rel="alternate" type="application/rss+xml" title="KittyORM Demo" />
 
   
 </head>
@@ -495,7 +495,7 @@ KittyORM is licensed under the Apache License, Version 2.0. To view a copy of th
     <a href="#ZgotmplZ">Lesson1 source code</a>
   </h1>
   <span class="post-date">Fri, Aug 17, 2018</span>
-  Database, model, supporting classes  Click to view SimpleDatabase.class 1package net.akaish.kittyormdemo.sqlite.introductiondb; 2 3import android.content.Context; 4 5import net.akaish.kitty.orm.KittyDatabase; 6import net.akaish.kitty.orm.annotations.KITTY_DATABASE; 7 8/** 9* Created by akaish on 09.08.18. 10*/ 11@KITTY_DATABASE( 12 isLoggingOn = true, 13 isProductionOn = false, 14 domainPackageNames = {&#34;net.akaish.kittyormdemo.sqlite.introductiondb&#34;} 15) 16public class SimpleDatabase extends KittyDatabase { 17 /** 18* KittyORM main database class that represents bootstrap and holder for all related with database 19* components. 20* &lt;br&gt; See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.
+  Database, model, supporting classes  Click to view SimpleDatabase.class 1package net.akaish.kittyormdemo.sqlite.introductiondb; 2 3import android.content.Context; 4 5import net.akaish.kitty.orm.KittyDatabase; 6import net.akaish.kitty.orm.annotations.KittyDatabase; 7 8/** 9* Created by akaish on 09.08.18. 10*/ 11@KITTY_DATABASE( 12 isLoggingOn = true, 13 isProductionOn = false, 14 domainPackageNames = {&#34;net.akaish.kittyormdemo.sqlite.introductiondb&#34;} 15) 16public class SimpleDatabase extends KittyDatabase { 17 /** 18* KittyORM main database class that represents bootstrap and holder for all related with database 19* components. 20* &lt;br&gt; See {@link KittyDatabase#KittyDatabase(Context, String)} for more info.
   
   <div class="read-more-link">
     <a href="/android_asset/inapptut/lessons/l1_code/">Read More…</a>

@@ -2,7 +2,7 @@
 /*
  * ---
  *
- *  Copyright (c) 2018 Denis Bogomolov (akaish)
+ *  Copyright (c) 2018-2020 Denis Bogomolov (akaish)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,6 @@ public class KittyTableConfiguration {
 
 	public final List<Index> indexes;
 
-	public final LinkedList<KittyJoinConfiguration> joins;
 	public final LinkedList<KittyColumnConfiguration> sortedColumns;
 	public final Class<? extends KittyModel> modelClass;
 	public final KittyPrimaryKey kittyPrimaryKey;
@@ -75,7 +74,6 @@ public class KittyTableConfiguration {
 														  List<ForeignKeyTableConstraint> foreignKeys,
 														  boolean isSchemaModel, boolean isCreateOnDemand,
 														  List<Index> indexes,
-														  LinkedList<KittyJoinConfiguration> joins,
 														  LinkedList<KittyColumnConfiguration> sortedColumns,
 														  Class<? extends KittyModel> modelClass, KittyPrimaryKey kittyPrimaryKey,
 														  boolean isCreateIfNotExists,
@@ -92,11 +90,116 @@ public class KittyTableConfiguration {
 		this.isSchemaModel = isSchemaModel;
 		this.isCreateOnDemand = isCreateOnDemand;
 		this.indexes = indexes;
-		this.joins = joins;
 		this.sortedColumns = sortedColumns;
 		this.modelClass = modelClass;
 		this.kittyPrimaryKey = kittyPrimaryKey;
 		this.isCreateIfNotExists = isCreateIfNotExists;
 		this.defaultColumnsInclusionPatternId = defaultColumnsInclusionPatternId;
+	}
+
+	public static class Builder {
+		private String schemaName = null;
+		private String tableName = null;
+		private boolean isTemporaryTable = false;
+		private boolean isWithoutRowid = false;
+		private PrimaryKeyTableConstraint primaryKey = null;
+		private List<UniqueTableConstraint> uniques = null;
+		private List<CheckTableConstraint> checks = null;
+		private List<ForeignKeyTableConstraint> foreignKeys = null;
+		private boolean isSchemaModel = true;
+		private boolean isCreateOnDemand = false;
+		private List<Index> indexes = null;
+		private LinkedList<KittyColumnConfiguration> sortedColumns = null;
+		private Class<? extends KittyModel> modelClass = null;
+		private KittyPrimaryKey kittyPrimaryKey = null;
+		private boolean isCreateIfNotExists = false;
+		private KittyArrayKey defaultColumnsInclusionPatternId = null;
+
+		public Builder setSchemaName(String schemaName) {
+			this.schemaName = schemaName;
+			return this;
+		}
+
+		public Builder setDefaultColumnsInclusionPatternId(KittyArrayKey defaultColumnsInclusionPatternId) {
+			this.defaultColumnsInclusionPatternId = defaultColumnsInclusionPatternId;
+			return this;
+		}
+
+		public Builder setIsCreateIfNotExists(boolean isCreateIfNotExists) {
+			this.isCreateIfNotExists = isCreateIfNotExists;
+			return this;
+		}
+
+		public Builder setTableName(String tableName) {
+			this.tableName = tableName;
+			return this;
+		}
+
+		public Builder setIsTemporaryTable(boolean isTemporaryTable) {
+			this.isTemporaryTable = isTemporaryTable;
+			return this;
+		}
+
+		public Builder setIsWithoutRowid(boolean isNoRowid) {
+			this.isWithoutRowid = isNoRowid;
+			return this;
+		}
+
+		public Builder setPrimaryKey(PrimaryKeyTableConstraint primaryKey) {
+			this.primaryKey = primaryKey;
+			return this;
+		}
+
+		public Builder setUniques(List<UniqueTableConstraint> uniques) {
+			this.uniques = uniques;
+			return this;
+		}
+
+		public Builder setChecks(List<CheckTableConstraint> checks) {
+			this.checks = checks;
+			return this;
+		}
+
+		public Builder setForeignKeys(List<ForeignKeyTableConstraint> foreignKeys) {
+			this.foreignKeys = foreignKeys;
+			return this;
+		}
+
+		public Builder setIsSchemaModel(boolean isSchemaModel) {
+			this.isSchemaModel = isSchemaModel;
+			return this;
+		}
+
+		public Builder setIsCreateOnDemand(boolean isCreateOnDemand) {
+			this.isCreateOnDemand = isCreateOnDemand;
+			return this;
+		}
+
+		public Builder setIndexes(List<Index> indexes) {
+			this.indexes = indexes;
+			return this;
+		}
+
+		public Builder setSortedColumns(LinkedList<KittyColumnConfiguration> sortedColumns) {
+			this.sortedColumns = sortedColumns;
+			return this;
+		}
+
+		public <T extends KittyModel> Builder setModelClass(Class<T> modelClass) {
+			this.modelClass = modelClass;
+			return this;
+		}
+
+		public Builder setKittyPrimaryKey(KittyPrimaryKey kittyPrimaryKey) {
+			this.kittyPrimaryKey = kittyPrimaryKey;
+			return this;
+		}
+
+		public KittyTableConfiguration build() {
+			return new KittyTableConfiguration(schemaName, tableName, isTemporaryTable, isWithoutRowid,
+					primaryKey, uniques, checks, foreignKeys, isSchemaModel, isCreateOnDemand,
+					indexes, sortedColumns, modelClass, kittyPrimaryKey, isCreateIfNotExists,
+					defaultColumnsInclusionPatternId);
+		}
 	}
 }
